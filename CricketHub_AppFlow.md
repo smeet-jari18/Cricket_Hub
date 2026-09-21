@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Project Name** | CricketHub |
 | **Document Version** | 1.0.0 |
-| **Author** | Lead Product Manager / UX Lead |
-| **Date** | October 24, 2023 |
+| **Author** | Smeet Jariwala , Aman Sinha |
+| **Date** | September 21, 2026 |
 | **Associated Docs** | PRD v1.0, TRD v1.0 |
 
 ---

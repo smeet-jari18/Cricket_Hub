@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Project Name** | CricketHub |
 | **Document Version** | 1.0.0 |
-| **Author** | Engineering Manager / Agile Coach |
+| **Author** | Smeet Jariwala , Aman Sinha |
 | **Methodology** | Agile (2-Week Sprints) |
-| **Date** | October 24, 2023 |
+| **Date** | September 21, 2026 |
 
 ---
 

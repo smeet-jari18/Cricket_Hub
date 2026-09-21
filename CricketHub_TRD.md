@@ -5,8 +5,8 @@
 | :--- | :--- |
 | **Project Name** | CricketHub |
 | **Document Version** | 1.0.0 |
-| **Author** | Lead Technical/Product Manager |
-| **Date** | October 24, 2023 |
+| **Author** | Smeet Jariwala , Aman Sinha |
+| **Date** | September 21, 2026 |
 | **Status** | Approved for Architecture Phase |
 | **Associated PRD** | CricketHub_PRD_v1.0 |
 

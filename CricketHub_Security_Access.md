@@ -4,10 +4,10 @@
 | Attribute | Details |
 | :--- | :--- |
 | **Project Name** | CricketHub |
-| **Document Version** | 1.1.0 |
+| **Document Version** | 1.2.0 |
 | **Author** | Solo Developer |
 | **Technology Focus** | Firebase (Auth, Firestore, Storage), Flutter |
-| **Date** | October 2023 / Updated Today |
+| **Date** | September 2026 |
 
 ---
 
@@ -72,8 +72,17 @@ service cloud.firestore {
     
     // 5. BOOKINGS (Phase 3)
     match /bookings/{bookingId} {
-      allow read, create: if isAuthenticated() && request.auth.uid == request.resource.data.user_id;
-      allow update: if false; 
+      // Fix applied: resource for reading, request.resource for creating
+      allow read: if isAuthenticated() && request.auth.uid == resource.data.user_id;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.user_id;
+      allow update, delete: if false; // Webhooks bypass rules using Admin SDK
+    }
+
+    // 6. GROUNDS (Phase 3)
+    match /grounds/{groundId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.owner_uid;
     }
   }
 }
