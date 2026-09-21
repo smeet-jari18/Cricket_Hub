@@ -120,32 +120,6 @@ Client apps should not calculate global stats or Net Run Rates (to prevent manip
 
 ## 6. Security & Access Control (Firestore Rules)
 
-Strict rules are required to prevent data tampering.
+Strict rules are required to prevent data tampering. 
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    
-    // Users can only edit their own profile
-    match /users/{userId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth.uid == userId;
-    }
-    
-    // Only the assigned scorer or tournament admin can update a match
-    match /matches/{matchId} {
-      allow read: if true; // Fans can view live scores
-      allow update: if request.auth != null && 
-                    (request.auth.uid == resource.data.scorer_uid || 
-                     request.auth.uid == resource.data.tournament_admin_uid);
-      
-      // Balls subcollection follows the same logic
-      match /balls/{ballId} {
-        allow read: if true;
-        allow write: if request.auth != null && 
-                     get(/databases/$(database)/documents/matches/$(matchId)).data.scorer_uid == request.auth.uid;
-      }
-    }
-  }
-}
+*Note: Please see the separate **Security & Access Control Document (v1.2)** for the authoritative and complete Firestore Security Rules. The code has been centralized there to prevent version drift.*

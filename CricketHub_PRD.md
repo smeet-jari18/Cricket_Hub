@@ -49,6 +49,7 @@ To maintain focus on our core value proposition, the following are explicitly **
 * Real-money betting or gambling integration.
 * Live video streaming of matches (we provide live *data/scores*, not video).
 * E-commerce functionality for selling cricket gear (bats, balls, etc.).
+* Detailed design, UI, and Database schemas for "Umpire Booking" (This is explicitly deferred until Phase 3).
 
 ---
 

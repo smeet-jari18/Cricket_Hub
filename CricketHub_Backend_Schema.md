@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Project Name** | CricketHub |
 | **Document Version** | 1.1.0 |
-| **Author** | Solo Developer |
+| **Author** | Smeet Jariwala , Aman Sinha |
 | **Database Type** | NoSQL (Firebase Cloud Firestore) |
-| **Date** | October 2023 / Updated Today |
+| **Date** | September 21, 2026 |
 
 ---
 
@@ -58,12 +58,13 @@ Unlike a traditional relational database (SQL), Firestore does not use foreign k
 | `toss` | Map | `winner_id` and `elected_to` ("bat" or "bowl") |
 | `scorer_uid` | String | UID of the assigned scorer |
 | `current_summary` | Map | Live score, wickets, overs, striker_id, bowler_id |
+| tournament_admin_uid | String | UID of tournament organizer (nullable, set if match belongs to a tournament) |
 
 ---
 
 ## 4. Sub-Collection: `matches/{match_id}/balls`
 **Purpose:** Stores every single ball. Used for offline-first syncing.
-* **Document ID:** `{ball_id}` (e.g., "over1ball_1")
+* Document ID: `{ball_id}` (e.g., "ball_001", "ball_002", using a running sequence to prevent collisions if an over has extra wide/no-balls)
 
 | Field Name | Data Type | Description / Example |
 | :--- | :--- | :--- |

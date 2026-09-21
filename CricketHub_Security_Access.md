@@ -5,9 +5,9 @@
 | :--- | :--- |
 | **Project Name** | CricketHub |
 | **Document Version** | 1.2.0 |
-| **Author** | Solo Developer |
+| **Author** | Smeet Jariwala , Aman Sinha |
 | **Technology Focus** | Firebase (Auth, Firestore, Storage), Flutter |
-| **Date** | September 2026 |
+| **Date** | September 21, 2026 |
 
 ---
 
