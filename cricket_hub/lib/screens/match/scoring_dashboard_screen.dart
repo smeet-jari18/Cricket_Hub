@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
 import '../../models/match_model.dart';
-import '../../services/match_service.dart';
+import '../../providers/scoring_engine.dart';
 import '../../providers/scoring_provider.dart';
+import '../../services/match_service.dart';
 import '../../widgets/score_button.dart';
 
 /// THE MOST CRITICAL SCREEN (UI/UX doc Screen 2).
@@ -24,6 +27,7 @@ class ScoringDashboardScreen extends StatefulWidget {
 class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   bool _offline = false;
   bool _setupShown = false;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   @override
   void initState() {
@@ -31,13 +35,32 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
     _listenConnectivity();
   }
 
-  void _listenConnectivity() {
-    Connectivity().onConnectivityChanged.listen((result) {
-      final offline = result == ConnectivityResult.none;
-      if (mounted && offline != _offline) {
-        setState(() => _offline = offline);
-      }
-    });
+  Future<void> _listenConnectivity() async {
+    final connectivity = Connectivity();
+    _connectivitySubscription = connectivity.onConnectivityChanged.listen(
+      _updateConnectivity,
+    );
+
+    // Read the initial state too; the stream may not emit until it changes.
+    try {
+      _updateConnectivity(await connectivity.checkConnectivity());
+    } catch (_) {
+      // Connectivity is only an indicator; Firestore remains authoritative.
+    }
+  }
+
+  void _updateConnectivity(List<ConnectivityResult> results) {
+    final offline =
+        results.isEmpty || results.contains(ConnectivityResult.none);
+    if (mounted && offline != _offline) {
+      setState(() => _offline = offline);
+    }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -428,6 +451,122 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                           fontSize: 16, fontWeight: FontWeight.w500)),
                 ))
             .toList(),
+      ),
+    );
+  }
+}
+
+/// Compact live score context shown above the scoring action pad.
+class _ContextBlock extends StatelessWidget {
+  final ScoringState s;
+
+  const _ContextBlock({required this.s});
+
+  @override
+  Widget build(BuildContext context) {
+    final bowler = s.bowlers[s.currentBowler];
+
+    return Container(
+      width: double.infinity,
+      color: AppTheme.surface,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${s.totalRuns}/${s.wickets}',
+                    style: const TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${s.oversDisplay} ov  •  CRR ${s.crr}',
+                    style: const TextStyle(color: AppTheme.textSecondary),
+                  ),
+                ],
+              ),
+              if (s.target != null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('Target ${s.target}'),
+                    Text(
+                      'Need ${s.runsNeeded}  •  RRR ${s.rrr ?? '—'}',
+                      style: const TextStyle(color: AppTheme.textSecondary),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _BatterLine(
+            name: s.striker,
+            stats: s.batsmen[s.striker],
+            onStrike: true,
+          ),
+          _BatterLine(
+            name: s.nonStriker,
+            stats: s.batsmen[s.nonStriker],
+            onStrike: false,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Bowler: ${s.currentBowler.isEmpty ? '—' : s.currentBowler}  •  '
+            '${bowler?.oversDisplay ?? '0.0'} ov  •  '
+            '${bowler?.runsConceded ?? 0} runs  •  ${bowler?.wickets ?? 0} wkts',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BatterLine extends StatelessWidget {
+  final String name;
+  final BatStats? stats;
+  final bool onStrike;
+
+  const _BatterLine({
+    required this.name,
+    required this.stats,
+    required this.onStrike,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              '${onStrike ? '▶ ' : ''}${name.isEmpty ? '—' : name}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: onStrike ? AppTheme.primary : AppTheme.textPrimary,
+                fontWeight: onStrike ? FontWeight.bold : FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          Text(
+            '${stats?.runs ?? 0} (${stats?.balls ?? 0})  •  '
+            '${stats?.strikeRate ?? '0.0'} SR',
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+          ),
+        ],
       ),
     );
   }

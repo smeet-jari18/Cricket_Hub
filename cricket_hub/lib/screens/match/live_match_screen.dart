@@ -69,7 +69,7 @@ class LiveMatchScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '$_oversDisplay(match) ov  •  ${match.status.toUpperCase()}',
+                        '${_oversDisplay(match)} ov  •  ${match.status.toUpperCase()}',
                         style: const TextStyle(color: AppTheme.textSecondary),
                       ),
                       if (match.isLive)

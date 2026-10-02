@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/app_theme.dart';
+import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_screen.dart';
@@ -25,8 +26,10 @@ import 'services/team_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // STEP NEEDED once: `flutterfire configure` (README.md, Step 3)
-  await Firebase.initializeApp();
+  // Generate lib/firebase_options.dart with `flutterfire configure`.
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Local cache on the phone -> scoring works offline & syncs later.
   FirebaseFirestore.instance.settings = const Settings(

@@ -108,6 +108,9 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       teamBName: _teamB!.teamName,
       totalOvers: _overs,
       scorerUid: auth.firebaseUser!.uid, // creator scores by default
+      // Toss has not happened yet; these are set on the toss screen.
+      battingTeamId: '',
+      bowlingTeamId: '',
     );
 
     try {
