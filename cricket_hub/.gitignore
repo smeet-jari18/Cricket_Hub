@@ -10,10 +10,15 @@ build/
 .vscode/
 *.iml
 
-# Firebase (auto-generated)
+# Firebase (auto-generated or local)
 lib/firebase_options.dart
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+functions/node_modules/
+functions/.secret.local
 
 # Misc
 *.log

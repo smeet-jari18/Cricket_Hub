@@ -92,6 +92,9 @@ class AuthService {
 
   // ---------- USER DOCUMENT ----------
 
+  String _playerNameKey(String name) =>
+      name.trim().replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
+
   /// First time login -> create an empty `users/{uid}` document.
   /// The Profile Setup screen then fills in the name and role.
   Future<void> _createUserDocumentIfMissing() async {
@@ -103,6 +106,7 @@ class AuthService {
       await doc.reference.set({
         'phone_number': user.phoneNumber ?? '',
         'display_name': user.displayName ?? '',
+        'player_name_key': _playerNameKey(user.displayName ?? ''),
         'avatar_url': user.photoURL ?? '',
         'role': 'player',
         'batting_style': '',
@@ -123,6 +127,7 @@ class AuthService {
 
     await _db.collection(AppConstants.usersCol).doc(user.uid).update({
       'display_name': name.trim(),
+      'player_name_key': _playerNameKey(name),
       'batting_style': battingStyle,
       'bowling_style': bowlingStyle,
     });

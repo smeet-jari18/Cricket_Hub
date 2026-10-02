@@ -1,1 +1,43 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"crickethub-dev","appId":"1:208815142654:android:3da0201cbddafbcf4ed7af","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"crickethub-dev","configurations":{"android":"1:208815142654:android:3da0201cbddafbcf4ed7af","ios":"1:208815142654:ios:32a84edf95e89f734ed7af","macos":"1:208815142654:ios:32a84edf95e89f734ed7af","web":"1:208815142654:web:bb6f73d5be5bf3864ed7af","windows":"1:208815142654:web:46a91da5916b4efd4ed7af"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "crickethub-dev",
+          "appId": "1:208815142654:android:3da0201cbddafbcf4ed7af",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "crickethub-dev",
+          "configurations": {
+            "android": "1:208815142654:android:3da0201cbddafbcf4ed7af",
+            "ios": "1:208815142654:ios:32a84edf95e89f734ed7af",
+            "macos": "1:208815142654:ios:32a84edf95e89f734ed7af",
+            "web": "1:208815142654:web:bb6f73d5be5bf3864ed7af",
+            "windows": "1:208815142654:web:46a91da5916b4efd4ed7af"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        ".firebase",
+        "*.local"
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

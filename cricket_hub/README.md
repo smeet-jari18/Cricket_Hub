@@ -1,147 +1,81 @@
-# 🏏 CricketHub — Phase 1 (MVP Starter Code)
+# CricketHub — Phase 1 + Phase 2
 
-Flutter + Dart + Firebase app for local cricket: teams, matches,
-**offline-first ball-by-ball scoring**, and live scores for fans.
+CricketHub is a Flutter/Firebase app for grassroots cricket: offline-first scoring, live match viewing, tournament fixtures and standings, player career stats, and match notifications.
 
-Built from: `CricketHub_PRD.md`, `CricketHub_TRD.md`, `CricketHub_AppFlow.md`,
-`CricketHub_Backend_Schema.md`, `CricketHub_Security_Access.md`, `CricketHub_UI_UX_Guidelines.md`
+## Phase 2 implementation
 
-**Team:** Smeet Jariwala, Aman Sinha
-**Stack:** Flutter • Dart • Firebase (Auth + Firestore) • Provider • daylight-first Material 3
-
----
-
-## ⚡ What is included (Phase 1)
-
-| Feature | Status |
+| Feature | Implementation |
 |---|---|
-| Phone OTP + Google login (Firebase Auth) | ✅ Working code |
-| Profile setup (name, batting/bowling style) | ✅ Working code |
-| Create team + add players to roster | ✅ Working code |
-| Create match (teams, overs) | ✅ Working code |
-| Toss screen (bat/bowl decision) | ✅ Working code |
-| **Scoring engine** (runs, extras, wickets, strike rotation, undo) | ✅ **Fully unit tested** |
-| Scoring Dashboard (big buttons, offline banner, dialogs) | ✅ Working code |
-| Ball-by-ball sync to Firestore (works OFFLINE) | ✅ Working code |
-| Live Match Center (real-time header + commentary tab) | ✅ Working code |
-| Career stats / scorecards / tournaments | ⏳ Phase 2 (Cloud Functions) |
-| Ground / umpire booking, payments | ⏳ Phase 3 |
+| Round-robin tournaments | Server-generated single round-robin fixtures; every team plays each other once. Odd-team byes do not create matches. |
+| Knockout tournaments | Seeded single-elimination bracket, automatic byes and winner advancement; tied games wait for an organizer tie-break decision. |
+| Points table and NRR | Cloud Function recomputes the table from completed match innings. NRR is cumulative runs/overs for minus runs/overs against; an all-out innings counts the full overs quota. |
+| Career statistics | Idempotent completion trigger aggregates batting/bowling totals, average, strike rate, economy, milestones, best figures, and recent form. |
+| Orange/Purple Caps | Tournament leaders recompute from completed tournament scorecards. |
+| Match notifications | FCM match-follow topics send match-start and wicket alerts, with in-app foreground alerts and tap-through to Match Center. |
+| Two-innings scorecards | Scoring now saves both innings, result, batting/bowling figures, extras, fall of wickets, and ball-by-ball commentary. |
 
----
+Cloud Functions source and its pure-domain unit tests live under `functions/`. Firestore rules and indexes are versioned in `firestore.rules` and `firestore.indexes.json`.
 
-## 🚀 Setup — Step by Step (do these in order!)
+## Prerequisites
 
-### Step 1 — Install Flutter (if not done)
-Download: https://docs.flutter.dev/get-started/install
-Check it works:
+- Flutter **3.27+** / Dart **3.6+**
+- Firebase CLI logged into the `crickethub-dev` project
+- Node.js **20** for Cloud Functions
+- A configured Android Firebase app (`google-services.json`) and `lib/firebase_options.dart`
+- For iOS push notifications: APNs key uploaded in Firebase Console and the Push Notifications capability enabled in Xcode
+
+## Setup
+
+From the `cricket_hub` directory:
+
 ```bash
-flutter doctor
-```
-
-### Step 2 — Create the platform folders
-This ZIP contains the source code (`lib/`, `test/`, `pubspec.yaml`).
-Generate the Android/iOS folders (takes 1 minute — it will NOT overwrite our code):
-```bash
-cd cricket_hub
-flutter create .
+flutter create .       # only if your checkout needs missing platform wrapper files
 flutter pub get
-```
-
-### Step 3 — Connect Firebase
-```bash
-# install the CLI once
-npm install -g firebase-tools
-firebase login
-
-dart pub global activate flutterfire_cli
 flutterfire configure --project=crickethub-dev
-```
-`flutterfire configure` will ask you to:
-1. Select/create a Firebase project (use `crickethub-dev` for this checkout)
-2. Select platforms: **web** and **android** (+ ios if you have a Mac)
-
-This creates `lib/firebase_options.dart` automatically.
-
-### Step 4 — Turn on Login methods
-Firebase Console → your project → **Authentication → Sign-in method**:
-1. Enable **Phone** (for OTP)
-2. Enable **Google**
-
-**Android phone-auth extra step (important!):**
-Firebase Console → Project Settings → Your Android app → add **SHA-1 fingerprint**:
-```bash
-cd android && ./gradlew signingReport   # copy the SHA-1 of debugVariant
-```
-Paste SHA-1 in Firebase Console, then re-download `google-services.json`
-and put it in `android/app/`.
-
-### Step 5 — Firestore Database
-Firebase Console → **Firestore Database** → Create database → Start in
-**test mode** (we replace with real rules below).
-
-Then copy the rules from `CricketHub_Security_Access.md v1.2`
-into Firestore → Rules → Publish. (The doc's rules are exactly what
-this code expects: only `scorer_uid` can update a live match.)
-
-### Step 6 — Run it!
-```bash
 flutter run
 ```
 
-### Step 7 — Run the scoring engine tests
+`flutterfire configure` creates the local `lib/firebase_options.dart`; Firebase platform configuration files are intentionally not committed in this source archive. Retain your existing files or configure your own Firebase project.
+
+Enable **Phone** and **Google** sign-in in Firebase Authentication. Create the Firestore database, then deploy the checked-in rules and indexes:
+
+```bash
+firebase deploy --only firestore:rules,firestore:indexes
+```
+
+Install, test, and deploy the Phase 2 Cloud Functions:
+
+```bash
+npm --prefix functions install
+npm --prefix functions test
+firebase deploy --only functions
+```
+
+The callable endpoints use the `asia-south1` region. Firebase may ask you to enable Cloud Functions/Cloud Build and select a billing plan before the first deployment. Push notifications require Cloud Messaging to be enabled; Android notification permission is requested when a user follows a match.
+
+For a single deployment after login and project setup:
+
+```bash
+firebase deploy --only firestore:rules,firestore:indexes,functions
+```
+
+## Tests and verification
+
 ```bash
 flutter test
-```
-20+ tests verify the cricket rules (strike rotation, wides, no-balls,
-byes, wickets, undo, over completion...). **All must pass.** 🟢
-
----
-
-## 📁 Project Structure
-
-```
-lib/
-├── main.dart                  # app entry, routes, providers
-├── core/
-│   ├── app_theme.dart         # ALL colors/theme (match your Stitch design here!)
-│   └── app_constants.dart     # collection names, defaults
-├── models/                    # data classes = Backend_Schema.md
-│   ├── app_user.dart          # users collection
-│   ├── team_model.dart        # teams collection
-│   ├── match_model.dart       # matches collection
-│   └── ball_event.dart        # balls subcollection
-├── services/                  # ALL Firebase calls live here
-│   ├── auth_service.dart      # OTP, Google, profile
-│   ├── team_service.dart      # teams CRUD
-│   └── match_service.dart     # matches + ball sync (WriteBatch)
-├── providers/
-│   ├── auth_provider.dart     # login state for whole app
-│   ├── scoring_engine.dart    # ⭐ PURE cricket logic (tested!)
-│   └── scoring_provider.dart  # engine + Firestore connection
-├── screens/
-│   ├── splash_screen.dart
-│   ├── auth/ (login, otp, profile_setup)
-│   ├── home/ (main_shell with bottom nav, home, my_cricket)
-│   ├── team/ (create_team)
-│   ├── match/ (create_match, toss, scoring_dashboard ⭐, live_match)
-│   └── menu/
-└── widgets/ (score_button, live_match_card, offline_banner)
-
-test/
-└── scoring_engine_test.dart   # 20+ unit tests of cricket rules
+flutter analyze
+npm --prefix functions test
 ```
 
-## 🎨 Matching your Stitch design
-All colors, fonts and shapes are in **ONE file**: `lib/core/app_theme.dart`.
-Change the hex codes there and the whole app re-skins instantly.
-(Current values = your UI/UX Guidelines: teal #00BFA5, orange #FF6D00, dark #121212.)
+The Node tests cover schedule generation, byes, standings, ICC-style all-out NRR overs, results, career aggregation, and tournament leaderboards. Flutter build/analyzer checks still need to be run in an environment with the Flutter SDK and the project's local Firebase configuration.
 
-## 📋 Known v1 limitations (planned, not bugs)
-- One innings per match session (full 2-innings chase flow → Sprint 4/Phase 2)
-- Roster uses player names (UID-based roster + invite links → Phase 2)
-- Batsmen-level live stats in Match Center → Sprint 4
-- Byes/leg-byes: enter runs via prompt (auto-detection of overthrows → Phase 2)
+## Data and attribution notes
 
-## 🔒 Security reminder
-The app trusts Firestore Security Rules completely. Before ANY public
-testing, replace test-mode rules with `CricketHub_Security_Access.md v1.2`.
+- Firestore rules keep account documents (including phone numbers) owner-readable; server-owned career aggregates cannot be edited by clients. Callable Functions require Firebase Authentication and verify tournament ownership; App Check enforcement is currently disabled and should be enabled after registering the production apps.
+- A scorer's own stats link by Firebase UID when the recorded player name matches their profile. Other player names link automatically only when there is exactly one matching normalized profile name. Ambiguous names stay in server-owned `player_stats` rather than being incorrectly assigned to an account; stable player IDs/invites are a future roster improvement.
+- Tournament results and NRR are based on completed two-innings scorecards. DLS/rain adjustments and super overs are not implemented. A tied knockout fixture therefore requires the organizer to choose which team advances.
+- FCM delivery and Cloud Functions are **not deployed automatically** by the source changes. Deploy them to the configured Firebase project and configure APNs before expecting device notifications.
+
+## Earlier platform setup note
+
+For Android builds, use JDK 17 with the Gradle wrapper. If the project and Pub cache are on different Windows drives, set `PUB_CACHE` to a directory on the same drive as the checkout before `flutter pub get`.

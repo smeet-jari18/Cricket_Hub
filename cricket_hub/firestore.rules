@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function owns(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isMatchScorer(matchId) {
+      return signedIn() &&
+        get(/databases/$(database)/documents/matches/$(matchId)).data.scorer_uid == request.auth.uid;
+    }
+
+    // Keep account PII private. Only the owner can read or edit this document;
+    // Cloud Functions use the Admin SDK for trusted career-stat updates.
+    match /users/{userId} {
+      allow get: if owns(userId);
+      allow list: if false;
+      allow create: if owns(userId) &&
+        request.resource.data.keys().hasOnly([
+          'phone_number', 'display_name', 'player_name_key', 'avatar_url',
+          'role', 'batting_style', 'bowling_style', 'created_at'
+        ]);
+      allow update: if owns(userId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'display_name', 'player_name_key', 'avatar_url', 'role',
+          'batting_style', 'bowling_style', 'updated_at'
+        ]);
+      allow delete: if false;
+
+      match /following_matches/{matchId} {
+        allow read, write: if owns(userId);
+      }
+    }
+
+    match /teams/{teamId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.admin_uid == request.auth.uid;
+      allow update: if signedIn() && resource.data.admin_uid == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'team_name', 'city', 'logo_url', 'roster', 'updated_at'
+        ]);
+      allow delete: if signedIn() && resource.data.admin_uid == request.auth.uid;
+    }
+
+    match /matches/{matchId} {
+      allow read: if signedIn();
+      allow create: if signedIn() &&
+        request.resource.data.scorer_uid == request.auth.uid &&
+        request.resource.data.status == 'scheduled' &&
+        request.resource.data.team_a_id is string &&
+        request.resource.data.team_a_id.size() > 0 &&
+        request.resource.data.team_b_id is string &&
+        request.resource.data.team_b_id.size() > 0 &&
+        request.resource.data.team_a_id != request.resource.data.team_b_id &&
+        request.resource.data.tournament_id == null &&
+        request.resource.data.fixture_id == null &&
+        request.resource.data.innings.size() == 0 &&
+        request.resource.data.keys().hasOnly([
+          'status', 'team_a_id', 'team_b_id', 'team_a_name', 'team_b_name',
+          'total_overs', 'scorer_uid', 'scorer_name', 'tournament_admin_uid',
+          'tournament_id', 'fixture_id', 'stage', 'round_number',
+          'fixture_number', 'scheduled_at', 'innings', 'current_innings_number',
+          'current_runs', 'current_wickets', 'legal_balls', 'created_at'
+        ]);
+      allow update: if isMatchScorer(matchId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'toss_winner', 'elected_to', 'batting_team_id', 'bowling_team_id',
+          'current_batting_team_id', 'current_innings_number', 'status',
+          'current_runs', 'current_wickets', 'legal_balls', 'striker_name',
+          'non_striker_name', 'current_bowler_name', 'innings',
+          'winner_team_id', 'result_type', 'result_text', 'completed_at',
+          'updated_at'
+        ]);
+      allow delete: if false;
+
+      match /balls/{ballId} {
+        allow read: if signedIn();
+        allow create, update, delete: if isMatchScorer(matchId);
+      }
+    }
+
+    match /tournaments/{tournamentId} {
+      allow read: if signedIn();
+      allow create: if signedIn() &&
+        request.resource.data.admin_uid == request.auth.uid &&
+        request.resource.data.status == 'draft' &&
+        request.resource.data.format in ['round_robin', 'knockout'] &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.location is string &&
+        request.resource.data.total_overs is int &&
+        request.resource.data.total_overs in [5, 10, 15, 20, 25, 30] &&
+        request.resource.data.team_ids.size() == 0 &&
+        request.resource.data.points_table.size() == 0 &&
+        request.resource.data.fixture_generation_status == 'not_generated' &&
+        request.resource.data.keys().hasOnly([
+          'name', 'location', 'format', 'status', 'admin_uid', 'start_at',
+          'end_at', 'total_overs', 'team_ids', 'teams', 'points_config',
+          'points_table', 'leaderboards', 'fixture_generation_status',
+          'fixture_count', 'round_count', 'created_at', 'updated_at'
+        ]);
+      allow update: if signedIn() && resource.data.admin_uid == request.auth.uid &&
+        resource.data.fixture_generation_status in ['not_generated', 'failed'] &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'location', 'start_at', 'end_at', 'format', 'total_overs',
+          'team_ids', 'teams', 'points_config', 'updated_at'
+        ]) &&
+        request.resource.data.team_ids.size() <= 64;
+      allow delete: if false;
+
+      match /fixtures/{fixtureId} {
+        allow read: if signedIn();
+        allow write: if false;
+      }
+    }
+
+    // Phase 2 aggregates are server-owned and cannot be changed by a client.
+    match /player_stats/{playerId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+  }
+}

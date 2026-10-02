@@ -1,0 +1,17 @@
+{
+  "name": "crickethub-cloud-functions",
+  "private": true,
+  "description": "CricketHub Phase 2 server-side fixtures, standings, career stats and FCM triggers",
+  "main": "index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check index.js && node --check domain.js && npm test"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.10.0",
+    "firebase-functions": "^7.4.0"
+  }
+}

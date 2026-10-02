@@ -6,82 +6,101 @@ import '../../models/team_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/team_service.dart';
 import '../team/create_team_screen.dart';
+import 'career_stats_screen.dart';
 
-/// Teams and roster management for the signed-in player.
+/// Personal cricket hub: team management and server-aggregated career stats.
 class MyCricketScreen extends StatelessWidget {
   const MyCricketScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthProvider>();
+    final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
     final teamService = context.read<TeamService>();
-    final uid = auth.firebaseUser?.uid ?? '';
-
     if (uid.isEmpty) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('My Cricket')),
-      body: StreamBuilder<List<Team>>(
-        stream: teamService.myTeamsStream(uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting &&
-              !snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('Couldn’t load your teams. Please try again.'),
-              ),
-            );
-          }
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('My Cricket'),
+          bottom: const TabBar(
+            indicatorColor: AppTheme.primary,
+            tabs: [
+              Tab(icon: Icon(Icons.groups_outlined), text: 'Teams'),
+              Tab(icon: Icon(Icons.insights_outlined), text: 'Career'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _TeamsTab(uid: uid, teamService: teamService),
+            const CareerStatsScreen(),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-          final teams = snapshot.data ?? [];
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 112),
-            children: [
+class _TeamsTab extends StatelessWidget {
+  final String uid;
+  final TeamService teamService;
+
+  const _TeamsTab({required this.uid, required this.teamService});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<Team>>(
+      stream: teamService.myTeamsStream(uid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Text('Couldn’t load your teams. Please try again.'),
+            ),
+          );
+        }
+
+        final teams = snapshot.data ?? [];
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
+          children: [
+            Text('Your squads', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 5),
+            Text(
+              'Manage your teams and keep your playing group together.',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 20),
+            if (teams.isEmpty)
+              _EmptyTeams(
+                onCreate: () => Navigator.pushNamed(context, CreateTeamScreen.route),
+              )
+            else ...[
               Text(
-                'Your squads',
-                style: Theme.of(context).textTheme.headlineMedium,
+                '${teams.length} ${teams.length == 1 ? 'team' : 'teams'}',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
               ),
-              const SizedBox(height: 5),
-              Text(
-                'Manage your teams and keep your playing group together.',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: AppTheme.textSecondary),
-              ),
-              const SizedBox(height: 20),
-              if (teams.isEmpty)
-                _EmptyTeams(
-                  onCreate: () =>
-                      Navigator.pushNamed(context, CreateTeamScreen.route),
-                )
-              else ...[
-                Text(
-                  '${teams.length} ${teams.length == 1 ? 'team' : 'teams'}',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppTheme.textSecondary,
-                      ),
-                ),
-                const SizedBox(height: 10),
-                ...teams.map(
-                  (team) => Padding(
+              const SizedBox(height: 10),
+              ...teams.map((team) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: _TeamCard(team: team),
-                  ),
-                ),
-              ],
+                  )),
             ],
-          );
-        },
-      ),
+          ],
+        );
+      },
     );
   }
 }
@@ -98,8 +117,7 @@ class _TeamCard extends StatelessWidget {
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        collapsedShape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         leading: Container(
           width: 46,
           height: 46,
@@ -109,8 +127,7 @@ class _TeamCard extends StatelessWidget {
           ),
           child: const Icon(Icons.shield, color: AppTheme.primary),
         ),
-        title: Text(team.teamName,
-            style: Theme.of(context).textTheme.titleMedium),
+        title: Text(team.teamName, style: Theme.of(context).textTheme.titleMedium),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Text(
@@ -136,28 +153,25 @@ class _TeamCard extends StatelessWidget {
               ),
             )
           else
-            ...team.roster.map(
-              (player) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: const CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppTheme.surfaceSoft,
-                  child: Icon(Icons.person_outline,
-                      size: 17, color: AppTheme.textSecondary),
-                ),
-                title: Text(player,
-                    style: Theme.of(context).textTheme.bodyMedium),
-                trailing: IconButton(
-                  tooltip: 'Remove player',
-                  icon: const Icon(Icons.close_rounded,
-                      size: 18, color: AppTheme.textSecondary),
-                  onPressed: () => context
-                      .read<TeamService>()
-                      .removePlayerFromRoster(team.id, player),
-                ),
-              ),
-            ),
+            ...team.roster.map((player) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: const CircleAvatar(
+                    radius: 16,
+                    backgroundColor: AppTheme.surfaceSoft,
+                    child: Icon(Icons.person_outline,
+                        size: 17, color: AppTheme.textSecondary),
+                  ),
+                  title: Text(player, style: Theme.of(context).textTheme.bodyMedium),
+                  trailing: IconButton(
+                    tooltip: 'Remove player',
+                    icon: const Icon(Icons.close_rounded,
+                        size: 18, color: AppTheme.textSecondary),
+                    onPressed: () => context
+                        .read<TeamService>()
+                        .removePlayerFromRoster(team.id, player),
+                  ),
+                )),
           const SizedBox(height: 8),
           _AddPlayerField(teamId: team.id),
         ],
@@ -185,8 +199,7 @@ class _EmptyTeams extends StatelessWidget {
                 color: AppTheme.primaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.groups_rounded,
-                  size: 32, color: AppTheme.primary),
+              child: const Icon(Icons.groups_rounded, size: 32, color: AppTheme.primary),
             ),
             const SizedBox(height: 14),
             Text('Start with your first team',
@@ -214,7 +227,6 @@ class _EmptyTeams extends StatelessWidget {
   }
 }
 
-/// Inline roster entry field.
 class _AddPlayerField extends StatefulWidget {
   final String teamId;
 

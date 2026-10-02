@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_theme.dart';
+import '../../providers/auth_provider.dart';
+import '../../services/notification_service.dart';
 import '../match/create_match_screen.dart';
 import '../menu/menu_screen.dart';
 import '../team/create_team_screen.dart';
+import '../tournament/tournaments_screen.dart';
 import 'home_screen.dart';
 import 'my_cricket_screen.dart';
 
@@ -23,9 +26,27 @@ class _MainShellState extends State<MainShell> {
   static const _pages = [
     HomeScreen(),
     MyCricketScreen(),
-    TournamentsPlaceholder(),
+    TournamentsScreen(),
     MenuScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openPendingMatch());
+  }
+
+  Future<void> _openPendingMatch() async {
+    if (!mounted) return;
+    final uid = context.read<AuthProvider>().firebaseUser?.uid;
+    if (uid == null) return;
+    final notifications = context.read<NotificationService>();
+    await notifications.resubscribeFollowedMatches(uid);
+    final matchId = notifications.takePendingMatchId();
+    if (matchId != null && mounted) {
+      Navigator.pushNamed(context, '/live-match', arguments: matchId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,58 +198,6 @@ class _QuickActionTile extends StatelessWidget {
               const Icon(Icons.arrow_forward_rounded,
                   size: 19, color: AppTheme.textSecondary),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tournaments arrive in Phase 2; show the placeholder in the same design system.
-class TournamentsPlaceholder extends StatelessWidget {
-  const TournamentsPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tournaments')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 68,
-                    height: 68,
-                    decoration: const BoxDecoration(
-                      color: AppTheme.primaryContainer,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.emoji_events_rounded,
-                        size: 32, color: AppTheme.primary),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Tournaments are on the way',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Points tables, net run rate and brackets are planned for a future release.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppTheme.textSecondary),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),

@@ -27,6 +27,7 @@ class ScoringDashboardScreen extends StatefulWidget {
 class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   bool _offline = false;
   bool _setupShown = false;
+  int? _completionDialogForInnings;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   @override
@@ -205,7 +206,9 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
       if (!_setupShown && s.batsmen.isEmpty) {
         _setupShown = true;
         _showOpenersDialog(context, scoring);
-      } else if (s.isInningsComplete) {
+      } else if (s.isInningsComplete &&
+          _completionDialogForInnings != scoring.inningsNumber) {
+        _completionDialogForInnings = scoring.inningsNumber;
         _showInningsCompleteDialog(context, scoring, s);
       } else if (s.pendingNewBatsman) {
         _showNewBatsmanDialog(context, scoring);
@@ -349,24 +352,45 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
   void _showInningsCompleteDialog(
       BuildContext context, ScoringProvider scoring, dynamic s) {
+    final firstInnings = scoring.inningsNumber == 1;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Innings Complete!'),
+        title: Text(firstInnings ? 'First innings complete' : 'Match complete'),
         content: Text(
           '${s.battingTeamName}: ${s.totalRuns}/${s.wickets} '
           '(${s.completedOvers}.${s.ballsThisOver} ov)\n\n'
-          'Well bowled! Save the result to the cloud.',
+          '${firstInnings
+              ? 'Save the innings and set a target of ${s.totalRuns + 1} for the chase.'
+              : 'Save both innings and publish the final result to the tournament.'}',
         ),
         actions: [
           TextButton(
             onPressed: () async {
-              await scoring.endMatch();
-              if (!context.mounted) return;
-              Navigator.of(context).popUntil((r) => r.isFirst);
+              try {
+                if (firstInnings) {
+                  await scoring.startSecondInnings();
+                  if (!mounted) return;
+                  setState(() {
+                    _setupShown = false;
+                    _completionDialogForInnings = null;
+                  });
+                  Navigator.pop(dialogContext);
+                } else {
+                  await scoring.endMatch();
+                  if (!context.mounted) return;
+                  Navigator.pop(dialogContext);
+                  Navigator.of(context).popUntil((r) => r.isFirst);
+                }
+              } catch (error) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Could not save innings: $error')),
+                );
+              }
             },
-            child: const Text('Save & Finish'),
+            child: Text(firstInnings ? 'Start second innings' : 'Save & finish'),
           ),
         ],
       ),

@@ -256,6 +256,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
       teamBName: _teamB!.teamName,
       totalOvers: _overs,
       scorerUid: auth.firebaseUser!.uid,
+      scorerName: auth.appUser?.displayName ?? '',
       battingTeamId: '',
       bowlingTeamId: '',
     );
