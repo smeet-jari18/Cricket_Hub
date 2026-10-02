@@ -7,7 +7,7 @@ Built from: `CricketHub_PRD.md`, `CricketHub_TRD.md`, `CricketHub_AppFlow.md`,
 `CricketHub_Backend_Schema.md`, `CricketHub_Security_Access.md`, `CricketHub_UI_UX_Guidelines.md`
 
 **Team:** Smeet Jariwala, Aman Sinha
-**Stack:** Flutter • Dart • Firebase (Auth + Firestore) • Provider • dark theme
+**Stack:** Flutter • Dart • Firebase (Auth + Firestore) • Provider • daylight-first Material 3
 
 ---
 
@@ -54,11 +54,11 @@ npm install -g firebase-tools
 firebase login
 
 dart pub global activate flutterfire_cli
-flutterfire configure
+flutterfire configure --project=crickethub-dev
 ```
 `flutterfire configure` will ask you to:
-1. Select/create a Firebase project (e.g. `crickethub-dev`)
-2. Select platforms: **android** (+ ios if you have a Mac)
+1. Select/create a Firebase project (use `crickethub-dev` for this checkout)
+2. Select platforms: **web** and **android** (+ ios if you have a Mac)
 
 This creates `lib/firebase_options.dart` automatically.
 

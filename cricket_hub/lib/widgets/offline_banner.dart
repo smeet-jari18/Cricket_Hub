@@ -20,14 +20,14 @@ class OfflineBanner extends StatelessWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.cloud_off, size: 14, color: AppTheme.background),
+          Icon(Icons.cloud_off, size: 14, color: AppTheme.textPrimary),
           SizedBox(width: 8),
           Text(
             'Offline — scoring continues, syncs automatically',
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.background),
+                color: AppTheme.textPrimary),
           ),
         ],
       ),

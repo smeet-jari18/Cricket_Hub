@@ -49,47 +49,81 @@ class LiveMatchScreen extends StatelessWidget {
 
             return Column(
               children: [
-                // ---- Sticky live header ----
-                Container(
-                  width: double.infinity,
-                  color: AppTheme.surface,
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Text(
-                        '${match.teamAName} vs ${match.teamBName}',
-                        style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 13),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '${match.venueRuns}/${match.venueWickets}',
-                        style: const TextStyle(
-                            fontSize: 48, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${_oversDisplay(match)} ov  •  ${match.status.toUpperCase()}',
-                        style: const TextStyle(color: AppTheme.textSecondary),
-                      ),
-                      if (match.isLive)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                // ---- Sticky live score card ----
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Icon(Icons.circle,
-                                  color: AppTheme.danger, size: 10),
-                              SizedBox(width: 6),
-                              Text('LIVE',
-                                  style: TextStyle(
-                                      color: AppTheme.danger,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 2)),
+                              Expanded(
+                                child: Text(
+                                  '${match.teamAName}  vs  ${match.teamBName}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(color: AppTheme.textSecondary),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              _MatchStatusPill(isLive: match.isLive),
                             ],
                           ),
-                        ),
-                    ],
+                          const SizedBox(height: 12),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${match.venueRuns}/${match.venueWickets}',
+                                style: Theme.of(context).textTheme.displayMedium
+                                    ?.copyWith(fontSize: 42, height: 1),
+                              ),
+                              const SizedBox(width: 10),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  '${_oversDisplay(match)} overs',
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(color: AppTheme.textSecondary),
+                                ),
+                              ),
+                              const Spacer(),
+                              const Icon(Icons.sports_cricket,
+                                  color: AppTheme.primary, size: 26),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          const Divider(height: 1),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(Icons.bolt_rounded,
+                                  color: AppTheme.primary, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${match.totalOvers}-over match',
+                                style: Theme.of(context).textTheme.labelMedium
+                                    ?.copyWith(color: AppTheme.textSecondary),
+                              ),
+                              const Spacer(),
+                              Text(
+                                match.isCompleted
+                                    ? 'Final score'
+                                    : match.isLive
+                                        ? 'Updating live'
+                                        : 'Scheduled',
+                                style: Theme.of(context).textTheme.labelMedium
+                                    ?.copyWith(color: AppTheme.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
 
@@ -111,8 +145,8 @@ class LiveMatchScreen extends StatelessWidget {
     );
   }
 
-  String _oversDisplay(match) {
-    final balls = match.ballsBowled as int;
+  String _oversDisplay(CricketMatch match) {
+    final balls = match.ballsBowled;
     return '${balls ~/ 6}.${balls % 6}';
   }
 }
@@ -205,20 +239,24 @@ class _CommentaryTab extends StatelessWidget {
             final isBoundary = !isWicket && (ball.runs == 4 || ball.runs == 6);
 
             return Card(
+              margin: const EdgeInsets.only(bottom: 10),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: isWicket
                       ? AppTheme.danger
-                      : isBoundary
-                          ? AppTheme.accent
-                          : AppTheme.primary,
+                      : ball.runs == 4
+                          ? AppTheme.boundaryFour
+                          : ball.runs == 6
+                              ? AppTheme.boundarySix
+                              : AppTheme.primaryContainer,
                   child: Text(
-                    isWicket
-                        ? 'W'
-                        : '${ball.runs}',
-                    style: const TextStyle(
-                        color: AppTheme.background,
-                        fontWeight: FontWeight.bold),
+                    isWicket ? 'W' : '${ball.runs}',
+                    style: TextStyle(
+                      color: isWicket || ball.runs == 6
+                          ? Colors.white
+                          : AppTheme.textPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
                 title: Text(
@@ -239,6 +277,43 @@ class _CommentaryTab extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _MatchStatusPill extends StatelessWidget {
+  final bool isLive;
+
+  const _MatchStatusPill({required this.isLive});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: isLive ? const Color(0xFFFFE4E3) : AppTheme.primaryContainer,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.circle,
+            size: 7,
+            color: isLive ? AppTheme.danger : AppTheme.primary,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            isLive ? 'LIVE' : 'MATCH',
+            style: TextStyle(
+              color: isLive ? const Color(0xFFB42318) : AppTheme.primary,
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

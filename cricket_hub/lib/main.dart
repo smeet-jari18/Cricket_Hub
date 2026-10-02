@@ -57,7 +57,7 @@ class CricketHubApp extends StatelessWidget {
       child: MaterialApp(
         title: 'CricketHub',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.dark, // dark mode default (UI/UX Guidelines)
+        theme: AppTheme.light,
         initialRoute: SplashScreen.route,
         routes: {
           SplashScreen.route: (_) => const SplashScreen(),

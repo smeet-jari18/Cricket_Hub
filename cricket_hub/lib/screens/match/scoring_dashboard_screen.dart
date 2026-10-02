@@ -90,9 +90,9 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                   onPressed: s.lastEventText == 'Match started'
                       ? null
                       : () => scoring.undo(),
-                  icon: const Icon(Icons.undo, color: AppTheme.accent),
+                  icon: const Icon(Icons.undo, color: AppTheme.accentText),
                   label: const Text('Undo',
-                      style: TextStyle(color: AppTheme.accent)),
+                      style: TextStyle(color: AppTheme.accentText)),
                 ),
               ],
             ),
@@ -141,12 +141,13 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                             children: [
                               ScoreButton(
                                   label: '4',
-                                  color: AppTheme.primary,
+                                  color: AppTheme.boundaryFour,
+                                  textColor: AppTheme.textPrimary,
                                   onTap: () => scoring.recordRuns(4)),
                               const SizedBox(width: 8),
                               ScoreButton(
                                   label: '6',
-                                  color: AppTheme.primary,
+                                  color: AppTheme.boundarySix,
                                   onTap: () => scoring.recordRuns(6)),
                               const SizedBox(width: 8),
                               ScoreButton(
@@ -174,6 +175,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                               ScoreButton(
                                 label: 'WICKET',
                                 color: AppTheme.danger,
+                                textColor: Colors.white,
                                 flex: 2,
                                 onTap: () => _askWicketType(scoring),
                               ),
@@ -456,7 +458,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   }
 }
 
-/// Compact live score context shown above the scoring action pad.
+/// Compact score, players and over tracker above the action pad.
 class _ContextBlock extends StatelessWidget {
   final ScoringState s;
 
@@ -466,67 +468,204 @@ class _ContextBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     final bowler = s.bowlers[s.currentBowler];
 
-    return Container(
-      width: double.infinity,
-      color: AppTheme.surface,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${s.totalRuns}/${s.wickets}',
-                    style: const TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                    ),
+    return Card(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        s.battingTeamName.toUpperCase(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.7,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        '${s.totalRuns}/${s.wickets}',
+                        style: const TextStyle(
+                          color: AppTheme.textPrimary,
+                          fontSize: 34,
+                          height: 1.05,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${s.oversDisplay} overs  ·  CRR ${s.crr}',
+                        style: const TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '${s.oversDisplay} ov  •  CRR ${s.crr}',
-                    style: const TextStyle(color: AppTheme.textSecondary),
-                  ),
-                ],
-              ),
-              if (s.target != null)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text('Target ${s.target}'),
-                    Text(
-                      'Need ${s.runsNeeded}  •  RRR ${s.rrr ?? '—'}',
-                      style: const TextStyle(color: AppTheme.textSecondary),
-                    ),
-                  ],
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          _BatterLine(
-            name: s.striker,
-            stats: s.batsmen[s.striker],
-            onStrike: true,
-          ),
-          _BatterLine(
-            name: s.nonStriker,
-            stats: s.batsmen[s.nonStriker],
-            onStrike: false,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Bowler: ${s.currentBowler.isEmpty ? '—' : s.currentBowler}  •  '
-            '${bowler?.oversDisplay ?? '0.0'} ov  •  '
-            '${bowler?.runsConceded ?? 0} runs  •  ${bowler?.wickets ?? 0} wkts',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
-          ),
-        ],
+                if (s.target != null)
+                  Container(
+                    constraints: const BoxConstraints(minWidth: 94),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppTheme.accentContainer,
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text(
+                          'TARGET',
+                          style: TextStyle(
+                            color: AppTheme.accentText,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.65,
+                          ),
+                        ),
+                        Text(
+                          '${s.target}',
+                          style: const TextStyle(
+                            color: AppTheme.textPrimary,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          'Need ${s.runsNeeded}',
+                          style: const TextStyle(
+                            color: AppTheme.accentText,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.circle, size: 7, color: AppTheme.primary),
+                        SizedBox(width: 6),
+                        Text(
+                          'INNINGS 1',
+                          style: TextStyle(
+                            color: AppTheme.primary,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 9),
+              child: Divider(height: 1),
+            ),
+            _BatterLine(
+              name: s.striker,
+              stats: s.batsmen[s.striker],
+              onStrike: true,
+            ),
+            _BatterLine(
+              name: s.nonStriker,
+              stats: s.batsmen[s.nonStriker],
+              onStrike: false,
+            ),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                const Text(
+                  'THIS OVER',
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.55,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Row(
+                    children: s.thisOverBalls.isEmpty
+                        ? const [
+                            Text('Ready to bowl',
+                                style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 10)),
+                          ]
+                        : s.thisOverBalls
+                            .take(6)
+                            .map((ball) => Padding(
+                                  padding: const EdgeInsets.only(right: 4),
+                                  child: _ScoreBallChip(token: ball),
+                                ))
+                            .toList(),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                const Icon(Icons.sports_cricket,
+                    size: 14, color: AppTheme.textSecondary),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    'Bowling: ${s.currentBowler.isEmpty ? '—' : s.currentBowler}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    '${bowler?.oversDisplay ?? '0.0'} ov  ·  '
+                    '${bowler?.runsConceded ?? 0} runs  ·  ${bowler?.wickets ?? 0} wkts',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -549,24 +688,92 @@ class _BatterLine extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
+          Icon(
+            onStrike ? Icons.sports_cricket : Icons.person_outline_rounded,
+            size: 13,
+            color: onStrike ? AppTheme.primary : AppTheme.textSecondary,
+          ),
+          const SizedBox(width: 6),
           Expanded(
             child: Text(
-              '${onStrike ? '▶ ' : ''}${name.isEmpty ? '—' : name}',
+              name.isEmpty ? (onStrike ? 'Striker' : 'Non-striker') : name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: onStrike ? AppTheme.primary : AppTheme.textPrimary,
-                fontWeight: onStrike ? FontWeight.bold : FontWeight.normal,
-                fontSize: 13,
+                color: onStrike ? AppTheme.textPrimary : AppTheme.textSecondary,
+                fontWeight: onStrike ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 11,
               ),
             ),
           ),
           Text(
-            '${stats?.runs ?? 0} (${stats?.balls ?? 0})  •  '
-            '${stats?.strikeRate ?? '0.0'} SR',
-            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+            '${stats?.runs ?? 0} (${stats?.balls ?? 0})',
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 48,
+            child: Text(
+              '${stats?.strikeRate ?? '0.0'} SR',
+              textAlign: TextAlign.end,
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 10,
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ScoreBallChip extends StatelessWidget {
+  final String token;
+
+  const _ScoreBallChip({required this.token});
+
+  @override
+  Widget build(BuildContext context) {
+    final isWicket = token.toUpperCase() == 'W';
+    final isFour = token == '4';
+    final isSix = token == '6';
+    final isExtra = token.toUpperCase() == 'WD' || token.toUpperCase() == 'NB';
+    final background = isWicket
+        ? AppTheme.danger
+        : isFour
+            ? AppTheme.boundaryFour
+            : isSix
+                ? AppTheme.boundarySix
+                : isExtra
+                    ? AppTheme.accentContainer
+                    : token == '0' || token == '.'
+                        ? AppTheme.surfaceSoft
+                        : AppTheme.primaryContainer;
+    final foreground = isWicket || isSix
+        ? Colors.white
+        : isFour
+            ? AppTheme.textPrimary
+            : isExtra
+                ? AppTheme.accentText
+                : AppTheme.primary;
+
+    return Container(
+      width: 22,
+      height: 22,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
+      child: Text(
+        token,
+        style: TextStyle(
+          color: foreground,
+          fontSize: token.length > 1 ? 7 : 9,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
