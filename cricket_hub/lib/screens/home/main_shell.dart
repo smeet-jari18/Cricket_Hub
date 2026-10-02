@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
@@ -164,7 +165,7 @@ class _QuickActionTile extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Row(
@@ -198,6 +199,58 @@ class _QuickActionTile extends StatelessWidget {
               const Icon(Icons.arrow_forward_rounded,
                   size: 19, color: AppTheme.textSecondary),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tournaments arrive in Phase 2; show the placeholder in the same design system.
+class TournamentsPlaceholder extends StatelessWidget {
+  const TournamentsPlaceholder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Tournaments')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 68,
+                    height: 68,
+                    decoration: const BoxDecoration(
+                      color: AppTheme.primaryContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.emoji_events_rounded,
+                        size: 32, color: AppTheme.primary),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Tournaments are on the way',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Points tables, net run rate and brackets are planned for a future release.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: AppTheme.textSecondary),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

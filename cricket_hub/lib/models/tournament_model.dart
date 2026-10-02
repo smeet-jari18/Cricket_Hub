@@ -99,6 +99,7 @@ class TournamentFixture {
   final String? teamBId;
   final String? teamBName;
   final String? winnerTeamId;
+  final String? winnerTeamName;
   final String? resultText;
   final DateTime? scheduledAt;
   final bool isBye;
@@ -118,6 +119,7 @@ class TournamentFixture {
     this.teamBId,
     this.teamBName,
     this.winnerTeamId,
+    this.winnerTeamName,
     this.resultText,
     this.scheduledAt,
     this.isBye = false,
@@ -139,6 +141,7 @@ class TournamentFixture {
       teamBId: map['team_b_id'] as String?,
       teamBName: map['team_b_name'] as String?,
       winnerTeamId: map['winner_team_id'] as String?,
+      winnerTeamName: map['winner_team_name'] as String?,
       resultText: map['result_text'] as String?,
       scheduledAt: _dateFrom(map['scheduled_at']),
       isBye: map['is_bye'] == true,
