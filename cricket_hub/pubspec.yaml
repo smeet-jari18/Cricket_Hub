@@ -1,0 +1,39 @@
+name: cricket_hub
+description: CricketHub - Local cricket management & live scoring platform (Phase 1 MVP).
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase (backend)
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  cloud_firestore: ^6.10.0
+
+  # Google Sign-In
+  google_sign_in: ^7.2.0
+
+  # State management (beginner-friendly, as decided)
+  provider: ^6.1.2
+
+  # Network status (offline banner on scoring screen)
+  connectivity_plus: ^7.3.1
+
+  # Formatting (dates, overs like "15.2")
+  intl: ^0.20.3
+
+  # Nice icons for cricket app
+  cupertino_icons: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
