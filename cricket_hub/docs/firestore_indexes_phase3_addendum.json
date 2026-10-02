@@ -1,0 +1,78 @@
+{
+  "_comment": "How to apply: open cricket_hub/firestore.indexes.json and append the indexes below to its existing 'indexes' array.",
+  "indexes_to_append": [
+    {
+      "collectionGroup": "grounds",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "city", "order": "ASCENDING" },
+        { "fieldPath": "pitch_type", "order": "ASCENDING" },
+        { "fieldPath": "price_weekday_hourly", "order": "ASCENDING" },
+        { "fieldPath": "avg_rating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "grounds",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "verified", "order": "ASCENDING" },
+        { "fieldPath": "avg_rating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "bookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "organizer_uid", "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "bookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "counterparty_uid", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "bookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "organizer_uid", "order": "ASCENDING" },
+        { "fieldPath": "resource_id", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" },
+        { "fieldPath": "slot_start", "order": "ASCENDING" },
+        { "fieldPath": "slot_end", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "bookings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "razorpay_order_id", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "umpires",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "city", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "verified", "order": "ASCENDING" },
+        { "fieldPath": "avg_rating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ground_reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ground_id", "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    }
+  ]
+}

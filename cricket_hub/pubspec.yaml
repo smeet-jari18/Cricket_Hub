@@ -32,6 +32,9 @@ dependencies:
 
   # Nice icons for cricket app
   cupertino_icons: ^2.0.0
+  qr_flutter: ^4.1.0
+  cached_network_image: ^4.0.4
+  razorpay_flutter: ^1.4.7
 
 dev_dependencies:
   flutter_test:
