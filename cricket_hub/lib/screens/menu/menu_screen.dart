@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../auth/login_screen.dart';
+import '../ground/ground_list_screen.dart';
 
 /// Player profile, account options and phase roadmap.
 class MenuScreen extends StatelessWidget {
@@ -127,23 +128,29 @@ class MenuScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Card(
             child: Column(
-              children: const [
-                _ComingSoonTile(
+              children: [
+                _ExploreTile(
                   icon: Icons.grass_rounded,
                   title: 'Ground booking',
                   subtitle: 'Find a place for your next game',
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    GroundListScreen.route,
+                  ),
                 ),
-                Divider(height: 1, indent: 68),
-                _ComingSoonTile(
+                const Divider(height: 1, indent: 68),
+                const _ExploreTile(
                   icon: Icons.record_voice_over_rounded,
                   title: 'Umpire booking',
                   subtitle: 'Bring an official to match day',
+                  comingSoon: true,
                 ),
-                Divider(height: 1, indent: 68),
-                _ComingSoonTile(
+                const Divider(height: 1, indent: 68),
+                const _ExploreTile(
                   icon: Icons.public_rounded,
                   title: 'International scores',
                   subtitle: 'Follow the wider cricket world',
+                  comingSoon: true,
                 ),
               ],
             ),
@@ -226,20 +233,25 @@ class _StatPlaceholder extends StatelessWidget {
   }
 }
 
-class _ComingSoonTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  const _ComingSoonTile({
+class _ExploreTile extends StatelessWidget {
+  const _ExploreTile({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
+    this.comingSoon = false,
   });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final bool comingSoon;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: comingSoon ? null : onTap,
       leading: Container(
         width: 40,
         height: 40,
@@ -247,7 +259,11 @@ class _ComingSoonTile extends StatelessWidget {
           color: AppTheme.surfaceSoft,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, size: 20, color: AppTheme.textSecondary),
+        child: Icon(
+          icon,
+          size: 20,
+          color: comingSoon ? AppTheme.textSecondary : AppTheme.primary,
+        ),
       ),
       title: Text(title, style: Theme.of(context).textTheme.titleSmall),
       subtitle: Text(
@@ -257,8 +273,28 @@ class _ComingSoonTile extends StatelessWidget {
             .bodySmall
             ?.copyWith(color: AppTheme.textSecondary),
       ),
-      trailing: const Icon(Icons.lock_outline_rounded,
-          size: 17, color: AppTheme.textSecondary),
+      trailing: comingSoon
+          ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryContainer,
+                borderRadius: BorderRadius.circular(99),
+              ),
+              child: const Text(
+                'COMING SOON',
+                style: TextStyle(
+                  color: AppTheme.primary,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            )
+          : const Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: AppTheme.primary,
+            ),
     );
   }
 }

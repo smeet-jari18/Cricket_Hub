@@ -35,6 +35,12 @@ dependencies:
   qr_flutter: ^4.1.0
   cached_network_image: ^4.0.4
   razorpay_flutter: ^1.4.7
+  mobile_scanner: ^7.4.2
+  image_picker: ^1.2.3
+  geolocator: ^14.0.1
+  table_calendar: ^3.3.0
+  jwt_decoder: ^2.0.1
+  permission_handler: ^13.0.2
 
 dev_dependencies:
   flutter_test:

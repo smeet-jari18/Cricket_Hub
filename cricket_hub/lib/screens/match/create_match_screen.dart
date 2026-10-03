@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,16 +28,22 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   Team? _teamB;
   int _overs = AppConstants.defaultOvers;
   bool _saving = false;
+  late final Stream<List<Team>> _teamsStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _teamsStream = context.read<TeamService>().teamsStream();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final teamService = context.read<TeamService>();
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Set up a match')),
       body: StreamBuilder<List<Team>>(
-        stream: teamService.teamsStream(),
+        stream: _teamsStream,
         builder: (context, snapshot) {
           final teams = snapshot.data ?? const <Team>[];
           if (snapshot.hasError) {
@@ -331,6 +339,9 @@ class _TeamPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final available = teams.where((team) => team.id != exclude?.id).toList();
+    final selectedId = available.any((team) => team.id == selected?.id)
+        ? selected!.id
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,14 +354,15 @@ class _TeamPicker extends StatelessWidget {
               ?.copyWith(color: AppTheme.textSecondary),
         ),
         const SizedBox(height: 7),
-        DropdownButtonFormField<Team>(
-          initialValue: selected,
+        DropdownButtonFormField<String>(
+          key: ValueKey<String>('$label:${selectedId ?? "none"}'),
+          initialValue: selectedId,
           isExpanded: true,
           hint: Text(available.isEmpty ? 'No teams available' : 'Select a team'),
           items: available
               .map(
-                (team) => DropdownMenuItem<Team>(
-                  value: team,
+                (team) => DropdownMenuItem<String>(
+                  value: team.id,
                   child: Text(
                     '${team.teamName} · ${team.city}',
                     maxLines: 1,
@@ -359,8 +371,14 @@ class _TeamPicker extends StatelessWidget {
                 ),
               )
               .toList(),
-          onChanged: (team) {
-            if (team != null) onChanged(team);
+          onChanged: (teamId) {
+            if (teamId == null) return;
+            for (final team in available) {
+              if (team.id == teamId) {
+                onChanged(team);
+                return;
+              }
+            }
           },
         ),
       ],

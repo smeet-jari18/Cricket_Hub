@@ -11,6 +11,11 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_screen.dart';
 import 'screens/auth/profile_setup_screen.dart';
 import 'screens/home/main_shell.dart';
+import 'screens/booking/booking_checkout_screen.dart';
+import 'screens/booking/booking_success_screen.dart';
+import 'screens/booking/checkout_args.dart';
+import 'screens/ground/ground_detail_screen.dart';
+import 'screens/ground/ground_list_screen.dart';
 import 'screens/match/create_match_screen.dart';
 import 'screens/match/live_match_screen.dart';
 import 'screens/match/scoring_dashboard_screen.dart';
@@ -19,8 +24,11 @@ import 'screens/splash_screen.dart';
 import 'screens/team/create_team_screen.dart';
 import 'screens/tournament/create_tournament_screen.dart';
 import 'screens/tournament/tournament_detail_screen.dart';
+import 'services/booking_service.dart';
+import 'services/ground_service.dart';
 import 'services/match_service.dart';
 import 'services/notification_service.dart';
+import 'services/payment_service.dart';
 import 'services/team_service.dart';
 import 'services/tournament_service.dart';
 
@@ -56,6 +64,14 @@ class CricketHubApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Services (Firebase talk)
+        Provider<GroundService>(create: (_) => GroundService()),
+        Provider<BookingService>(create: (_) => BookingService()),
+        Provider<PaymentService>(
+          create: (context) => PaymentService(
+            bookingService: context.read<BookingService>(),
+          ),
+          dispose: (_, service) => service.dispose(),
+        ),
         Provider<MatchService>(create: (_) => MatchService()),
         Provider<TeamService>(create: (_) => TeamService()),
         Provider<TournamentService>(create: (_) => TournamentService()),
@@ -77,6 +93,22 @@ class CricketHubApp extends StatelessWidget {
           OtpScreen.route: (_) => const OtpScreen(),
           ProfileSetupScreen.route: (_) => const ProfileSetupScreen(),
           MainShell.route: (_) => const MainShell(),
+          GroundListScreen.route: (ctx) {
+            final city = ModalRoute.of(ctx)?.settings.arguments;
+            return GroundListScreen(city: city as String?);
+          },
+          GroundDetailScreen.route: (ctx) {
+            final groundId = ModalRoute.of(ctx)?.settings.arguments as String;
+            return GroundDetailScreen(groundId: groundId);
+          },
+          BookingCheckoutScreen.route: (ctx) {
+            final args = ModalRoute.of(ctx)?.settings.arguments as CheckoutArgs;
+            return BookingCheckoutScreen(args: args);
+          },
+          BookingSuccessScreen.route: (ctx) {
+            final bookingId = ModalRoute.of(ctx)?.settings.arguments as String;
+            return BookingSuccessScreen(bookingId: bookingId);
+          },
           CreateTeamScreen.route: (_) => const CreateTeamScreen(),
           CreateMatchScreen.route: (_) => const CreateMatchScreen(),
           TossScreen.route: (_) => const TossScreen(),
