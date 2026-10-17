@@ -4,7 +4,7 @@ import 'package:cricket_hub/models/ground_model.dart';
 
 void main() {
   group('Ground hourly rate by date', () {
-    final ground = Ground(
+    final ground = const Ground(
       id: 'Gr_1',
       name: 'Suncity Turf',
       ownerUid: 'uid_owner',
@@ -13,8 +13,8 @@ void main() {
       lat: 23.0,
       lng: 72.5,
       pitchType: 'turf',
-      amenities: const ['floodlights', 'parking'],
-      photos: const [],
+      amenities: ['floodlights', 'parking'],
+      photos: [],
       coverPhotoUrl: '',
       priceWeekdayHourly: 500,
       priceWeekendHourly: 800,
@@ -27,7 +27,7 @@ void main() {
       avgRating: 4.5,
       reviewCount: 10,
       bookingCount: 50,
-      groundStats: const {},
+      groundStats: {},
     );
 
     test('uses weekday rate on Monday', () {
@@ -48,7 +48,7 @@ void main() {
 
   group('Ground isActive', () {
     test('true when status=active and verified=true', () {
-      final g = Ground(
+      final g = const Ground(
         id: 'g',
         name: 'g',
         ownerUid: 'u',
@@ -57,8 +57,8 @@ void main() {
         lat: 0,
         lng: 0,
         pitchType: 'turf',
-        amenities: const [],
-        photos: const [],
+        amenities: [],
+        photos: [],
         coverPhotoUrl: '',
         priceWeekdayHourly: 100,
         priceWeekendHourly: 100,
@@ -71,13 +71,13 @@ void main() {
         avgRating: 0,
         reviewCount: 0,
         bookingCount: 0,
-        groundStats: const {},
+        groundStats: {},
       );
       expect(g.isActive, isTrue);
     });
 
     test('false when not verified', () {
-      final g = Ground(
+      final g = const Ground(
         id: 'g',
         name: 'g',
         ownerUid: 'u',
@@ -86,8 +86,8 @@ void main() {
         lat: 0,
         lng: 0,
         pitchType: 'turf',
-        amenities: const [],
-        photos: const [],
+        amenities: [],
+        photos: [],
         coverPhotoUrl: '',
         priceWeekdayHourly: 100,
         priceWeekendHourly: 100,
@@ -100,13 +100,13 @@ void main() {
         avgRating: 0,
         reviewCount: 0,
         bookingCount: 0,
-        groundStats: const {},
+        groundStats: {},
       );
       expect(g.isActive, isFalse);
     });
 
     test('false when status is not active', () {
-      final g = Ground(
+      final g = const Ground(
         id: 'g',
         name: 'g',
         ownerUid: 'u',
@@ -115,8 +115,8 @@ void main() {
         lat: 0,
         lng: 0,
         pitchType: 'turf',
-        amenities: const [],
-        photos: const [],
+        amenities: [],
+        photos: [],
         coverPhotoUrl: '',
         priceWeekdayHourly: 100,
         priceWeekendHourly: 100,
@@ -129,7 +129,7 @@ void main() {
         avgRating: 0,
         reviewCount: 0,
         bookingCount: 0,
-        groundStats: const {},
+        groundStats: {},
       );
       expect(g.isActive, isFalse);
     });

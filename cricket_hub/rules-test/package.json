@@ -1,0 +1,12 @@
+{
+  "name": "crickethub-rules-test",
+  "private": true,
+  "description": "Firestore security-rules verification for CricketHub. Runs the real firestore.rules against the Firestore emulator using the real client SDK.",
+  "scripts": {
+    "test": "firebase emulators:exec --only firestore --project demo-crickethub \"node rules.test.js\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.0",
+    "firebase": "^12.0.0"
+  }
+}

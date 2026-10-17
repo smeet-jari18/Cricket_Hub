@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.cricket_hub"
-    compileSdk = 37
+    compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

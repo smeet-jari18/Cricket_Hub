@@ -36,15 +36,26 @@ class GroundService {
     Query<Map<String, dynamic>> query = _grounds
         .where('city', isEqualTo: city)
         .where('status', isEqualTo: 'active')
-        .where('verified', isEqualTo: true)
-        .orderBy('avg_rating', descending: true)
-        .limit(limit);
+        .where('verified', isEqualTo: true);
+
+    // Firestore rule (docs: "Order and limit data" -> Limitations):
+    //   "If you include a filter with a range comparison (<, <=, >, >=),
+    //    your first ordering must be on the same field."
+    // So a price ceiling FORCES the first orderBy to be price_weekday_hourly.
+    // Ordering by avg_rating here would throw:
+    //   Invalid query. You have a where filter with an inequality on field
+    //   'price_weekday_hourly' and so you must also use 'price_weekday_hourly'
+    //   as your first argument to Query.orderBy() ...
+    // We therefore sort by price on the server and re-rank by rating below.
+    query = maxPrice != null
+        ? query
+            .where('price_weekday_hourly', isLessThanOrEqualTo: maxPrice)
+            .orderBy('price_weekday_hourly')
+            .limit(limit)
+        : query.orderBy('avg_rating', descending: true).limit(limit);
 
     if (pitchType != null && pitchType.isNotEmpty) {
       query = query.where('pitch_type', isEqualTo: pitchType);
-    }
-    if (maxPrice != null) {
-      query = query.where('price_weekday_hourly', isLessThanOrEqualTo: maxPrice);
     }
 
     return query.snapshots().map((snap) {
@@ -56,7 +67,13 @@ class GroundService {
       if (amenities != null && amenities.isNotEmpty) {
         list = list.where((g) => amenities.every(g.amenities.contains));
       }
-      return list.toList();
+      final out = list.toList();
+      // The server ordered by price when a ceiling was set — restore the
+      // "best rated first" ordering the UI expects.
+      if (maxPrice != null) {
+        out.sort((a, b) => b.avgRating.compareTo(a.avgRating));
+      }
+      return out;
     });
   }
 

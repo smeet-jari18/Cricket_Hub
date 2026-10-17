@@ -2,12 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/app_constants.dart';
 import '../../core/app_theme.dart';
 import '../../models/ground_model.dart';
+import '../../models/review_model.dart';
 import '../../services/ground_service.dart';
-import '../booking/booking_checkout_screen.dart';
-import '../booking/checkout_args.dart';
+import '../../services/review_service.dart';
+import '../../widgets/rating_stars.dart';
+import 'ground_calendar_screen.dart';
 
 /// Ground detail screen with 4 tabs: Overview, Calendar, Reviews, Location.
 class GroundDetailScreen extends StatefulWidget {
@@ -90,28 +91,11 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
                     Expanded(
                       flex: 2,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          final ground = _ground!;
-                          final hours = ground.slotDurationMinutes ~/ 60;
-                          final amountPaise =
-                              ground.priceWeekdayHourly * 100 * hours;
-                          final platformFeePaise =
-                              (amountPaise * AppConstants.platformFeePct).round();
-                          Navigator.pushNamed(
-                            context,
-                            BookingCheckoutScreen.route,
-                            arguments: CheckoutArgs(
-                              ground: ground,
-                              dateIso: _todayIso(),
-                              slotStart: ground.openTime,
-                              slotEnd: _addMinutes(
-                                  ground.openTime,
-                                  ground.slotDurationMinutes),
-                              amountPaise: amountPaise,
-                              platformFeePaise: platformFeePaise,
-                            ),
-                          );
-                        },
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          GroundCalendarScreen.route,
+                          arguments: _ground!,
+                        ),
                         icon: const Icon(Icons.event_available_rounded, size: 18),
                         label: const Text('Book this ground'),
                       ),
@@ -204,7 +188,7 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
             children: [
               OverviewTab(ground: g),
               CalendarTab(ground: g),
-              const ReviewsTab(),
+              ReviewsTab(ground: g),
               LocationTab(ground: g),
             ],
           ),
@@ -240,17 +224,6 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
       ),
     );
   }
-}
-
-String _todayIso() {
-  final n = DateTime.now();
-  return '${n.year.toString().padLeft(4, '0')}-${n.month.toString().padLeft(2, '0')}-${n.day.toString().padLeft(2, '0')}';
-}
-
-String _addMinutes(String hhmm, int minutes) {
-  final parts = hhmm.split(':');
-  final total = int.parse(parts[0]) * 60 + int.parse(parts[1]) + minutes;
-  return '${(total ~/ 60).toString().padLeft(2, '0')}:${(total % 60).toString().padLeft(2, '0')}';
 }
 
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
@@ -393,12 +366,22 @@ class CalendarTab extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
-              'Tap "Book this ground" below to choose date and time.',
+              'Use the calendar to pick a date and slots, or tap '
+              '"Book this ground" below.',
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
                   ?.copyWith(color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              onPressed: () => Navigator.pushNamed(
+                context,
+                GroundCalendarScreen.route,
+                arguments: ground,
+              ),
+              child: const Text('Open calendar'),
             ),
           ],
         ),
@@ -408,33 +391,99 @@ class CalendarTab extends StatelessWidget {
 }
 
 class ReviewsTab extends StatelessWidget {
-  const ReviewsTab({super.key});
+  const ReviewsTab({super.key, required this.ground});
+
+  final Ground ground;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.reviews_outlined,
-                size: 64, color: AppTheme.textSecondary),
-            const SizedBox(height: 8),
-            Text('No reviews yet',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              'Reviews appear here after a booking is completed.',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: AppTheme.textSecondary),
-              textAlign: TextAlign.center,
+    return StreamBuilder<List<Review>>(
+      stream: context.read<ReviewService>().groundReviewsStream(ground.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final reviews = snapshot.data ?? const <Review>[];
+        if (reviews.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.reviews_outlined,
+                      size: 64, color: AppTheme.textSecondary),
+                  const SizedBox(height: 8),
+                  Text('No reviews yet',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 4),
+                  Text(
+                    ground.reviewCount > 0
+                        ? '${ground.reviewCount} rating(s) recorded, but the '
+                            'written reviews are still loading.'
+                        : 'Reviews appear here after a booking is completed.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: AppTheme.textSecondary),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: reviews.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (context, i) {
+            final r = reviews[i];
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        RatingStars(rating: r.rating.toDouble(), size: 14),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            r.reviewerName.isEmpty ? 'Player' : r.reviewerName,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        if (r.createdAt != null)
+                          Text(
+                            '${r.createdAt!.day}/${r.createdAt!.month}/'
+                            '${r.createdAt!.year % 100}',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: AppTheme.textSecondary,
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (r.text.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        r.text,
+                        style: const TextStyle(fontSize: 13, height: 1.45),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

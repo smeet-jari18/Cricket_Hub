@@ -7,7 +7,7 @@ import '../models/app_user.dart';
 import '../services/auth_service.dart';
 
 /// Central auth state for the whole app (Provider).
-/// Screens call: context.watch<AuthProvider>()
+/// Screens call: `context.watch<AuthProvider>()`
 class AuthProvider extends ChangeNotifier {
   final AuthService _service = AuthService();
 

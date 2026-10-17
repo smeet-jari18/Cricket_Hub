@@ -4,7 +4,7 @@ import 'package:cricket_hub/models/booking_model.dart';
 
 void main() {
   group('Booking refund policy', () {
-    final booking = Booking(
+    final booking = const Booking(
       id: 'Bk_1',
       kind: 'Booking',
       resourceId: 'Gr_1',
@@ -49,7 +49,7 @@ void main() {
   });
 
   group('Booking display helpers', () {
-    final booking = Booking(
+    final booking = const Booking(
       id: 'Bk_1',
       kind: 'ground',
       resourceId: 'Gr_1',

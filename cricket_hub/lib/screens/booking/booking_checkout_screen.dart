@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +22,36 @@ class BookingCheckoutScreen extends StatefulWidget {
 }
 
 class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
-  String _paymentMethod = 'razorpay'; // 'razorpay' | 'cod'
+  // razorpay_flutter has no web implementation, so web falls back to Cash on
+  // Ground instead of offering a button that can only fail.
+  String _paymentMethod = kIsWeb ? 'cod' : 'razorpay'; // 'razorpay' | 'cod'
   String _notes = '';
   bool _processing = false;
+
+  /// The ground owner's display name, read from `users/{ownerUid}` so bookings
+  /// don't all say "Ground Owner". Falls back gracefully when the profile
+  /// hasn't been filled in.
+  String _ownerName = 'Ground owner';
+
+  @override
+  void initState() {
+    super.initState();
+    _resolveOwnerName();
+  }
+
+  Future<void> _resolveOwnerName() async {
+    final ownerUid = widget.args.ground.ownerUid;
+    if (ownerUid.isEmpty) return;
+    try {
+      final snap =
+          await FirebaseFirestore.instance.collection('users').doc(ownerUid).get();
+      final name = (snap.data()?['display_name'] ?? '') as String;
+      if (!mounted || name.trim().isEmpty) return;
+      setState(() => _ownerName = name.trim());
+    } catch (_) {
+      // Non-fatal: the booking still works with the generic label.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +67,21 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
           _orderCard(args),
           const SizedBox(height: 20),
           _section('Payment method'),
-          _paymentRadio('razorpay', 'Online (UPI / Card / NetBanking)',
-              'Razorpay secure checkout', Icons.credit_card_rounded),
-          const SizedBox(height: 8),
-          _paymentRadio('cod', 'Cash on Ground',
-              'Pay at the venue. Booking is held until owner confirms.',
-              Icons.payments_outlined),
+          RadioGroup<String>(
+            groupValue: _paymentMethod,
+            onChanged: (v) =>
+                setState(() => _paymentMethod = v ?? 'razorpay'),
+            child: Column(
+              children: [
+                _paymentRadio('razorpay', 'Online (UPI / Card / NetBanking)',
+                    'Razorpay secure checkout', Icons.credit_card_rounded),
+                const SizedBox(height: 8),
+                _paymentRadio('cod', 'Cash on Ground',
+                    'Pay at the venue. Booking is held until owner confirms.',
+                    Icons.payments_outlined),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
           _section('Add a note'),
           TextField(
@@ -155,9 +193,12 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
 
   Widget _paymentRadio(
       String value, String title, String subtitle, IconData icon) {
+    // Online payments need the native Razorpay plugin (Android/iOS only).
+    final enabled = !(value == 'razorpay' && kIsWeb);
     final isSelected = _paymentMethod == value;
+    final dimmed = !enabled;
     return InkWell(
-      onTap: () => setState(() => _paymentMethod = value),
+      onTap: enabled ? () => setState(() => _paymentMethod = value) : null,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -180,9 +221,14 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
                   Text(title,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        color: isSelected ? AppTheme.primary : AppTheme.textPrimary,
+                        color: dimmed
+                            ? AppTheme.textSecondary
+                            : (isSelected ? AppTheme.primary : AppTheme.textPrimary),
                       )),
-                  Text(subtitle,
+                  Text(
+                      dimmed
+                          ? 'Available in the Android / iOS app only'
+                          : subtitle,
                       style: Theme.of(context)
                           .textTheme
                           .bodySmall
@@ -190,10 +236,11 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
                 ],
               ),
             ),
+            // groupValue/onChanged now come from the RadioGroup ancestor.
+            // `enabled` keeps the unsupported-on-web option unselectable.
             Radio<String>(
               value: value,
-              groupValue: _paymentMethod,
-              onChanged: (v) => setState(() => _paymentMethod = v ?? 'razorpay'),
+              enabled: enabled,
               activeColor: AppTheme.primary,
             ),
           ],
@@ -251,7 +298,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
           groundId: args.ground.id,
           groundName: args.ground.name,
           ownerUid: args.ground.ownerUid,
-          ownerName: 'Ground Owner', // Phase 3.5: denormalize on ground doc
+          ownerName: _ownerName,
           organizerUid: user.uid,
           organizerName: user.displayName,
           date: args.dateIso,
@@ -273,7 +320,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
         groundId: args.ground.id,
         groundName: args.ground.name,
         ownerUid: args.ground.ownerUid,
-        ownerName: 'Ground Owner',
+        ownerName: _ownerName,
         organizerUid: user.uid,
         organizerName: user.displayName,
         date: args.dateIso,
@@ -286,6 +333,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
       );
 
       final order = await bookingService.createRazorpayOrder(bookingId);
+      if (!mounted) return;
 
       final paymentService = context.read<PaymentService>();
       paymentService.initialize();
@@ -297,7 +345,8 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
         organizerName: user.displayName.isEmpty
             ? 'CricketHub user'
             : user.displayName,
-        organizerEmail: 'user@example.com', // Phase 3.5: add email to users
+        organizerEmail:
+            context.read<AuthProvider>().firebaseUser?.email ?? '',
         organizerPhone: user.phoneNumber,
         description: 'Ground booking at ${args.ground.name}',
       );

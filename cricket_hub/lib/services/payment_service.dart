@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -49,6 +50,18 @@ class PaymentService {
     required String organizerPhone,
     required String description,
   }) {
+    // razorpay_flutter only registers Android + iOS implementations. On web
+    // (and desktop) `_razorpay.open()` would blow up with an opaque
+    // MissingPluginException, so fail early with something actionable.
+    if (kIsWeb || !(defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS)) {
+      throw UnsupportedError(
+        'Razorpay checkout is only available in the Android and iOS app. '
+        'On web, offer a different payment method (or integrate the '
+        'Razorpay web SDK / a hosted payment link).',
+      );
+    }
+
     if (!_initialized) initialize();
     _activeBookingId = bookingId;
 

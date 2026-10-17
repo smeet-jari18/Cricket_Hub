@@ -244,9 +244,13 @@ class ScoringProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void confirmNewBatsman(String name) {
-    engine.confirmNewBatsman(name);
-    notifyListeners();
+  /// Returns `true` when the engine accepted the batter. On `false` the
+  /// innings is untouched (still `pendingNewBatsman`) so the scoring screen
+  /// can keep the dialog open and show what went wrong.
+  bool confirmNewBatsman(String name) {
+    final accepted = engine.confirmNewBatsman(name);
+    if (accepted) notifyListeners();
+    return accepted;
   }
 
   Future<void> startSecondInnings() async {

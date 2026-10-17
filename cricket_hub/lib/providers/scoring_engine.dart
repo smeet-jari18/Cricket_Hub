@@ -13,6 +13,12 @@ import 'package:flutter/foundation.dart';
 ///  - Wickets: bowler credited except run-outs
 ///  - Over end after 6 legal balls -> rotate strike + new bowler
 ///  - Undo everything (snapshot stack)
+///
+/// Hardened (review pass):
+///  - `_readyForBall` guard on every record* entry point -> no crash when a
+///    bowler/batter is missing, and no scoring after the innings is over
+///  - runs validated to 0-6 so a single delivery can't corrupt the card
+///  - `confirmNewBatsman` rejects an already-dismissed / already-batting name
 /// ============================================================
 
 /// Batting stats for one player.
@@ -251,6 +257,30 @@ class ScoringEngine extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// True when a delivery may legally be recorded right now.
+  ///
+  /// Every `record*` method calls this first. It closes the three ways the
+  /// engine used to crash or corrupt the scorecard:
+  ///   * no striker / no bowler chosen yet -> `batsmen[s]!` threw
+  ///     "Null check operator used on a null value" (app-level crash)
+  ///   * the striker is already dismissed
+  ///   * the innings is already finished (all out / overs done / chased)
+  bool get _readyForBall {
+    if (_state.isInningsComplete) return false;
+    if (_state.needsAttention) return false;
+
+    final s = _state.striker;
+    if (s.isEmpty) return false;
+    final bat = _state.batsmen[s];
+    if (bat == null || bat.out) return false;
+
+    final b = _state.currentBowler;
+    if (b.isEmpty) return false;
+    if (!_state.bowlers.containsKey(b)) return false;
+
+    return true;
+  }
+
   // ---------------- SETUP ----------------
 
   void setOpener(String name) {
@@ -281,16 +311,24 @@ class ScoringEngine extends ChangeNotifier {
   }
 
   /// New batter after a wicket (replaces the striker position).
-  void confirmNewBatsman(String name) {
-    if (name.trim().isEmpty || _state.batsmen.containsKey(name.trim())) {
-      _apply(_state.copyWith(pendingNewBatsman: false));
-      return;
-    }
+  ///
+  /// Returns `true` when the batter was accepted. Returns `false` and leaves
+  /// the innings completely untouched (still `pendingNewBatsman`) for an
+  /// invalid name, so the UI can re-prompt instead of silently re-activating
+  /// a dismissed batter.
+  bool confirmNewBatsman(String name) {
+    final n = name.trim();
+    if (n.isEmpty) return false;
+    // Cannot walk in at both ends.
+    if (n == _state.nonStriker) return false;
+    // Already in this innings - either still batting, or already dismissed.
+    if (_state.batsmen.containsKey(n)) return false;
+
     final batsmen = _state._copyBatsmen();
-    batsmen[name.trim()] = BatStats(name: name.trim());
+    batsmen[n] = BatStats(name: n);
     var next = _state.copyWith(
       batsmen: batsmen,
-      striker: name.trim(),
+      striker: n,
       pendingNewBatsman: false,
     );
     // Wicket fell on the LAST ball of the over? Then we still need
@@ -299,6 +337,7 @@ class ScoringEngine extends ChangeNotifier {
       next = next.copyWith(pendingNewBowler: true);
     }
     _apply(next);
+    return true;
   }
 
   void setTarget(int runs) {
@@ -308,7 +347,9 @@ class ScoringEngine extends ChangeNotifier {
   // ---------------- RUNS OFF THE BAT ----------------
 
   void recordRuns(int runs) {
-    if (_state.needsAttention || runs < 0) return;
+    // One delivery yields 0-6 off the bat; anything else is not cricket.
+    if (runs < 0 || runs > 6) return;
+    if (!_readyForBall) return;
     _backup();
 
     final batsmen = _state._copyBatsmen();
@@ -352,7 +393,8 @@ class ScoringEngine extends ChangeNotifier {
   /// WIDE: +1 penalty (plus any additional runs run).
   /// NOT a legal ball, batter's ball count unchanged.
   void recordWide({int additional = 0}) {
-    if (_state.needsAttention) return;
+    if (additional < 0) return;
+    if (!_readyForBall) return;
     _backup();
 
     final bowlers = _state._copyBowlers();
@@ -380,7 +422,8 @@ class ScoringEngine extends ChangeNotifier {
   /// NO BALL: +1 penalty plus runs off the bat.
   /// NOT a legal ball, but the batter IS credited with runs + ball faced.
   void recordNoBall({int batRuns = 0}) {
-    if (_state.needsAttention) return;
+    if (batRuns < 0 || batRuns > 6) return;
+    if (!_readyForBall) return;
     _backup();
 
     final batsmen = _state._copyBatsmen();
@@ -413,7 +456,8 @@ class ScoringEngine extends ChangeNotifier {
 
   /// BYE / LEG BYE: legal ball, runs NOT charged to the bowler.
   void _recordByeLike(int runs, String label) {
-    if (_state.needsAttention || runs <= 0) return;
+    if (runs <= 0 || runs > 6) return;
+    if (!_readyForBall) return;
     _backup();
 
     final batsmen = _state._copyBatsmen();
@@ -447,7 +491,7 @@ class ScoringEngine extends ChangeNotifier {
   // ---------------- WICKET ----------------
 
   void recordWicket({String type = 'bowled', bool creditBowler = true}) {
-    if (_state.needsAttention) return;
+    if (!_readyForBall) return;
     _backup();
 
     final batsmen = _state._copyBatsmen();

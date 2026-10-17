@@ -44,7 +44,7 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return _StateCard(
+            return const _StateCard(
               icon: Icons.cloud_off_outlined,
               title: 'Couldn’t load tournaments',
               subtitle: 'Check your connection and try again.',

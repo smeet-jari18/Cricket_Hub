@@ -28,6 +28,10 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   bool _offline = false;
   bool _setupShown = false;
   int? _completionDialogForInnings;
+  // The batter/bowler dialogs now stay open until a VALID name is entered, so
+  // a rebuild must not open a duplicate dialog on top of them.
+  bool _batsmanDialogOpen = false;
+  bool _bowlerDialogOpen = false;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   @override
@@ -210,9 +214,9 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
           _completionDialogForInnings != scoring.inningsNumber) {
         _completionDialogForInnings = scoring.inningsNumber;
         _showInningsCompleteDialog(context, scoring, s);
-      } else if (s.pendingNewBatsman) {
+      } else if (s.pendingNewBatsman && !_batsmanDialogOpen) {
         _showNewBatsmanDialog(context, scoring);
-      } else if (s.pendingNewBowler) {
+      } else if (s.pendingNewBowler && !_bowlerDialogOpen) {
         _showNewBowlerDialog(context, scoring);
       }
     });
@@ -274,33 +278,78 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
   void _showNewBatsmanDialog(BuildContext context, ScoringProvider scoring) {
     final c = TextEditingController();
+    String? error;
+    _batsmanDialogOpen = true;
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('WICKET! Next batter'),
-        content: TextField(
-          controller: c,
-          autofocus: true,
-          textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(hintText: 'New batter name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              if (c.text.trim().isEmpty) return;
-              scoring.confirmNewBatsman(c.text);
-              Navigator.pop(dialogContext);
-            },
-            child: const Text('Send in'),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
+          title: const Text('WICKET! Next batter'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: c,
+                autofocus: true,
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  hintText: 'New batter name',
+                  errorText: error,
+                ),
+                onSubmitted: (_) => _sendInNewBatsman(
+                    scoring, dialogContext, c, (e) => setDialogState(() => error = e)),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'A batter who is already out (or already at the crease) '
+                'cannot come in again.',
+                style: TextStyle(
+                    fontSize: 12, color: AppTheme.textSecondary),
+              ),
+            ],
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => _sendInNewBatsman(
+                  scoring, dialogContext, c, (e) => setDialogState(() => error = e)),
+              child: const Text('Send in'),
+            ),
+          ],
+        ),
       ),
-    );
+    ).whenComplete(() => _batsmanDialogOpen = false);
+  }
+
+  /// Shared by the "Send in" button and the keyboard's submit action.
+  /// Keeps the dialog open (with an inline error) when the name is rejected,
+  /// so the scorer must give a valid name instead of the engine silently
+  /// sending a dismissed batter back in.
+  void _sendInNewBatsman(
+    ScoringProvider scoring,
+    BuildContext dialogContext,
+    TextEditingController c,
+    void Function(String?) setError,
+  ) {
+    final name = c.text.trim();
+    if (name.isEmpty) {
+      setError('Enter the new batter\'s name');
+      return;
+    }
+    if (!scoring.confirmNewBatsman(name)) {
+      setError('"$name" is already out or already batting');
+      return;
+    }
+    setError(null);
+    Navigator.pop(dialogContext);
   }
 
   void _showNewBowlerDialog(BuildContext context, ScoringProvider scoring) {
     final c = TextEditingController();
+    String? error;
+    _bowlerDialogOpen = true;
     // Quick-pick: bowlers who already bowled.
     final existing =
         scoring.state.bowlers.keys.where((k) => k.isNotEmpty).toList();
@@ -308,7 +357,8 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
         title: const Text('Over complete! Next bowler'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -331,23 +381,29 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               controller: c,
               autofocus: true,
               textCapitalization: TextCapitalization.words,
-              decoration:
-                  const InputDecoration(hintText: 'Or type a new bowler'),
+              decoration: InputDecoration(
+                hintText: 'Or type a new bowler',
+                errorText: error,
+              ),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              if (c.text.trim().isEmpty) return;
+              if (c.text.trim().isEmpty) {
+                setDialogState(() => error = 'Enter a bowler name');
+                return;
+              }
               scoring.setBowler(c.text);
               Navigator.pop(dialogContext);
             },
             child: const Text('Continue'),
           ),
         ],
+        ),
       ),
-    );
+    ).whenComplete(() => _bowlerDialogOpen = false);
   }
 
   void _showInningsCompleteDialog(
@@ -371,7 +427,9 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               try {
                 if (firstInnings) {
                   await scoring.startSecondInnings();
-                  if (!mounted) return;
+                  // The dialog's own context is what gets used below, so it
+                  // needs its own guard (plus State.mounted for setState).
+                  if (!mounted || !dialogContext.mounted) return;
                   setState(() {
                     _setupShown = false;
                     _completionDialogForInnings = null;
@@ -384,7 +442,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                   Navigator.of(context).popUntil((r) => r.isFirst);
                 }
               } catch (error) {
-                if (!mounted) return;
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Could not save innings: $error')),
                 );

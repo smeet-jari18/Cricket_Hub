@@ -140,9 +140,9 @@ class CareerStatsScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Card(
                   child: ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       backgroundColor: AppTheme.primaryContainer,
-                      child: const Icon(Icons.sports_cricket, color: AppTheme.primary, size: 19),
+                      child: Icon(Icons.sports_cricket, color: AppTheme.primary, size: 19),
                     ),
                     title: Text(
                       (entry['opponent'] ?? 'Match') as String,
