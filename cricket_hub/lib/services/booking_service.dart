@@ -127,17 +127,16 @@ class BookingService {
   }
 
   // ---------------------------------------------------------------------------
-  // Cancellation
+  // Owner-side lifecycle (ground owner is the counterparty)
   // ---------------------------------------------------------------------------
 
-  /// Cancels a booking. Cloud Function `onBookingCancelled` enforces refund policy.
   /// Ground owner confirms a cash-on-delivery booking after collecting the
   /// money at the venue.
   ///
   /// COD bookings are created as `pending_payment`. Nothing in the old rules
   /// let the counterparty move them forward, so they were stuck forever and
   /// [validateQr] (which requires `confirmed`) always refused their QR.
-  /// `firestore.rules` now allows exactly this one transition for the ground
+  /// `firestore.rules` allows exactly this one transition for the ground
   /// owner and only touches these three fields.
   Future<void> confirmCodBooking(String bookingId) {
     return _bookings.doc(bookingId).update({
@@ -160,6 +159,12 @@ class BookingService {
     });
   }
 
+  // ---------------------------------------------------------------------------
+  // Cancellation
+  // ---------------------------------------------------------------------------
+
+  /// Cancels a booking. Cloud Function `onBookingCancelled` enforces the
+  /// refund policy (>=24h 100%, 12-24h 50%, <12h 0%).
   Future<Map<String, dynamic>> cancelBooking({
     required String bookingId,
     required String reason,

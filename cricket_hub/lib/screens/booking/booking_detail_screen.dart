@@ -59,8 +59,6 @@ class _BodyState extends State<_Body> {
 
   String? get _uid => context.read<AuthProvider>().firebaseUser?.uid;
 
-  /// The ground owner holding this booking, looking at an unpaid COD booking.
-  /// Only they may confirm the cash, and only while it is `pending_payment`.
   /// Ground owner, booking already confirmed, match is over.
   bool get _canMarkCompleted =>
       _uid != null &&
@@ -68,6 +66,8 @@ class _BodyState extends State<_Body> {
       _b.isGroundBooking &&
       _b.isConfirmed;
 
+  /// The ground owner holding this booking, looking at an unpaid COD booking.
+  /// Only they may confirm the cash, and only while it is `pending_payment`.
   bool get _canConfirmCash =>
       _uid != null &&
       _uid == _b.counterpartyUid &&
