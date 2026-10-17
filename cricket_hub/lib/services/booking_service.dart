@@ -131,6 +131,35 @@ class BookingService {
   // ---------------------------------------------------------------------------
 
   /// Cancels a booking. Cloud Function `onBookingCancelled` enforces refund policy.
+  /// Ground owner confirms a cash-on-delivery booking after collecting the
+  /// money at the venue.
+  ///
+  /// COD bookings are created as `pending_payment`. Nothing in the old rules
+  /// let the counterparty move them forward, so they were stuck forever and
+  /// [validateQr] (which requires `confirmed`) always refused their QR.
+  /// `firestore.rules` now allows exactly this one transition for the ground
+  /// owner and only touches these three fields.
+  Future<void> confirmCodBooking(String bookingId) {
+    return _bookings.doc(bookingId).update({
+      'status': 'confirmed',
+      'cod_confirmed_at': FieldValue.serverTimestamp(),
+      'updated_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Ground owner closes the loop after the match: `confirmed` → `completed`.
+  ///
+  /// Nothing in the app ever moved a booking to `completed`, so
+  /// "Rate this ground" never appeared and the review pipeline could not be
+  /// exercised. `firestore.rules` already allows the counterparty this exact
+  /// transition; this is the missing button behind it.
+  Future<void> markBookingCompleted(String bookingId) {
+    return _bookings.doc(bookingId).update({
+      'status': 'completed',
+      'updated_at': FieldValue.serverTimestamp(),
+    });
+  }
+
   Future<Map<String, dynamic>> cancelBooking({
     required String bookingId,
     required String reason,

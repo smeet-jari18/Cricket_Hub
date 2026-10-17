@@ -233,17 +233,26 @@ exports.createBookingHold = onCall(
         }
       }
 
-      const newEntry = {
-        status: 'held',
-        held_by: organizerUid,
-        held_until: Timestamp.fromDate(new Date(Date.now() + HOLD_DURATION_MIN * 60_000)),
-      };
+      const bookingRef = db.collection('bookings').doc();
+
+      // COD money changes hands at the ground, so the slot is committed the
+      // moment the booking is created — not a 10-minute hold. A plain 'held'
+      // entry would be reclaimed by expireStaleHolds while the booking is
+      // still alive, letting someone else book the same window.
+      const newEntry = paymentMethod === 'cod'
+        ? { status: 'booked', booking_id: bookingRef.id }
+        : {
+            status: 'held',
+            held_by: organizerUid,
+            held_until: Timestamp.fromDate(
+              new Date(Date.now() + HOLD_DURATION_MIN * 60_000),
+            ),
+            booking_id: bookingRef.id,
+          };
       tx.update(slotRef, {
         [`slots.${slotKey}`]: newEntry,
         updated_at: FieldValue.serverTimestamp(),
       });
-
-      const bookingRef = db.collection('bookings').doc();
       const qrToken = jwt.sign(
         {
           booking_id: bookingRef.id,

@@ -57,9 +57,61 @@ class _BodyState extends State<_Body> {
 
   bool get _canCancel => !_b.isCancelled && !_b.isCompleted;
 
+  String? get _uid => context.read<AuthProvider>().firebaseUser?.uid;
+
+  /// The ground owner holding this booking, looking at an unpaid COD booking.
+  /// Only they may confirm the cash, and only while it is `pending_payment`.
+  /// Ground owner, booking already confirmed, match is over.
+  bool get _canMarkCompleted =>
+      _uid != null &&
+      _uid == _b.counterpartyUid &&
+      _b.isGroundBooking &&
+      _b.isConfirmed;
+
+  bool get _canConfirmCash =>
+      _uid != null &&
+      _uid == _b.counterpartyUid &&
+      _b.isGroundBooking &&
+      _b.isPendingPayment &&
+      _b.paymentMethod == 'cod';
+
   // ---------------------------------------------------------------------------
   // Actions
   // ---------------------------------------------------------------------------
+
+  Future<void> _confirmCash() async {
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      await context.read<BookingService>().confirmCodBooking(_b.id);
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Cash received — booking confirmed.')),
+      );
+    } catch (e) {
+      messenger.showSnackBar(
+        SnackBar(content: Text('Could not confirm: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _markCompleted() async {
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      await context.read<BookingService>().markBookingCompleted(_b.id);
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Match closed. The player can rate you now.')),
+      );
+    } catch (e) {
+      messenger.showSnackBar(
+        SnackBar(content: Text('Could not close the booking: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   Future<void> _cancel() async {
     final refundPaise = _b.computeRefundAmountPaise();
@@ -193,6 +245,31 @@ class _BodyState extends State<_Body> {
               icon: const Icon(Icons.star_outline_rounded),
               label: const Text('Rate this ground'),
             ),
+          if (_canConfirmCash) ...[
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _busy ? null : _confirmCash,
+              icon: const Icon(Icons.payments_rounded),
+              label: Text(
+                _busy ? 'Confirming…' : 'Cash received — confirm booking',
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'The player pays you in cash at the ground. Confirm here so '
+              'their QR becomes valid for check-in.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            ),
+          ],
+          if (_canMarkCompleted) ...[
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: _busy ? null : _markCompleted,
+              icon: const Icon(Icons.sports_cricket_rounded),
+              label: Text(_busy ? 'Closing…' : 'Match played — close booking'),
+            ),
+          ],
           if (_canCancel) ...[
             const SizedBox(height: 8),
             OutlinedButton.icon(

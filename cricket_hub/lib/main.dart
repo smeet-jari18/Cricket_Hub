@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +57,31 @@ import 'services/umpire_service.dart';
 /// ================================================
 final NotificationService appNotificationService = NotificationService();
 
+// ───────────────────────────────────────────────────────────────────────────
+// Local Firebase Emulator Suite — free testing, no Blaze plan needed.
+//
+//   flutter run --dart-define=USE_EMULATOR=true
+//
+// Android emulator: "localhost" is auto-mapped to 10.0.2.2 by the plugins.
+// Physical phone:   pass your PC's LAN IP —
+//   flutter run --dart-define=USE_EMULATOR=true \
+//               --dart-define=EMULATOR_HOST=192.168.1.42
+//
+// Start the suite with:  firebase emulators:start
+// ───────────────────────────────────────────────────────────────────────────
+const bool _useEmulator = bool.fromEnvironment('USE_EMULATOR');
+const String _emulatorHost =
+    String.fromEnvironment('EMULATOR_HOST', defaultValue: 'localhost');
+
+Future<void> _connectEmulators() async {
+  await FirebaseAuth.instance.useAuthEmulator(_emulatorHost, 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator(_emulatorHost, 8080);
+  FirebaseFunctions.instanceFor(region: 'asia-south1')
+      .useFunctionsEmulator(_emulatorHost, 5001);
+  debugPrint('🔥 Emulators → $_emulatorHost '
+      '(auth:9099 · firestore:8080 · functions:5001)');
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -62,6 +89,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if (_useEmulator) {
+    await _connectEmulators();
+  }
 
   // Local cache on the phone -> scoring writes queue offline and sync later.
   FirebaseFirestore.instance.settings = const Settings(
