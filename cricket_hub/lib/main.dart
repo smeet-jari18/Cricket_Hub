@@ -2,13 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/app_navigator.dart';
+import 'core/firebase_bootstrap.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'providers/locale_provider.dart';
+import 'services/cric_api_service.dart';
+import 'screens/international/international_screen.dart';
+import 'screens/settings/language_screen.dart';
 import 'core/app_theme.dart';
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
+import 'screens/admin/admin_verification_screen.dart';
+import 'screens/bootstrap_error_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_screen.dart';
 import 'screens/auth/profile_setup_screen.dart';
@@ -29,23 +38,30 @@ import 'screens/match/toss_screen.dart';
 import 'screens/owner/owner_calendar_screen.dart';
 import 'screens/owner/owner_create_ground_screen.dart';
 import 'screens/owner/owner_dashboard.dart';
+import 'screens/owner/owner_edit_ground_screen.dart';
 import 'screens/owner/owner_earnings_screen.dart';
 import 'screens/owner/owner_qr_scanner_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/team/create_team_screen.dart';
 import 'screens/tournament/create_tournament_screen.dart';
 import 'screens/tournament/tournament_detail_screen.dart';
+import 'models/ground_model.dart';
 import 'screens/umpire/umpire_availability_screen.dart';
+import 'screens/umpire/umpire_booking_requests_screen.dart';
+import 'screens/umpire/umpire_booking_screen.dart';
 import 'screens/umpire/umpire_dashboard.dart';
+import 'screens/umpire/umpire_edit_screen.dart';
 import 'screens/umpire/umpire_detail_screen.dart';
 import 'screens/umpire/umpire_list_screen.dart';
 import 'screens/umpire/umpire_onboarding_screen.dart';
+import 'services/admin_service.dart';
 import 'services/booking_service.dart';
 import 'services/ground_service.dart';
 import 'services/match_service.dart';
 import 'services/notification_service.dart';
 import 'services/payment_service.dart';
 import 'services/payout_service.dart';
+import 'services/storage_service.dart';
 import 'services/review_service.dart';
 import 'services/team_service.dart';
 import 'services/tournament_service.dart';
@@ -78,6 +94,7 @@ Future<void> _connectEmulators() async {
   FirebaseFirestore.instance.useFirestoreEmulator(_emulatorHost, 8080);
   FirebaseFunctions.instanceFor(region: 'asia-south1')
       .useFunctionsEmulator(_emulatorHost, 5001);
+  await FirebaseStorage.instance.useStorageEmulator(_emulatorHost, 9199);
   debugPrint('🔥 Emulators → $_emulatorHost '
       '(auth:9099 · firestore:8080 · functions:5001)');
 }
@@ -85,21 +102,74 @@ Future<void> _connectEmulators() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Generate lib/firebase_options.dart with `flutterfire configure`.
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  // Firebase init must never kill the app.
+  //
+  // Android's google-services plugin creates the [DEFAULT] app natively at
+  // process start from google-services.json. Calling `Firebase.initializeApp`
+  // with *different* options (e.g. the placeholder firebase_options.dart that
+  // ships in the zip) throws `[core/duplicate-app]`, and because that used to
+  // be un-guarded, `runApp` never ran and the phone showed a black screen.
+  // See lib/core/firebase_bootstrap.dart for the full story.
+  final bootstrap = await bootstrapFirebase(
+    existingProjectId: () {
+      final apps = Firebase.apps;
+      return apps.isEmpty ? null : apps.first.options.projectId;
+    },
+    initialize: () async {
+      final app = await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      return app.options.projectId;
+    },
+    // Last resort: no options => attach to the native [DEFAULT] app.
+    adoptExisting: () async {
+      final app = await Firebase.initializeApp();
+      return app.options.projectId;
+    },
+    log: debugPrint,
   );
+
+  if (!bootstrap.ready) {
+    debugPrint('Firebase bootstrap failed: ${bootstrap.error}');
+    runApp(BootstrapErrorScreen(error: bootstrap.error));
+    return;
+  }
+
+  // Loud, non-fatal warning: a placeholder key (the one that ships in this
+  // repo's firebase_options.dart) means auth/database calls will fail in ways
+  // that look like "no data" rather than an error. Say it once, clearly.
+  try {
+    final apiKey = Firebase.app().options.apiKey;
+    if (apiKey.isEmpty || apiKey.toUpperCase().contains('PLACEHOLDER')) {
+      debugPrint(
+        '⚠️ Firebase apiKey looks like a placeholder — run '
+        '`flutterfire configure --project=crickethub-dev` '
+        'before testing auth/data on a real device.',
+      );
+    }
+  } catch (_) {
+    // Never let diagnostics break startup.
+  }
 
   if (_useEmulator) {
     await _connectEmulators();
   }
 
-  // Local cache on the phone -> scoring writes queue offline and sync later.
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-  );
-  await appNotificationService.initialize();
+  // Everything after init can fail too (bad config, missing permission, a
+  // plugin that refuses the emulator host). Any failure here must still land on
+  // a readable screen instead of a black one.
+  try {
+    // Local cache on the phone -> scoring writes queue offline and sync later.
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    await appNotificationService.initialize();
+  } catch (e, stack) {
+    debugPrint('Startup failed after Firebase init: $e\n$stack');
+    runApp(BootstrapErrorScreen(error: e));
+    return;
+  }
 
   runApp(const CricketHubApp());
 }
@@ -120,6 +190,8 @@ class CricketHubApp extends StatelessWidget {
         // Phase 3 — marketplace services
         Provider<GroundService>(create: (_) => GroundService()),
         Provider<BookingService>(create: (_) => BookingService()),
+        Provider<AdminService>(create: (_) => AdminService()),
+        Provider<StorageService>(create: (_) => StorageService()),
         Provider<UmpireService>(create: (_) => UmpireService()),
         Provider<ReviewService>(create: (_) => ReviewService()),
         Provider<PayoutService>(create: (_) => PayoutService()),
@@ -127,15 +199,34 @@ class CricketHubApp extends StatelessWidget {
           create: (_) => PaymentService()..initialize(),
         ),
 
+        // Phase 4 — International scores (CricAPI). The key is baked in with
+        // --dart-define=CRICAPI_KEY=... ; without it the screen offers demo
+        // data instead of failing.
+        Provider<CricApiService>(create: (_) => CricApiService()),
+
         // Auth state for the whole app
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+
+        // Phase 4 — language. Loads the saved choice asynchronously; while it
+        // loads the app draws in the device language, which is also the
+        // correct default for a first run.
+        ChangeNotifierProvider(create: (_) => LocaleProvider()..load()),
       ],
-      child: MaterialApp(
+      child: Consumer<LocaleProvider>(
+        builder: (context, localeProvider, _) => MaterialApp(
         navigatorKey: appNavigatorKey,
         scaffoldMessengerKey: appScaffoldMessengerKey,
         title: 'CricketHub',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
+
+        // Phase 4 — localization. `locale == null` means "follow the device",
+        // which is why the provider stores null instead of the resolved value.
+        locale: localeProvider.locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localeResolutionCallback: (device, supported) =>
+            LocaleProvider.resolve(device ?? const Locale('en')),
         initialRoute: SplashScreen.route,
         routes: {
           SplashScreen.route: (_) => const SplashScreen(),
@@ -181,6 +272,14 @@ class CricketHubApp extends StatelessWidget {
           OwnerCalendarScreen.route: (_) => const OwnerCalendarScreen(),
           OwnerEarningsScreen.route: (_) => const OwnerEarningsScreen(),
           OwnerQrScannerScreen.route: (_) => const OwnerQrScannerScreen(),
+          // Takes a typed argument from Navigator.pushNamed (see _GroundRow).
+          OwnerEditGroundScreen.route: (ctx) => OwnerEditGroundScreen(
+                ground: ModalRoute.of(ctx)!.settings.arguments as Ground,
+              ),
+
+          // Platform admin
+          AdminVerificationScreen.route: (_) =>
+              const AdminVerificationScreen(),
 
           // Phase 3 — umpire marketplace
           UmpireListScreen.route: (_) => const UmpireListScreen(),
@@ -188,7 +287,17 @@ class CricketHubApp extends StatelessWidget {
           UmpireOnboardingScreen.route: (_) => const UmpireOnboardingScreen(),
           UmpireDashboard.route: (_) => const UmpireDashboard(),
           UmpireAvailabilityScreen.route: (_) => const UmpireAvailabilityScreen(),
+          // These two read their own `ModalRoute` argument inside build().
+          UmpireBookingScreen.route: (_) => const UmpireBookingScreen(),
+          UmpireEditScreen.route: (_) => const UmpireEditScreen(),
+          UmpireBookingRequestsScreen.route: (_) =>
+              const UmpireBookingRequestsScreen(),
+
+          // Phase 4
+          InternationalScreen.route: (_) => const InternationalScreen(),
+          LanguageScreen.route: (_) => const LanguageScreen(),
         },
+        ),
       ),
     );
   }

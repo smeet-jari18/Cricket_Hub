@@ -5,6 +5,8 @@ import '../../core/app_constants.dart';
 import '../../core/app_theme.dart';
 import '../../models/umpire_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/photo_picker.dart';
+import '../../services/storage_service.dart';
 import '../../services/umpire_service.dart';
 
 /// Sprint 10's `umpire_onboarding_screen.dart`.
@@ -32,6 +34,9 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
   String _city = AppConstants.supportedCities.first;
   bool _busy = false;
 
+  final PhotoPicker _picker = PhotoPicker();
+  PickedPhoto? _photo;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +58,28 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
     super.dispose();
   }
 
+  Future<void> _pickPhoto() async {
+    try {
+      final picked = await _picker.pickFromGallery();
+      if (picked == null) return;
+      final problem = PhotoRules.validate(
+        sizeBytes: picked.bytes.length,
+        contentType: picked.contentType,
+      );
+      if (problem != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(problem)));
+        return;
+      }
+      setState(() => _photo = picked);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Could not open the gallery: $e')));
+    }
+  }
+
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final user = context.read<AuthProvider>().appUser;
@@ -60,7 +87,31 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
 
     setState(() => _busy = true);
     final service = context.read<UmpireService>();
+    final storage = context.read<StorageService>();
     try {
+      // Upload first: the Storage path is umpires/{uid}/..., which does not
+      // need the Firestore document to exist yet.
+      String photoUrl = '';
+      var photoFailed = false;
+      // The photo is optional: if Storage rejects it (size, type, offline) the
+      // umpire should still be able to register and add a photo later, so the
+      // failure is swallowed and reported, never fatal.
+      if (_photo != null) {
+        try {
+          final uploaded = await storage.uploadBytes(
+            target: PhotoTarget.umpire,
+            ownerId: user.uid,
+            bytes: _photo!.bytes,
+            contentType: _photo!.contentType,
+            fileName: 'profile_${DateTime.now().millisecondsSinceEpoch}'
+                '${PhotoRules.extensionFor(_photo!.contentType)}',
+          );
+          photoUrl = uploaded.downloadUrl;
+        } on Exception {
+          photoFailed = true;
+        }
+      }
+
       await service.registerUmpire(
         Umpire(
           uid: user.uid,
@@ -72,7 +123,7 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
           dayRate: int.tryParse(_day.text.trim()) ?? 0,
           hourlyRate: int.tryParse(_hourly.text.trim()) ?? 0,
           bio: _bio.text.trim(),
-          photoUrl: '',
+          photoUrl: photoUrl,
           verified: false,
           avgRating: 0,
           reviewCount: 0,
@@ -84,8 +135,10 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile submitted — an admin will verify it.'),
+        SnackBar(
+          content: Text(photoFailed
+              ? 'Profile submitted, but the photo could not be uploaded.'
+              : 'Profile submitted — an admin will verify it.'),
         ),
       );
     } catch (e) {
@@ -185,6 +238,35 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
               ),
             ),
             const SizedBox(height: 8),
+            const Text(
+              'Profile photo',
+              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                ClipOval(
+                  child: SizedBox(
+                    width: 64,
+                    height: 64,
+                    child: _photo == null
+                        ? Container(
+                            color: AppTheme.primaryContainer,
+                            child: const Icon(Icons.person_rounded,
+                                color: AppTheme.primary),
+                          )
+                        : Image.memory(_photo!.bytes, fit: BoxFit.cover),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                OutlinedButton.icon(
+                  onPressed: _busy ? null : _pickPhoto,
+                  icon: const Icon(Icons.add_a_photo_outlined, size: 18),
+                  label: Text(_photo == null ? 'Add photo' : 'Change photo'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _busy ? null : _submit,
               child: Text(_busy ? 'Submitting…' : 'Submit for verification'),

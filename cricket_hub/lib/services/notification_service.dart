@@ -31,6 +31,23 @@ class NotificationService {
     }
   }
 
+  /// Attaches this installation to the user's private notification topic.
+  ///
+  /// The `onBookingCreated` Cloud Function pushes to `user_<uid>`, so an owner
+  /// learns about a new booking without storing device tokens anywhere.
+  /// Idempotent — safe to call on every app start.
+  Future<void> syncUserTopic(String uid) async {
+    if (uid.isEmpty) return;
+    try {
+      await _messaging.requestPermission(alert: true, badge: true, sound: true);
+      await _messaging.subscribeToTopic('user_$uid');
+    } catch (error) {
+      // Emulators and devices without Google Play services throw here; the app
+      // must keep working without push.
+      debugPrint('Could not subscribe to user topic: $error');
+    }
+  }
+
   Stream<bool> followingMatchStream(String uid, String matchId) {
     return _db
         .collection('users')

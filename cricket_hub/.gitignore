@@ -26,3 +26,13 @@ firestore-debug.log
 # Misc
 *.log
 .DS_Store
+
+# Python tooling
+__pycache__/
+*.pyc
+
+# Emulator debug logs
+firestore-debug.log
+pubsub-debug.log
+ui-debug.log
+firebase-debug.log

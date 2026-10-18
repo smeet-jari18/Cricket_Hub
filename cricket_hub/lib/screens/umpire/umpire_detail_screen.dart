@@ -6,7 +6,7 @@ import '../../models/review_model.dart';
 import '../../models/umpire_model.dart';
 import '../../services/review_service.dart';
 import '../../widgets/rating_stars.dart';
-import '../booking/leave_review_screen.dart';
+import 'umpire_booking_screen.dart';
 
 /// Sprint 10's `umpire_detail_screen.dart` — profile, certifications, rates and
 /// (read-only) reviews.
@@ -115,25 +115,39 @@ class _Body extends StatelessWidget {
           _ReviewsCard(umpireUid: umpire.uid),
         ],
       ),
+      // No "leave a review" button here on purpose: a review must reference a
+      // completed booking (firestore.rules requires booking_id + status
+      // 'completed' + reviewer == organizer). The entry point is the booking
+      // itself — Booking Detail -> "Rate this umpire".
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ElevatedButton(
-            onPressed: umpire.isActive
-                ? () => Navigator.pushNamed(
-                      context,
-                      LeaveReviewScreen.route,
-                      arguments: LeaveReviewArgs(
-                        bookingId: '',
-                        groundId: '',
-                        groundName: umpire.displayName,
-                        umpireUid: umpire.uid,
-                      ),
-                    )
-                : null,
-            child: Text(
-              umpire.isActive ? 'Leave a review' : 'Not available for booking',
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton.icon(
+                onPressed: umpire.isActive
+                    ? () => Navigator.pushNamed(
+                          context,
+                          UmpireBookingScreen.route,
+                          arguments: umpire,
+                        )
+                    : null,
+                icon: const Icon(Icons.event_available_rounded, size: 18),
+                label: Text(
+                  umpire.isActive
+                      ? 'Book this umpire'
+                      : 'Not available for booking',
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'You can rate an umpire after a completed booking.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+              ),
+            ],
           ),
         ),
       ),

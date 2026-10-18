@@ -5,6 +5,8 @@ import '../../core/app_constants.dart';
 import '../../core/app_theme.dart';
 import '../../models/ground_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/photo_picker.dart';
+import '../../services/storage_service.dart';
 import '../../services/ground_service.dart';
 
 /// Sprint 9's `owner_create_ground_screen.dart` — the 4-step wizard described
@@ -51,6 +53,11 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
   // Step 3
   String _pitchType = 'turf';
   final Set<String> _amenities = {'floodlights'};
+
+  // Step 3 — listing photos (uploaded after the document exists, because the
+  // Storage path is grounds/{groundId}/... and the id comes from Firestore).
+  final PhotoPicker _picker = PhotoPicker();
+  final List<PickedPhoto> _photos = [];
 
   @override
   void dispose() {
@@ -103,6 +110,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
 
     setState(() => _busy = true);
     final service = context.read<GroundService>();
+    final storage = context.read<StorageService>();
     try {
       final ground = Ground(
         id: '', // assigned by Firestore
@@ -131,11 +139,36 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
       );
 
       final id = await service.createGround(ground);
+
+      // Photos are optional: a listing without them still works, and the
+      // owner can add them later from Edit ground. Their failure must not
+      // abort the submission — the ground document already exists, so an
+      // exception here would leave it in `draft` and make the owner retry,
+      // creating a duplicate listing.
+      var photosFailed = false;
+      if (_photos.isNotEmpty) {
+        try {
+          final urls = await storage.uploadGroundPhotos(
+            groundId: id,
+            photos: [for (final p in _photos) (p.bytes, p.contentType)],
+          );
+          await service.updateGround(id, {
+            'photos': urls,
+            'cover_photo_url': urls.first,
+          });
+        } on Exception {
+          photosFailed = true;
+        }
+      }
+
       await service.submitForVerification(id);
 
       if (!mounted) return;
       Navigator.pop(context);
-      _snack('Ground submitted — an admin will verify it shortly.');
+      _snack(photosFailed
+          ? 'Ground submitted, but the photos could not be uploaded. '
+              'Add them from Edit ground.'
+          : 'Ground submitted — an admin will verify it shortly.');
     } catch (e) {
       if (!mounted) return;
       _snack('Could not save: $e');
@@ -212,6 +245,28 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _addPhotos() async {
+    if (_photos.length >= PhotoRules.maxGroundPhotos) {
+      _snack('You can add up to ${PhotoRules.maxGroundPhotos} photos.');
+      return;
+    }
+    try {
+      final picked = await _picker.pickFromGallery();
+      if (picked == null) return;
+      final problem = PhotoRules.validate(
+        sizeBytes: picked.bytes.length,
+        contentType: picked.contentType,
+      );
+      if (problem != null) {
+        _snack(problem);
+        return;
+      }
+      setState(() => _photos.add(picked));
+    } catch (e) {
+      if (mounted) _snack('Could not open the gallery: $e');
+    }
   }
 
   Widget _buildStep() {
@@ -375,26 +430,20 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            const Card(
-              child: Padding(
-                padding: EdgeInsets.all(14),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline_rounded,
-                        size: 18, color: AppTheme.textSecondary),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Photos can be added after the ground is verified.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppTheme.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const Text(
+              'Photos',
+              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            ),
+            const SizedBox(height: 8),
+            _PhotoStrip(
+              photos: _photos,
+              onAdd: _addPhotos,
+              onRemove: (i) => setState(() => _photos.removeAt(i)),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Up to 5 photos, 5MB each. The first one becomes the cover image.',
+              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
             ),
           ],
         );
@@ -545,6 +594,88 @@ class _ReviewRow extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/// Horizontal strip of picked photos with an "add" tile.
+class _PhotoStrip extends StatelessWidget {
+  const _PhotoStrip({
+    required this.photos,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  final List<PickedPhoto> photos;
+  final VoidCallback onAdd;
+  final void Function(int index) onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 96,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (var i = 0; i < photos.length; i++)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.memory(
+                      photos[i].bytes,
+                      width: 96,
+                      height: 96,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: InkWell(
+                      onTap: () => onRemove(i),
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close_rounded,
+                            size: 14, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (photos.length < PhotoRules.maxGroundPhotos)
+            InkWell(
+              onTap: onAdd,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceSoft,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppTheme.border),
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_a_photo_outlined,
+                        color: AppTheme.primary, size: 22),
+                    SizedBox(height: 6),
+                    Text('Add photo', style: TextStyle(fontSize: 10)),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

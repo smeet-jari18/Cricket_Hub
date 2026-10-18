@@ -127,6 +127,79 @@ class BookingService {
   }
 
   // ---------------------------------------------------------------------------
+  // Umpire bookings (kind == 'umpire')
+  // ---------------------------------------------------------------------------
+
+  /// Books an umpire for a window. Same `createBookingHold` Cloud Function as
+  /// a ground booking — it already switches the slot path to
+  /// `umpires/{uid}/availability/{date}` when `kind == 'umpire'`.
+  ///
+  /// Payment is cash-to-umpire (`cod`), so the function commits the slot as
+  /// `booked` (not a 10-minute `held`) and the booking lands in
+  /// `pending_payment` until the umpire confirms the cash.
+  Future<String> createUmpireBooking({
+    required String umpireId,
+    required String umpireName,
+    required String organizerUid,
+    required String organizerName,
+    required String date,
+    required String slotStart,
+    required String slotEnd,
+    required int durationMinutes,
+    required int amountPaise,
+    required int platformFeePaise,
+    String? notes,
+  }) async {
+    final callable = _functions.httpsCallable('createBookingHold');
+    final response = await callable.call({
+      'kind': 'umpire',
+      'resourceId': umpireId,
+      'resourceName': umpireName,
+      'counterpartyUid': umpireId,
+      'counterpartyName': umpireName,
+      'organizerUid': organizerUid,
+      'organizerName': organizerName,
+      'date': date,
+      'slotStart': slotStart,
+      'slotEnd': slotEnd,
+      'durationMinutes': durationMinutes,
+      'amountPaise': amountPaise,
+      'platformFeePaise': platformFeePaise,
+      'payoutAmountPaise': amountPaise - platformFeePaise,
+      'notes': notes ?? '',
+      'paymentMethod': 'cod',
+    });
+    final data = Map<String, dynamic>.from(response.data as Map);
+    return data['bookingId'] as String;
+  }
+
+  /// Umpire declines an incoming request (App Flow 9: "Accept or Decline").
+  ///
+  /// Rules give the umpire exactly `['status', 'updated_at']` on a
+  /// `pending_payment` umpire booking, with `status in ['confirmed','cancelled']`
+  /// — so a reason string cannot be stored here; it would be PERMISSION_DENIED.
+  Future<void> declineUmpireBooking(String bookingId) {
+    return _bookings.doc(bookingId).update({
+      'status': 'cancelled',
+      'updated_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Umpire confirms the cash he received at the ground.
+  ///
+  /// Deliberately NOT [confirmCodBooking]: `firestore.rules` allows the umpire
+  /// exactly `affectedKeys().hasOnly(['status', 'updated_at'])` on an umpire
+  /// COD booking. Writing `cod_confirmed_at` too (like the ground-owner path
+  /// does) would be rejected with PERMISSION_DENIED, so this method writes only
+  /// those two fields.
+  Future<void> confirmUmpireCodBooking(String bookingId) {
+    return _bookings.doc(bookingId).update({
+      'status': 'confirmed',
+      'updated_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // ---------------------------------------------------------------------------
   // Owner-side lifecycle (ground owner is the counterparty)
   // ---------------------------------------------------------------------------
 

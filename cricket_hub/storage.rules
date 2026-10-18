@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// CricketHub — Firebase Storage rules (Phase 3).
+//
+// Before this file existed nothing could upload a photo, so every listing
+// shipped with an empty `photos` list and a blank `cover_photo_url`.
+//
+// Layout:
+//   grounds/{groundId}/{fileName}     listing photos (public read)
+//   umpires/{umpireUid}/{fileName}    umpire profile photo (public read)
+//
+// Writes are checked against Firestore so Storage can never drift from who
+// actually owns the listing. The size/type limits here are mirrored in
+// `lib/services/storage_service.dart` (`PhotoRules`) — the client shows a
+// friendly message first, the server is the hard limit. They must stay equal:
+//   * max size  : 5 * 1024 * 1024  (inclusive on both sides)
+//   * max photos: 5 per ground     (client-only, Storage cannot count a prefix)
+//   * type      : image/*
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ---- Ground photos -----------------------------------------------------
+    // Anyone can see them (they sit on a public marketplace card), but only
+    // the ground's own owner can add, replace or delete them.
+    match /grounds/{groundId}/{fileName} {
+      allow read: if true;
+
+      // `create`/`update` may inspect request.resource; `delete` must not,
+      // because on delete request.resource is null and reading `.size` there
+      // would raise instead of evaluating to false.
+      allow create, update: if request.auth != null
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*')
+        // Cross-service lookup: the caller must be the owner_uid recorded on
+        // the ground document itself, so a re-used groundId cannot be written
+        // by a stranger.
+        && firestore.get(/databases/(default)/documents/grounds/$(groundId)).data.owner_uid
+             == request.auth.uid;
+
+      allow delete: if request.auth != null
+        && firestore.get(/databases/(default)/documents/grounds/$(groundId)).data.owner_uid
+             == request.auth.uid;
+    }
+
+    // ---- Umpire photos -----------------------------------------------------
+    // Path is keyed by the umpire's UID, so the ownership check is the token.
+    match /umpires/{umpireUid}/{fileName} {
+      allow read: if true;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == umpireUid
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+
+      allow delete: if request.auth != null && request.auth.uid == umpireUid;
+    }
+
+    // ---- Everything else ---------------------------------------------------
+    // Deny by default. A new path needs its own explicit rule.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

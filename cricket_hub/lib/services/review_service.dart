@@ -17,6 +17,30 @@ class ReviewService {
   CollectionReference<Map<String, dynamic>> get _umpireReviews =>
       _db.collection(AppConstants.umpireReviewsCol);
 
+  /// Client-side mirror of the rule checks, so the user gets a readable
+  /// message instead of `permission-denied`.
+  ///
+  /// `booking_id` is mandatory: `firestore.rules` only accepts a review when
+  /// that booking exists, belongs to the reviewer, targets this exact
+  /// ground/umpire, and is `completed`.
+  static void _validate({
+    required int rating,
+    required String text,
+    required String bookingId,
+  }) {
+    if (bookingId.trim().isEmpty) {
+      throw ArgumentError(
+        'A review needs a completed booking. Book first, then rate.',
+      );
+    }
+    if (rating < 1 || rating > 5) {
+      throw ArgumentError('Rating must be between 1 and 5.');
+    }
+    if (text.length > 500) {
+      throw ArgumentError('Review text must be 500 characters or fewer.');
+    }
+  }
+
   /// Writes a ground review.
   ///
   /// The rules require exactly this shape:
@@ -27,19 +51,16 @@ class ReviewService {
   /// give the user a readable message instead of `permission-denied`.
   Future<void> submitGroundReview({
     required String groundId,
+    required String bookingId,
     required String reviewerUid,
     required String reviewerName,
     required int rating,
     required String text,
   }) async {
-    if (rating < 1 || rating > 5) {
-      throw ArgumentError('Rating must be between 1 and 5.');
-    }
-    if (text.length > 500) {
-      throw ArgumentError('Review text must be 500 characters or fewer.');
-    }
+    _validate(rating: rating, text: text, bookingId: bookingId);
     await _groundReviews.add({
       'ground_id': groundId,
+      'booking_id': bookingId,
       'reviewer_uid': reviewerUid,
       'reviewer_name': reviewerName,
       'rating': rating,
@@ -50,19 +71,16 @@ class ReviewService {
 
   Future<void> submitUmpireReview({
     required String umpireUid,
+    required String bookingId,
     required String reviewerUid,
     required String reviewerName,
     required int rating,
     required String text,
   }) async {
-    if (rating < 1 || rating > 5) {
-      throw ArgumentError('Rating must be between 1 and 5.');
-    }
-    if (text.length > 500) {
-      throw ArgumentError('Review text must be 500 characters or fewer.');
-    }
+    _validate(rating: rating, text: text, bookingId: bookingId);
     await _umpireReviews.add({
       'umpire_uid': umpireUid,
+      'booking_id': bookingId,
       'reviewer_uid': reviewerUid,
       'reviewer_name': reviewerName,
       'rating': rating,

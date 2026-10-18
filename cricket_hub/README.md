@@ -5,6 +5,59 @@
 
 ---
 
+## 🚨 Device pe black screen? Pehle ye padho
+
+Agar `flutter run` me ye dikhe:
+
+```
+Unhandled Exception: [core/duplicate-app] A Firebase App named "[DEFAULT]" already exists
+   at main (package:cricket_hub/main.dart)
+```
+
+…aur app black screen par atak jaaye, to wajah ye hai:
+
+| | |
+|---|---|
+| **1** | `android/app/google-services.json` (ya iOS ka `GoogleService-Info.plist`) **asli** config ke saath pehle se maujood hai |
+| **2** | Android ka google-services plugin process start par `[DEFAULT]` FirebaseApp **khud bana deta hai** |
+| **3** | Repo ki `lib/firebase_options.dart` ek **PLACEHOLDER** hai (`apiKey: 'AIzaSyPLACEHOLDER-…'`) |
+| **4** | `Firebase.initializeApp(options: placeholder)` → naam wahi, options alag → crash → `runApp()` chala hi nahi → black screen |
+
+### Fix A — turant (bina kuch generate kiye)
+
+Is version me `lib/core/firebase_bootstrap.dart` pehle check karta hai ki native
+app bana hua hai kya; agar haan, to **usi ko adopt** kar leta hai. Matlab
+`google-services.json` hi source of truth hai aur app chal jaata hai — aur agar
+kabhi init fail bhi ho to black screen ki jagah ek readable error screen aata hai.
+
+```bash
+flutter clean && flutter run
+```
+
+### Fix B — asli (recommended)
+
+Placeholder ko asli file se replace karo:
+
+```bash
+flutterfire configure --project=crickethub-dev
+```
+
+Ye `lib/firebase_options.dart` (aur platform config) regenerate karta hai.
+**Ise repo me commit mat karna** — `.gitignore` me hai, aur har developer ki
+machine pe apna hota hai.
+
+> ⚠️ **Zip extract karte waqt dhyan:** zip me placeholder `firebase_options.dart`
+> bhi hota hai. Agar aapke paas pehle se asli file thi, to zip ne usko overwrite
+> kar diya hoga — Fix B chala kar wapas banao. (Git users ke liye ye problem
+> nahi hoti, kyunki file gitignored hai.)
+
+### Black screen phir bhi aaye?
+
+`flutter run` ka output dekho — ab startup ka har failure `BootstrapErrorScreen`
+par dikhta hai jisme exact error hota hai. Uske bina kuch bhi guess mat karo.
+
+---
+
 ## 📂 What's in this package
 
 The files below mirror the existing Phase 2 project structure 1:1 — when you copy them into `cricket_hub/`, they sit alongside your existing Phase 2 files without any restructuring.

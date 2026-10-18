@@ -9,6 +9,7 @@ import '../../services/booking_service.dart';
 import '../../services/ground_service.dart';
 import 'owner_calendar_screen.dart';
 import 'owner_create_ground_screen.dart';
+import 'owner_edit_ground_screen.dart';
 import 'owner_earnings_screen.dart';
 import 'owner_qr_scanner_screen.dart';
 
@@ -379,6 +380,16 @@ class _GroundRow extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                     color: _statusColor,
                   ),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Edit ground',
+                icon: const Icon(Icons.edit_outlined, size: 18),
+                color: AppTheme.textSecondary,
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  OwnerEditGroundScreen.route,
+                  arguments: ground,
                 ),
               ),
             ],

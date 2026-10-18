@@ -30,6 +30,7 @@ const {
   onDocumentUpdated,
 } = require('firebase-functions/v2/firestore');
 const { onSchedule } = require('firebase-functions/v2/scheduler');
+const { bookingCreatedNotification } = require('./domain');
 
 const Razorpay = require('razorpay');
 const jwt = require('jsonwebtoken');
@@ -871,6 +872,29 @@ exports.weeklyPayoutDigest = onSchedule(
 // ===========================================================================
 // FIRESTORE: onBookingCompleted (review prompt)
 // ===========================================================================
+// ===========================================================================
+// TRIGGER: onBookingCreated — tell the owner / umpire about a new booking
+//
+// App Flow 7 step 8: "FCM also sent to ground owner: 'New booking on {date}'".
+// The app subscribes to the `user_<uid>` topic after sign-in
+// (NotificationService.syncUserTopic), so no device tokens are stored.
+// ===========================================================================
+exports.onBookingCreated = onDocumentCreated(
+  { document: 'bookings/{bookingId}', region: 'asia-south1' },
+  async (event) => {
+    const booking = event.data?.data();
+    if (!booking) return;
+    const payload = bookingCreatedNotification(event.params.bookingId, booking);
+    if (!payload) return;
+    await sendTopicNotification(
+      payload.topic,
+      payload.title,
+      payload.body,
+      payload.data
+    );
+  },
+);
+
 exports.onBookingCompleted = onDocumentUpdated(
   { document: 'bookings/{bookingId}', region: 'asia-south1' },
   async (event) => {

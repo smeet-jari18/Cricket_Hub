@@ -2,28 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/admin_service.dart';
+import '../admin/admin_verification_screen.dart';
 import '../auth/login_screen.dart';
 import '../booking/my_bookings_screen.dart';
 import '../ground/ground_list_screen.dart';
+import '../international/international_screen.dart';
 import '../owner/owner_dashboard.dart';
+import '../settings/language_screen.dart';
 import '../umpire/umpire_dashboard.dart';
 import '../umpire/umpire_list_screen.dart';
 
 /// Player profile, account options and phase roadmap.
+///
+/// Phase 4: every string here goes through [AppLocalizations], and the two
+/// "coming soon" rows are now real screens (International scores, Language).
 class MenuScreen extends StatelessWidget {
   const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
     final user = auth.appUser;
     final name = user?.displayName.trim().isNotEmpty == true
         ? user!.displayName
-        : 'Player';
+        : l10n.menuPlayer;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Your profile')),
+      appBar: AppBar(title: Text(l10n.menuProfileTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         children: [
@@ -72,7 +81,7 @@ class MenuScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          Text('Your season', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.menuSeason, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           Card(
             child: Padding(
@@ -85,7 +94,7 @@ class MenuScreen extends StatelessWidget {
                       const Icon(Icons.insights_rounded,
                           color: AppTheme.primary, size: 20),
                       const SizedBox(width: 8),
-                      Text('Career stats',
+                      Text(l10n.menuCareerStats,
                           style: Theme.of(context).textTheme.titleMedium),
                       const Spacer(),
                       Container(
@@ -95,9 +104,9 @@ class MenuScreen extends StatelessWidget {
                           color: AppTheme.primaryContainer,
                           borderRadius: BorderRadius.circular(99),
                         ),
-                        child: const Text(
-                          'COMING SOON',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.menuComingSoon,
+                          style: const TextStyle(
                             color: AppTheme.primary,
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
@@ -108,16 +117,16 @@ class MenuScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 14),
-                  const Row(
+                  Row(
                     children: [
-                      _StatPlaceholder(label: 'RUNS'),
-                      _StatPlaceholder(label: 'WICKETS'),
-                      _StatPlaceholder(label: 'AVERAGE'),
+                      _StatPlaceholder(label: l10n.menuRuns),
+                      _StatPlaceholder(label: l10n.menuWickets),
+                      _StatPlaceholder(label: l10n.menuAverage),
                     ],
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Your match history and leaderboards will live here.',
+                    l10n.menuCareerBody,
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall
@@ -128,69 +137,75 @@ class MenuScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text('Explore', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.menuExplore, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           Card(
             child: Column(
               children: [
-                _ComingSoonTile(
+                _MenuTile(
                   icon: Icons.grass_rounded,
-                  title: 'Ground booking',
-                  subtitle: 'Find a place for your next game',
+                  title: l10n.menuGroundBooking,
+                  subtitle: l10n.menuGroundBookingSub,
                   onTap: () => Navigator.pushNamed(
                     context,
                     GroundListScreen.route,
                   ),
                 ),
                 const Divider(height: 1, indent: 68),
-                _ComingSoonTile(
+                _MenuTile(
                   icon: Icons.record_voice_over_rounded,
-                  title: 'Umpire booking',
-                  subtitle: 'Bring an official to match day',
+                  title: l10n.menuUmpireBooking,
+                  subtitle: l10n.menuUmpireBookingSub,
                   onTap: () => Navigator.pushNamed(
                     context,
                     UmpireListScreen.route,
                   ),
                 ),
                 const Divider(height: 1, indent: 68),
-                _ComingSoonTile(
+                _MenuTile(
                   icon: Icons.event_note_rounded,
-                  title: 'My bookings',
-                  subtitle: 'Your slots and QR codes',
+                  title: l10n.menuMyBookings,
+                  subtitle: l10n.menuMyBookingsSub,
                   onTap: () => Navigator.pushNamed(
                     context,
                     MyBookingsScreen.route,
                   ),
                 ),
                 const Divider(height: 1, indent: 68),
-                const _ComingSoonTile(
+                // Phase 4 — was a disabled "coming soon" row until this round.
+                _MenuTile(
                   icon: Icons.public_rounded,
-                  title: 'International scores',
-                  subtitle: 'Follow the wider cricket world',
+                  title: l10n.menuInternational,
+                  subtitle: l10n.menuInternationalSub,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    InternationalScreen.route,
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 18),
-          Text('For owners', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.menuForOwners,
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 10),
           Card(
             child: Column(
               children: [
-                _ComingSoonTile(
+                _MenuTile(
                   icon: Icons.stadium_rounded,
-                  title: 'Ground owner panel',
-                  subtitle: 'List grounds, manage days, see payouts',
+                  title: l10n.menuOwnerPanel,
+                  subtitle: l10n.menuOwnerPanelSub,
                   onTap: () => Navigator.pushNamed(
                     context,
                     OwnerDashboard.route,
                   ),
                 ),
                 const Divider(height: 1, indent: 68),
-                _ComingSoonTile(
+                _MenuTile(
                   icon: Icons.sports_rounded,
-                  title: 'Umpire dashboard',
-                  subtitle: 'Your listing, rates and availability',
+                  title: l10n.menuUmpireDashboard,
+                  subtitle: l10n.menuUmpireDashboardSub,
                   onTap: () => Navigator.pushNamed(
                     context,
                     UmpireDashboard.route,
@@ -199,16 +214,26 @@ class MenuScreen extends StatelessWidget {
               ],
             ),
           ),
+          const _AdminEntry(),
+          const SizedBox(height: 18),
+          Card(
+            child: _MenuTile(
+              icon: Icons.translate_rounded,
+              title: l10n.menuLanguage,
+              subtitle: l10n.menuLanguageSub,
+              onTap: () => Navigator.pushNamed(context, LanguageScreen.route),
+            ),
+          ),
           const SizedBox(height: 18),
           OutlinedButton.icon(
             onPressed: () => _confirmSignOut(context),
             icon: const Icon(Icons.logout_rounded, color: AppTheme.danger),
-            label: const Text('Log out',
-                style: TextStyle(color: AppTheme.danger)),
+            label: Text(l10n.menuLogout,
+                style: const TextStyle(color: AppTheme.danger)),
           ),
           const SizedBox(height: 16),
           Text(
-            'CricketHub  ·  Local cricket. Pro level.',
+            l10n.menuTagline,
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
@@ -221,19 +246,20 @@ class MenuScreen extends StatelessWidget {
   }
 
   Future<void> _confirmSignOut(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     final shouldSignOut = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Log out?'),
-        content: const Text('You can sign back in anytime to return to your teams.'),
+        title: Text(l10n.menuLogoutTitle),
+        content: Text(l10n.menuLogoutBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Log out'),
+            child: Text(l10n.menuLogout),
           ),
         ],
       ),
@@ -277,16 +303,16 @@ class _StatPlaceholder extends StatelessWidget {
   }
 }
 
-class _ComingSoonTile extends StatelessWidget {
+/// A menu row. When [onTap] is null the row renders as a disabled "coming
+/// soon" entry (lock icon) — Phase 4 leaves none of those behind in this
+/// screen, but the state stays for future rows.
+class _MenuTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-
-  /// When null the row renders as a disabled "coming soon" entry (lock icon).
-  /// Phase 3 screens now pass a real [onTap] and get an enabled chevron.
   final VoidCallback? onTap;
 
-  const _ComingSoonTile({
+  const _MenuTile({
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -324,6 +350,46 @@ class _ComingSoonTile extends StatelessWidget {
         size: 17,
         color: AppTheme.textSecondary,
       ),
+    );
+  }
+}
+
+/// Renders nothing unless the signed-in user has an `/admins/{uid}` document.
+/// Rules also make `/admins/{uid}` readable only by its owner, so a normal
+/// user never even learns whether other admins exist.
+class _AdminEntry extends StatelessWidget {
+  const _AdminEntry();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final uid = context.watch<AuthProvider>().appUser?.uid;
+    if (uid == null) return const SizedBox.shrink();
+
+    return StreamBuilder<bool>(
+      stream: context.read<AdminService>().isAdminStream(uid),
+      builder: (context, snapshot) {
+        if (snapshot.data != true) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 18),
+            Text(l10n.menuStaff, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 10),
+            Card(
+              child: _MenuTile(
+                icon: Icons.verified_user_rounded,
+                title: l10n.menuVerificationQueue,
+                subtitle: l10n.menuVerificationQueueSub,
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  AdminVerificationScreen.route,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

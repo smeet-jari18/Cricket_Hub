@@ -508,8 +508,51 @@ function buildTournamentLeaders(matches, limit = 10) {
   return { orange_cap: orangeCap, purple_cap: purpleCap };
 }
 
+/**
+ * "New booking" push payload for the listing owner / umpire.
+ *
+ * Pure so it can be unit-tested without Firestore or FCM. Returns null when
+ * the booking has nobody to notify (no counterparty_uid) — the caller then
+ * skips the send instead of pushing to a `user_undefined` topic.
+ *
+ * The app subscribes to `user_<uid>` after sign-in (NotificationService
+ * .syncUserTopic), which is how App Flow 7 step 8 ("FCM also sent to ground
+ * owner") is delivered.
+ */
+function bookingCreatedNotification(bookingId, booking = {}) {
+  const counterparty = String(booking.counterparty_uid || '').trim();
+  if (!counterparty || !bookingId) return null;
+
+  const kind = booking.kind === 'umpire' ? 'umpire' : 'ground';
+  const resource = String(booking.resource_name || '').trim() ||
+    (kind === 'umpire' ? 'your umpiring slot' : 'your ground');
+  const date = String(booking.date || '').trim();
+  const start = String(booking.slot_start || '').trim();
+  const end = String(booking.slot_end || '').trim();
+  const when = date && start && end
+    ? `${date} · ${start}-${end}`
+    : [date, start].filter(Boolean).join(' · ');
+
+  const amount = Number(booking.amount_paise || 0);
+  const rupees = amount > 0 ? `₹${Math.round(amount / 100)}` : '';
+  const method = booking.payment_method === 'cod' ? 'cash' : 'online';
+
+  return {
+    topic: `user_${counterparty}`,
+    title: `New ${kind} booking`,
+    body: [resource, when, rupees].filter(Boolean).join(' · ') +
+      (rupees ? ` (${method})` : ''),
+    data: {
+      type: 'booking_created',
+      bookingId: String(bookingId),
+      kind,
+    },
+  };
+}
+
 module.exports = {
   DEFAULT_POINTS,
+  bookingCreatedNotification,
   buildCareerContributions,
   buildTournamentLeaders,
   calculateNRR,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
+import '../../core/geo.dart';
 import '../../models/ground_model.dart';
 import '../../services/ground_service.dart';
 import 'ground_detail_screen.dart';
@@ -27,6 +28,14 @@ class _GroundListScreenState extends State<GroundListScreen> {
   int? _maxPrice;
   Set<String> _amenities = {};
   String _sortBy = 'rating'; // 'rating' | 'price' | 'distance'
+  String _search = '';
+  final TextEditingController _searchCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -57,13 +66,26 @@ class _GroundListScreenState extends State<GroundListScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search_rounded, size: 20),
+              controller: _searchCtrl,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search_rounded, size: 20),
                 hintText: 'Search grounds, city, pitch...',
+                suffixIcon: _search.isEmpty
+                    ? null
+                    : IconButton(
+                        tooltip: 'Clear search',
+                        icon: const Icon(Icons.close_rounded, size: 18),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _search = '');
+                        },
+                      ),
               ),
-              onChanged: (value) {
-                // Phase 3.5: debounced text search.
-              },
+              // Filtering is client-side: the list is already fetched for the
+              // selected city, and a Firestore full-text search would need a
+              // third-party index (Algolia/Typesense) — Phase 3.5.
+              onChanged: (value) => setState(() => _search = value),
             ),
           ),
           const SizedBox(width: 8),
@@ -105,7 +127,10 @@ class _GroundListScreenState extends State<GroundListScreen> {
             itemBuilder: (ctx) => const [
               PopupMenuItem(value: 'rating', child: Text('Rating: High → Low')),
               PopupMenuItem(value: 'price', child: Text('Price: Low → High')),
-              PopupMenuItem(value: 'distance', child: Text('Distance')),
+              PopupMenuItem(
+                  value: 'distance',
+                  child: Text('Distance (city centre)'),
+                ),
             ],
             child: Container(
               padding:
@@ -231,7 +256,15 @@ class _GroundListScreenState extends State<GroundListScreen> {
             ),
           );
         }
-        final grounds = snapshot.data ?? [];
+        final grounds = (snapshot.data ?? [])
+            .where((g) => groundMatchesQuery(
+                  query: _search,
+                  name: g.name,
+                  city: g.city,
+                  address: g.address,
+                  pitchType: g.pitchType,
+                ))
+            .toList();
         if (grounds.isEmpty) return _emptyState(context);
         grounds.sort(_comparator);
         return RefreshIndicator(
@@ -252,7 +285,11 @@ class _GroundListScreenState extends State<GroundListScreen> {
       case 'price':
         return (a, b) => a.priceWeekdayHourly.compareTo(b.priceWeekdayHourly);
       case 'distance':
-        return (a, b) => 0; // Phase 3.5: geolocator-based sort
+        // No location permission yet, so "distance" is measured from the
+        // selected city's centre — see lib/core/geo.dart.
+        final (cLat, cLng) = centreOf(_city);
+        double km(Ground g) => distanceKm(cLat, cLng, g.lat, g.lng);
+        return (a, b) => km(a).compareTo(km(b));
       case 'rating':
       default:
         return (a, b) => b.avgRating.compareTo(a.avgRating);

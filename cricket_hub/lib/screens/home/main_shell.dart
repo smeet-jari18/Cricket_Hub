@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/notification_service.dart';
+import '../international/international_screen.dart';
 import '../match/create_match_screen.dart';
 import '../menu/menu_screen.dart';
 import '../team/create_team_screen.dart';
@@ -28,6 +30,7 @@ class _MainShellState extends State<MainShell> {
     HomeScreen(),
     MyCricketScreen(),
     TournamentsScreen(),
+    InternationalScreen(),
     MenuScreen(),
   ];
 
@@ -42,6 +45,7 @@ class _MainShellState extends State<MainShell> {
     final uid = context.read<AuthProvider>().firebaseUser?.uid;
     if (uid == null) return;
     final notifications = context.read<NotificationService>();
+    await notifications.syncUserTopic(uid);
     await notifications.resubscribeFollowedMatches(uid);
     final matchId = notifications.takePendingMatchId();
     if (matchId != null && mounted) {
@@ -51,6 +55,7 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: IndexedStack(index: _index, children: _pages),
       floatingActionButton: _index < 2
@@ -58,32 +63,40 @@ class _MainShellState extends State<MainShell> {
               heroTag: 'quickActions',
               onPressed: () => _showQuickActions(context),
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Create'),
+              label: Text(l10n.create),
             )
           : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (index) => setState(() => _index = index),
-        destinations: const [
+        // Phase 4 adds the International tab (PRD US-10). Five destinations is
+        // the documented maximum for a NavigationBar; adding a sixth means
+        // folding something into "Menu" instead.
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: 'Home',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home_rounded),
+            label: l10n.navHome,
           ),
           NavigationDestination(
-            icon: Icon(Icons.sports_cricket),
-            selectedIcon: Icon(Icons.sports_cricket),
-            label: 'My Cricket',
+            icon: const Icon(Icons.sports_cricket),
+            selectedIcon: const Icon(Icons.sports_cricket),
+            label: l10n.navMyCricket,
           ),
           NavigationDestination(
-            icon: Icon(Icons.emoji_events_outlined),
-            selectedIcon: Icon(Icons.emoji_events_rounded),
-            label: 'Tours',
+            icon: const Icon(Icons.emoji_events_outlined),
+            selectedIcon: const Icon(Icons.emoji_events_rounded),
+            label: l10n.navTours,
           ),
           NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view_rounded),
-            label: 'Menu',
+            icon: const Icon(Icons.public_outlined),
+            selectedIcon: const Icon(Icons.public_rounded),
+            label: l10n.navInternational,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.grid_view_outlined),
+            selectedIcon: const Icon(Icons.grid_view_rounded),
+            label: l10n.navMenu,
           ),
         ],
       ),
@@ -101,11 +114,11 @@ class _MainShellState extends State<MainShell> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Make it a match day',
+              Text(AppLocalizations.of(context).quickActionsTitle,
                   style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 6),
               Text(
-                'Pick what you want to set up.',
+                AppLocalizations.of(context).quickActionsBody,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -114,8 +127,8 @@ class _MainShellState extends State<MainShell> {
               const SizedBox(height: 16),
               _QuickActionTile(
                 icon: Icons.sports_cricket,
-                title: 'Start a match',
-                subtitle: 'Choose teams, toss and start scoring',
+                title: AppLocalizations.of(context).quickStartMatch,
+                subtitle: AppLocalizations.of(context).quickStartMatchSub,
                 accent: AppTheme.accentContainer,
                 iconColor: AppTheme.accentText,
                 onTap: () {
@@ -126,8 +139,8 @@ class _MainShellState extends State<MainShell> {
               const SizedBox(height: 10),
               _QuickActionTile(
                 icon: Icons.groups_rounded,
-                title: 'Create a team',
-                subtitle: 'Build a squad for your next game',
+                title: AppLocalizations.of(context).quickCreateTeam,
+                subtitle: AppLocalizations.of(context).quickCreateTeamSub,
                 accent: AppTheme.primaryContainer,
                 iconColor: AppTheme.primary,
                 onTap: () {
@@ -199,58 +212,6 @@ class _QuickActionTile extends StatelessWidget {
               const Icon(Icons.arrow_forward_rounded,
                   size: 19, color: AppTheme.textSecondary),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Tournaments arrive in Phase 2; show the placeholder in the same design system.
-class TournamentsPlaceholder extends StatelessWidget {
-  const TournamentsPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tournaments')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 68,
-                    height: 68,
-                    decoration: const BoxDecoration(
-                      color: AppTheme.primaryContainer,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.emoji_events_rounded,
-                        size: 32, color: AppTheme.primary),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Tournaments are on the way',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Points tables, net run rate and brackets are planned for a future release.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppTheme.textSecondary),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),

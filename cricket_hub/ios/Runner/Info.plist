@@ -47,6 +47,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CricketHub lets you pick photos of your ground so players can see it before booking.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>CricketHub uses the camera so you can take a photo of your ground or umpire profile.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

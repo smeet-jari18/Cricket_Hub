@@ -15,6 +15,7 @@ class AppConstants {
   static const String tournamentsCol = 'tournaments';
 
   // Phase 3 collections
+  static const String adminsCol = 'admins';
   static const String groundsCol = 'grounds';
   static const String slotsSubCol = 'slots';
   static const String blockedRulesSubCol = 'blocked_rules';

@@ -160,14 +160,18 @@ class _BodyState extends State<_Body> {
     }
   }
 
+  /// Reviews are tied to this booking — `firestore.rules` only accepts a
+  /// review whose `booking_id` is `completed` and belongs to the reviewer.
+  /// Umpire bookings review the umpire, ground bookings review the ground.
   void _openReview() {
     Navigator.pushNamed(
       context,
       LeaveReviewScreen.route,
       arguments: LeaveReviewArgs(
         bookingId: _b.id,
-        groundId: _b.resourceId,
+        groundId: _b.isUmpireBooking ? '' : _b.resourceId,
         groundName: _b.resourceName,
+        umpireUid: _b.isUmpireBooking ? _b.counterpartyUid : null,
       ),
     );
   }
@@ -243,7 +247,9 @@ class _BodyState extends State<_Body> {
             OutlinedButton.icon(
               onPressed: _openReview,
               icon: const Icon(Icons.star_outline_rounded),
-              label: const Text('Rate this ground'),
+              label: Text(
+                _b.isUmpireBooking ? 'Rate this umpire' : 'Rate this ground',
+              ),
             ),
           if (_canConfirmCash) ...[
             const SizedBox(height: 8),

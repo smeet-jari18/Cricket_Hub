@@ -7,6 +7,8 @@ import '../../providers/auth_provider.dart';
 import '../../services/umpire_service.dart';
 import '../../widgets/rating_stars.dart';
 import 'umpire_availability_screen.dart';
+import 'umpire_booking_requests_screen.dart';
+import 'umpire_edit_screen.dart';
 import 'umpire_onboarding_screen.dart';
 
 /// Sprint 10's `umpire_dashboard.dart` — the umpire's own home: status,
@@ -192,6 +194,33 @@ class _Dashboard extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 UmpireAvailabilityScreen.route,
+                arguments: umpire,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.inbox_rounded, color: AppTheme.accent),
+              title: const Text('Booking requests'),
+              subtitle: const Text('Confirm cash you received from organizers'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => Navigator.pushNamed(
+                context,
+                UmpireBookingRequestsScreen.route,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.edit_outlined, color: AppTheme.primary),
+              title: const Text('Edit profile'),
+              subtitle: const Text('Name, bio, experience and rates'),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => Navigator.pushNamed(
+                context,
+                UmpireEditScreen.route,
                 arguments: umpire,
               ),
             ),

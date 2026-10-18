@@ -37,6 +37,28 @@ service cloud.firestore {
         get(/databases/$(database)/documents/umpires/$(umpireId)).data.status == 'active';
     }
 
+    // A review is only credible if the reviewer actually played the booking.
+    // docs/CricketHub_Security_Phase3.md -> Threat model:
+    //   "Self-booking + self-review — Reviews require booking_id; Cloud
+    //    Function verifies booking.status === 'completed'".
+    // There is no Cloud Function on the review write path (the client writes
+    // the doc directly), so the same invariant is enforced here instead.
+    // A missing booking makes get() error out, which denies the write — that
+    // is exactly the behaviour we want.
+    function isCompletedGroundBookingFor(bookingId, groundId) {
+      return get(/databases/$(database)/documents/bookings/$(bookingId)).data.organizer_uid == request.auth.uid &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.status == 'completed' &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.kind == 'ground' &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.resource_id == groundId;
+    }
+
+    function isCompletedUmpireBookingFor(bookingId, umpireUid) {
+      return get(/databases/$(database)/documents/bookings/$(bookingId)).data.organizer_uid == request.auth.uid &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.status == 'completed' &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.kind == 'umpire' &&
+        get(/databases/$(database)/documents/bookings/$(bookingId)).data.counterparty_uid == umpireUid;
+    }
+
     // Keep account PII private. Only the owner can read or edit this document;
     // Cloud Functions use the Admin SDK for trusted career-stat updates.
     match /users/{userId} {
@@ -230,6 +252,18 @@ service cloud.firestore {
       }
     }
 
+    // ----- ADMINS -----
+    // Platform staff are identified by a document here (see isAdmin() above).
+    // A user may read ONLY their own entry, so the list of admins never leaks;
+    // writes stay server-side (Console / Admin SDK), so nobody can promote
+    // themselves. The app uses this read to decide whether to show the
+    // verification queue in Menu.
+    match /admins/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list: if false;
+      allow write: if false;
+    }
+
     // ----- BOOKINGS -----
     match /bookings/{bookingId} {
       allow read: if signedIn() && (
@@ -303,9 +337,13 @@ service cloud.firestore {
       allow read: if signedIn();
       allow create: if signedIn() &&
         request.resource.data.reviewer_uid == request.auth.uid &&
+        request.resource.data.booking_id is string &&
+        request.resource.data.booking_id.size() > 0 &&
         request.resource.data.rating is int &&
         request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
-        request.resource.data.text.size() <= 500;
+        request.resource.data.text.size() <= 500 &&
+        isCompletedGroundBookingFor(
+          request.resource.data.booking_id, request.resource.data.ground_id);
       allow update, delete: if isAdmin();
     }
 
@@ -313,9 +351,13 @@ service cloud.firestore {
       allow read: if signedIn();
       allow create: if signedIn() &&
         request.resource.data.reviewer_uid == request.auth.uid &&
+        request.resource.data.booking_id is string &&
+        request.resource.data.booking_id.size() > 0 &&
         request.resource.data.rating is int &&
         request.resource.data.rating >= 1 && request.resource.data.rating <= 5 &&
-        request.resource.data.text.size() <= 500;
+        request.resource.data.text.size() <= 500 &&
+        isCompletedUmpireBookingFor(
+          request.resource.data.booking_id, request.resource.data.umpire_uid);
       allow update, delete: if isAdmin();
     }
 

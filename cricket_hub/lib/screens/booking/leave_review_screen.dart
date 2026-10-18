@@ -65,6 +65,16 @@ class _BodyState extends State<_Body> {
   }
 
   Future<void> _submit() async {
+    if (widget.args.bookingId.trim().isEmpty) {
+      // Rules reject a review without a completed booking — fail early with a
+      // readable message instead of a PERMISSION_DENIED from Firestore.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Reviews come from a completed booking.'),
+        ),
+      );
+      return;
+    }
     if (_rating == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Pick a rating from 1 to 5 first.')),
@@ -80,6 +90,7 @@ class _BodyState extends State<_Body> {
       if (widget.args.isUmpireReview) {
         await service.submitUmpireReview(
           umpireUid: widget.args.umpireUid!,
+          bookingId: widget.args.bookingId,
           reviewerUid: user.uid,
           reviewerName: user.displayName,
           rating: _rating,
@@ -88,6 +99,7 @@ class _BodyState extends State<_Body> {
       } else {
         await service.submitGroundReview(
           groundId: widget.args.groundId,
+          bookingId: widget.args.bookingId,
           reviewerUid: user.uid,
           reviewerName: user.displayName,
           rating: _rating,

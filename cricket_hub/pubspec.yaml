@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # Firebase (backend)
   firebase_core: ^4.15.0
@@ -37,13 +39,23 @@ dependencies:
   razorpay_flutter: ^1.4.7
   # QR scanning (owner verifies a booking at the ground)
   mobile_scanner: ^7.4.2
+  firebase_storage: ^13.6.0
+  image_picker: ^1.2.4
+  http: ^1.6.0
+  shared_preferences: ^2.5.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # Device/emulator-level flow tests — run with:
+  #   flutter test integration_test/app_flow_test.dart \
+  #       --dart-define=USE_EMULATOR=true
+  integration_test:
+    sdk: flutter
   flutter_lints: ^6.0.0
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/player_hero.png

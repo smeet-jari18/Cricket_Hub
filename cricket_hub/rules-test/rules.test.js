@@ -190,18 +190,106 @@ async function run() {
       { added_at: 'now' }), 'fav')));
 
   // -------------------------------------------------- 6. reviews
-  console.log('\n[6] Reviews: create own only, correct rating bounds');
-  check('user CAN create own review',
+  console.log('\n[6] Reviews: own booking only, correct rating bounds');
+
+  // A review must reference a booking the reviewer actually completed.
+  // (docs/CricketHub_Security_Phase3.md -> "Self-booking + self-review")
+  await seed('bookings/Bk_done', {
+    organizer_uid: STRANGER, counterparty_uid: OWNER, kind: 'ground',
+    resource_id: 'Gr_1', status: 'completed', amount_paise: 100000,
+  });
+  await seed('bookings/Bk_pending', {
+    organizer_uid: STRANGER, counterparty_uid: OWNER, kind: 'ground',
+    resource_id: 'Gr_1', status: 'pending_payment', amount_paise: 100000,
+  });
+  await seed('bookings/Bk_other', {
+    organizer_uid: BUYER, counterparty_uid: OWNER, kind: 'ground',
+    resource_id: 'Gr_1', status: 'completed', amount_paise: 100000,
+  });
+  await seed('bookings/Bk_umpire_done', {
+    organizer_uid: STRANGER, counterparty_uid: 'U_1', kind: 'umpire',
+    resource_id: 'U_1', status: 'completed', amount_paise: 150000,
+  });
+
+  check('user CAN review a completed own booking',
     await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_new'),
-      { reviewer_uid: STRANGER, rating: 4, text: 'Nice' }), 'review'));
+      { booking_id: 'Bk_done', ground_id: 'Gr_1', reviewer_uid: STRANGER,
+        rating: 4, text: 'Nice' }), 'review'));
+  check('review WITHOUT booking_id is rejected',
+    !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_nobooking'),
+      { reviewer_uid: STRANGER, rating: 5, text: 'Drive-by review' }), 'review')));
+  check('review on a pending (unplayed) booking is rejected',
+    !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_pending'),
+      { booking_id: 'Bk_pending', ground_id: 'Gr_1', reviewer_uid: STRANGER,
+        rating: 5, text: 'Not played yet' }), 'review')));
+  check('review on someone else\'s booking is rejected',
+    !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_someone'),
+      { booking_id: 'Bk_other', ground_id: 'Gr_1', reviewer_uid: STRANGER,
+        rating: 5, text: 'Not mine' }), 'review')));
+  check('review for the wrong ground is rejected',
+    !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_wrongground'),
+      { booking_id: 'Bk_done', ground_id: 'Gr_OTHER', reviewer_uid: STRANGER,
+        rating: 5, text: 'Wrong ground' }), 'review')));
   check('user CANNOT create a review in someone else\'s name',
     !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_fake'),
-      { reviewer_uid: BUYER, rating: 5, text: 'Fake' }), 'review')));
+      { booking_id: 'Bk_done', ground_id: 'Gr_1', reviewer_uid: BUYER,
+        rating: 5, text: 'Fake' }), 'review')));
   check('rating out of bounds is rejected',
     !(await allowed(setDoc(doc(asStranger(), 'ground_reviews/R_bad'),
-      { reviewer_uid: STRANGER, rating: 9, text: 'Bad' }), 'review')));
+      { booking_id: 'Bk_done', ground_id: 'Gr_1', reviewer_uid: STRANGER,
+        rating: 9, text: 'Bad' }), 'review')));
+  check('umpire review requires a completed umpire booking',
+    await allowed(setDoc(doc(asStranger(), 'umpire_reviews/UR_ok'),
+      { booking_id: 'Bk_umpire_done', umpire_uid: 'U_1', reviewer_uid: STRANGER,
+        rating: 5, text: 'Good calls' }), 'review'));
+  check('umpire review without a booking is rejected',
+    !(await allowed(setDoc(doc(asStranger(), 'umpire_reviews/UR_nobooking'),
+      { umpire_uid: 'U_1', reviewer_uid: STRANGER, rating: 1,
+        text: 'Anonymous' }), 'review')));
   check('user CANNOT delete a review (admin only)',
     !(await allowed(deleteDoc(doc(asStranger(), 'ground_reviews/R_1')), 'review')));
+
+  // -------------------------------------------------- 6b. admins
+  console.log('\n[6b] Admin roster: read own entry only, never writable');
+
+  check('admin CAN read own /admins/{uid}',
+    await allowed(getDoc(doc(asAdmin(), 'admins/' + ADMIN)), 'admin doc'));
+  check('user CANNOT read someone else\'s admin entry',
+    !(await allowed(getDoc(doc(asBuyer(), 'admins/' + ADMIN)), 'admin doc')));
+  check('nobody can write themselves into /admins',
+    !(await allowed(setDoc(doc(asStranger(), 'admins/' + STRANGER),
+      { granted_at: 'now' }), 'admin doc')));
+  check('anon CANNOT read the admin doc',
+    !(await allowed(getDoc(doc(asNobody(), 'admins/' + ADMIN)), 'admin doc')));
+
+  console.log('\n[6c] Admin verification writes');
+
+  await seed('grounds/Gr_pending', {
+    name: 'Pending Turf', owner_uid: OWNER, city: 'Ahmedabad',
+    status: 'pending_verification', verified: false, avg_rating: 0,
+    review_count: 0, booking_count: 0,
+  });
+  await seed('umpires/U_pending', {
+    user_uid: STRANGER, display_name: 'Pending Umpire', status: 'pending_verification',
+    verified: false, day_rate: 3000, avg_rating: 0, review_count: 0,
+    matches_officiated: 0, city: 'Ahmedabad',
+  });
+
+  check('owner CANNOT verify their own ground',
+    !(await allowed(updateDoc(doc(asOwner(), 'grounds/Gr_pending'),
+      { verified: true, status: 'active' }), 'ground')));
+  check('admin CAN approve a pending ground',
+    await allowed(updateDoc(doc(asAdmin(), 'grounds/Gr_pending'),
+      { verified: true, status: 'active', updated_at: 'now' }), 'ground'));
+  check('umpire CANNOT verify themselves',
+    !(await allowed(updateDoc(doc(asStranger(), 'umpires/U_pending'),
+      { verified: true, status: 'active' }), 'umpire')));
+  check('admin CAN approve a pending umpire',
+    await allowed(updateDoc(doc(asAdmin(), 'umpires/U_pending'),
+      { verified: true, status: 'active', updated_at: 'now' }), 'umpire'));
+  check('admin CANNOT silently edit a ground\'s name (scope)',
+    !(await allowed(updateDoc(doc(asAdmin(), 'grounds/Gr_pending'),
+      { name: 'Hijacked' }), 'ground')));
 
   // -------------------------------------------------- 7. legacy Phase 1/2 still works
   console.log('\n[7] Phase 1/2 rules must not have regressed');
