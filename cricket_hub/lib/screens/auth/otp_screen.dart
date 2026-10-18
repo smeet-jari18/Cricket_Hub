@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../home/main_shell.dart';
 import 'profile_setup_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Six-digit phone verification step.
 class OtpScreen extends StatefulWidget {
@@ -39,9 +40,10 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _verify() async {
+    final l10n = AppLocalizations.of(context);
     if (_otpController.text.trim().length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter the 6-digit code.')),
+        SnackBar(content: Text(l10n.otpErrCode)),
       );
       return;
     }
@@ -58,10 +60,11 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Verify number')),
+      appBar: AppBar(title: Text(l10n.otpTitle)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -82,13 +85,13 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Check your messages',
+                  l10n.otpHeadline,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Enter the 6-digit code we sent to $_phoneNumber.',
+                  l10n.otpSentTo(_phoneNumber),
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -153,7 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  'The code can take a few seconds to arrive. Keep this screen open.',
+                  l10n.otpHint,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme

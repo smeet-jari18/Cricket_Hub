@@ -14,6 +14,7 @@ import '../../services/tournament_service.dart';
 import '../match/live_match_screen.dart';
 import '../match/toss_screen.dart';
 import '../team/create_team_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TournamentDetailScreen extends StatelessWidget {
   const TournamentDetailScreen({super.key});
@@ -22,9 +23,10 @@ class TournamentDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final tournamentId = ModalRoute.of(context)?.settings.arguments as String?;
     if (tournamentId == null || tournamentId.isEmpty) {
-      return const Scaffold(body: Center(child: Text('Tournament not found')));
+      return Scaffold(body: Center(child: Text(l10n.tournament_not_found)));
     }
 
     final service = context.read<TournamentService>();
@@ -59,18 +61,18 @@ class TournamentDetailScreen extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasError) {
-              return const _MessageState(
+              return _MessageState(
                 icon: Icons.cloud_off_outlined,
-                title: 'Couldn’t load this tournament',
-                subtitle: 'Check your connection and try again.',
+                title: l10n.couldn_t_load_this_tournament,
+                subtitle: l10n.checkConnection,
               );
             }
             final tournament = snapshot.data;
             if (tournament == null) {
-              return const _MessageState(
+              return _MessageState(
                 icon: Icons.search_off_rounded,
-                title: 'Tournament not found',
-                subtitle: 'It may have been removed by its organizer.',
+                title: l10n.tournament_not_found,
+                subtitle: l10n.it_may_have_been_removed_by,
               );
             }
             return TabBarView(
@@ -105,6 +107,7 @@ class _OverviewTabState extends State<_OverviewTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
     final isAdmin = tournament.isAdmin(uid);
     final dateLabel = _dateRange(tournament);
@@ -164,7 +167,7 @@ class _OverviewTabState extends State<_OverviewTab> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '${tournament.location} · $dateLabel',
+                      l10n.locationAndDate(tournament.location, dateLabel),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Color(0xFFE1F2EE), fontSize: 12),
@@ -180,7 +183,7 @@ class _OverviewTabState extends State<_OverviewTab> {
           children: [
             Expanded(
               child: _MetricCard(
-                label: 'TEAMS',
+                label: l10n.teams,
                 value: '${tournament.teamIds.length}',
                 icon: Icons.groups_rounded,
               ),
@@ -188,7 +191,7 @@ class _OverviewTabState extends State<_OverviewTab> {
             const SizedBox(width: 10),
             Expanded(
               child: _MetricCard(
-                label: 'FIXTURES',
+                label: l10n.fixtures,
                 value: tournament.fixturesGenerated ? '${tournament.fixtureCount}' : '—',
                 icon: Icons.event_note_rounded,
               ),
@@ -196,7 +199,7 @@ class _OverviewTabState extends State<_OverviewTab> {
             const SizedBox(width: 10),
             Expanded(
               child: _MetricCard(
-                label: 'OVERS',
+                label: l10n.overs,
                 value: '${tournament.totalOvers}',
                 icon: Icons.sports_cricket_rounded,
               ),
@@ -213,7 +216,7 @@ class _OverviewTabState extends State<_OverviewTab> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('Participating teams',
+                      child: Text(l10n.participating_teams,
                           style: Theme.of(context).textTheme.titleLarge),
                     ),
                     if (isAdmin && !tournament.fixturesGenerated)
@@ -226,9 +229,9 @@ class _OverviewTabState extends State<_OverviewTab> {
                 ),
                 const SizedBox(height: 9),
                 if (tournament.teams.isEmpty)
-                  const Text(
-                    'No teams added yet. Choose teams from your CricketHub team list to continue.',
-                    style: TextStyle(color: AppTheme.textSecondary, height: 1.45),
+                  Text(
+                    l10n.no_teams_added_yet_choose_teams,
+                    style: const TextStyle(color: AppTheme.textSecondary, height: 1.45),
                   )
                 else
                   ...tournament.teams.map((team) {
@@ -264,19 +267,19 @@ class _OverviewTabState extends State<_OverviewTab> {
                     label: Text(_generating ? 'Building schedule…' : 'Generate fixtures'),
                   ),
                   if (tournament.teamIds.length < 2)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        'Add at least two teams before generating the schedule.',
-                        style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                        l10n.add_at_least_two_teams_before,
+                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
                       ),
                     ),
                 ] else if (!tournament.fixturesGenerated)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 7),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7),
                     child: Text(
-                      'The organizer is still preparing the team list and fixtures.',
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                      l10n.the_organizer_is_still_preparing_the,
+                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
                     ),
                   ),
               ],
@@ -290,7 +293,7 @@ class _OverviewTabState extends State<_OverviewTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Points configuration',
+                Text(l10n.points_configuration,
                     style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 12),
                 Wrap(
@@ -322,6 +325,7 @@ class _OverviewTabState extends State<_OverviewTab> {
   }
 
   Future<void> _editTeams() async {
+    final l10n = AppLocalizations.of(context);
     if (_savingTeams) return;
     setState(() => _savingTeams = true);
     try {
@@ -341,12 +345,12 @@ class _OverviewTabState extends State<_OverviewTab> {
       await service.updateTournamentTeams(tournament.id, selected);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${selected.length} teams saved.')),
+        SnackBar(content: Text(l10n.teamsSavedCount(selected.length))),
       );
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not save teams: $error')),
+          SnackBar(content: Text(l10n.errCouldNotSaveTeams('$error'))),
         );
       }
     } finally {
@@ -355,10 +359,11 @@ class _OverviewTabState extends State<_OverviewTab> {
   }
 
   Future<void> _generateFixtures() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Generate fixture schedule?'),
+        title: Text(l10n.generate_fixture_schedule),
         content: Text(
           tournament.isKnockout
               ? 'CricketHub will build a seeded knockout bracket for ${tournament.teamIds.length} teams, including byes where needed. This cannot be edited after generation.'
@@ -367,11 +372,11 @@ class _OverviewTabState extends State<_OverviewTab> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Not yet'),
+            child: Text(l10n.not_yet),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Generate'),
+            child: Text(l10n.generate),
           ),
         ],
       ),
@@ -385,12 +390,12 @@ class _OverviewTabState extends State<_OverviewTab> {
       if (!mounted) return;
       final count = result['fixtureCount'] ?? tournament.fixtureCount;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Schedule ready · $count fixtures created.')),
+        SnackBar(content: Text(l10n.scheduleReadyCount(count))),
       );
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not generate fixtures: $error')),
+          SnackBar(content: Text(l10n.errCouldNotGenerateFixtures('$error'))),
         );
       }
     } finally {
@@ -419,6 +424,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return SafeArea(
       child: SizedBox(
@@ -428,11 +434,11 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Choose tournament teams',
+              Text(l10n.choose_tournament_teams,
                   style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 4),
               Text(
-                '${_selected.length}/${widget.maxTeams} selected · at least 2 required',
+                l10n.teamsSelectedOf(_selected.length, widget.maxTeams),
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
@@ -448,7 +454,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError) {
-                      return const Center(child: Text('Couldn’t load teams.'));
+                      return Center(child: Text(l10n.couldn_t_load_teams));
                     }
                     final teams = snapshot.data ?? const <Team>[];
                     if (teams.isEmpty) {
@@ -456,7 +462,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('Create a team before building your tournament.'),
+                            Text(l10n.create_a_team_before_building_your),
                             const SizedBox(height: 12),
                             OutlinedButton.icon(
                               onPressed: () {
@@ -465,7 +471,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
                                 navigator.pushNamed(CreateTeamScreen.route);
                               },
                               icon: const Icon(Icons.add_rounded),
-                              label: const Text('Create team'),
+                              label: Text(l10n.create_team),
                             ),
                           ],
                         ),
@@ -483,7 +489,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
                           activeColor: AppTheme.primary,
                           contentPadding: EdgeInsets.zero,
                           title: Text(team.teamName),
-                          subtitle: Text('${team.city} · ${team.roster.length} players'),
+                          subtitle: Text(l10n.cityAndPlayers(team.city, team.roster.length)),
                           secondary: const Icon(Icons.shield_outlined, color: AppTheme.primary),
                           onChanged: (value) {
                             if (value == true && !canAdd) return;
@@ -515,7 +521,7 @@ class _TeamPickerSheetState extends State<_TeamPickerSheet> {
                             teams.where((team) => _selected.contains(team.id)).toList(),
                           );
                         },
-                  child: const Text('Save selected teams'),
+                  child: Text(l10n.save_selected_teams),
                 ),
               ),
             ],
@@ -533,11 +539,12 @@ class _FixturesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (!tournament.fixturesGenerated) {
-      return const _MessageState(
+      return _MessageState(
         icon: Icons.event_note_outlined,
-        title: 'Fixtures aren’t ready yet',
-        subtitle: 'The organizer can add teams and generate the schedule from Overview.',
+        title: l10n.fixtures_aren_t_ready_yet,
+        subtitle: l10n.the_organizer_can_add_teams_and,
       );
     }
     return StreamBuilder<List<TournamentFixture>>(
@@ -547,18 +554,18 @@ class _FixturesTab extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return const _MessageState(
+          return _MessageState(
             icon: Icons.cloud_off_outlined,
-            title: 'Couldn’t load fixtures',
-            subtitle: 'Check your connection and try again.',
+            title: l10n.couldn_t_load_fixtures,
+            subtitle: l10n.checkConnection,
           );
         }
         final fixtures = snapshot.data ?? const <TournamentFixture>[];
         if (fixtures.isEmpty) {
-          return const _MessageState(
+          return _MessageState(
             icon: Icons.event_busy_outlined,
-            title: 'No fixtures found',
-            subtitle: 'Ask the organizer to regenerate the tournament schedule.',
+            title: l10n.no_fixtures_found,
+            subtitle: l10n.ask_the_organizer_to_regenerate_the,
           );
         }
         final grouped = <int, List<TournamentFixture>>{};
@@ -570,18 +577,18 @@ class _FixturesTab extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           children: [
             if (tournament.isKnockout)
-              const Padding(
-                padding: EdgeInsets.fromLTRB(4, 0, 4, 10),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 10),
                 child: Text(
-                  'Winners advance automatically. Fixtures marked TBD unlock when the previous round is complete.',
-                  style: TextStyle(color: AppTheme.textSecondary, height: 1.4),
+                  l10n.winners_advance_automatically_fixtures_marked_tbd,
+                  style: const TextStyle(color: AppTheme.textSecondary, height: 1.4),
                 ),
               ),
             for (final round in rounds) ...[
               Padding(
                 padding: const EdgeInsets.fromLTRB(4, 11, 4, 8),
                 child: Text(
-                  _roundName(tournament, round, grouped[round]!),
+                  _roundName(l10n, tournament, round, grouped[round]!),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -599,9 +606,12 @@ class _FixturesTab extends StatelessWidget {
     );
   }
 
-  String _roundName(Tournament tournament, int round, List<TournamentFixture> fixtures) {
-    final label = fixtures.isNotEmpty ? fixtures.first.roundName : 'Round $round';
-    return tournament.isRoundRobin ? 'Round $round' : label;
+  String _roundName(AppLocalizations l10n, Tournament tournament, int round,
+      List<TournamentFixture> fixtures) {
+    final label = fixtures.isNotEmpty
+        ? fixtures.first.roundName
+        : l10n.roundLabel('$round');
+    return tournament.isRoundRobin ? l10n.roundLabel('$round') : label;
   }
 }
 
@@ -613,6 +623,7 @@ class _FixtureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (fixture.status == 'bye' || fixture.isBye) {
       return Card(
         child: ListTile(
@@ -621,7 +632,7 @@ class _FixtureCard extends StatelessWidget {
             child: Icon(Icons.skip_next_rounded, color: AppTheme.primary),
           ),
           title: Text(fixture.winnerTeamName ?? fixture.teamAName ?? fixture.teamBName ?? 'Team'),
-          subtitle: Text('${fixture.roundName} · BYE — advances automatically'),
+          subtitle: Text(l10n.byeAdvances(fixture.roundName)),
           trailing: const Icon(Icons.check_circle_outline, color: AppTheme.primary),
         ),
       );
@@ -639,7 +650,7 @@ class _FixtureCard extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w800)),
           ),
           title: Text('${fixture.teamAName ?? 'TBD'}  vs  ${fixture.teamBName ?? 'TBD'}'),
-          subtitle: Text('${fixture.roundName} · Waiting for previous result'),
+          subtitle: Text(l10n.waitingForResult(fixture.roundName)),
           trailing: const Icon(Icons.lock_clock_outlined, color: AppTheme.textSecondary),
         ),
       );
@@ -652,7 +663,7 @@ class _FixtureCard extends StatelessWidget {
           return Card(
             child: ListTile(
               title: Text('${fixture.teamAName ?? 'Team A'}  vs  ${fixture.teamBName ?? 'Team B'}'),
-              subtitle: Text('${fixture.roundName} · Loading fixture'),
+              subtitle: Text(l10n.loadingFixture(fixture.roundName)),
               trailing: const CircularProgressIndicator(strokeWidth: 2),
             ),
           );
@@ -676,6 +687,7 @@ class _ReadyFixtureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
     final canScore = uid.isNotEmpty && uid == match.scorerUid;
     final isLive = match.isLive;
@@ -726,7 +738,7 @@ class _ReadyFixtureCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${match.teamAName}  vs  ${match.teamBName}',
+                        l10n.teamVsTeam(match.teamAName, match.teamBName),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.titleSmall,
@@ -784,6 +796,7 @@ class _TieResolutionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
     final isAdmin = tournament.isAdmin(uid);
     return Card(
@@ -795,14 +808,14 @@ class _TieResolutionCard extends StatelessWidget {
             Text('${fixture.teamAName ?? 'Team A'}  vs  ${fixture.teamBName ?? 'Team B'}',
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 4),
-            const Text('Tied fixture · organizer decision required',
-                style: TextStyle(color: AppTheme.accentText, fontSize: 12)),
+            Text(l10n.tied_fixture_organizer_decision_required,
+                style: const TextStyle(color: AppTheme.accentText, fontSize: 12)),
             if (isAdmin) ...[
               const SizedBox(height: 10),
               OutlinedButton.icon(
                 onPressed: () => _chooseWinner(context),
                 icon: const Icon(Icons.emoji_events_outlined),
-                label: const Text('Resolve tie'),
+                label: Text(l10n.resolve_tie),
               ),
             ],
           ],
@@ -812,6 +825,7 @@ class _TieResolutionCard extends StatelessWidget {
   }
 
   Future<void> _chooseWinner(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     final candidates = [
       if (fixture.teamAId != null) (fixture.teamAId!, fixture.teamAName ?? 'Team A'),
       if (fixture.teamBId != null) (fixture.teamBId!, fixture.teamBName ?? 'Team B'),
@@ -824,7 +838,7 @@ class _TieResolutionCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(18),
-              child: Text('Choose the advancing team',
+              child: Text(l10n.choose_the_advancing_team,
                   style: Theme.of(context).textTheme.titleLarge),
             ),
             ...candidates.map((team) => ListTile(
@@ -847,7 +861,7 @@ class _TieResolutionCard extends StatelessWidget {
     } catch (error) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not resolve the tie: $error')),
+          SnackBar(content: Text(l10n.errCouldNotResolveTie('$error'))),
         );
       }
     }
@@ -861,29 +875,30 @@ class _PointsTableTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (tournament.isKnockout) {
-      return const _MessageState(
+      return _MessageState(
         icon: Icons.account_tree_outlined,
-        title: 'Knockout bracket',
-        subtitle: 'There is no league points table for elimination matches. Follow each round in the Fixtures tab.',
+        title: l10n.knockout_bracket,
+        subtitle: l10n.there_is_no_league_points_table,
       );
     }
     final rows = tournament.pointsTable;
     if (rows.isEmpty) {
-      return const _MessageState(
+      return _MessageState(
         icon: Icons.leaderboard_outlined,
-        title: 'The table is ready for play',
-        subtitle: 'Points and NRR are calculated automatically after each completed fixture.',
+        title: l10n.the_table_is_ready_for_play,
+        subtitle: l10n.points_and_nrr_are_calculated_automatically,
       );
     }
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
       children: [
-        Text('League standings', style: Theme.of(context).textTheme.titleLarge),
+        Text(l10n.league_standings, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
-        const Text(
-          'Equal points are ranked by net run rate, then wins.',
-          style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+        Text(
+          l10n.equal_points_are_ranked_by_net,
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
         ),
         const SizedBox(height: 12),
         Card(
@@ -892,15 +907,15 @@ class _PointsTableTab extends StatelessWidget {
             child: DataTable(
               columnSpacing: 18,
               horizontalMargin: 14,
-              columns: const [
-                DataColumn(label: Text('#')),
-                DataColumn(label: Text('TEAM')),
-                DataColumn(label: Text('P')),
-                DataColumn(label: Text('W')),
-                DataColumn(label: Text('L')),
-                DataColumn(label: Text('T/NR')),
-                DataColumn(label: Text('PTS')),
-                DataColumn(label: Text('NRR')),
+              columns: [
+                const DataColumn(label: Text('#')),
+                DataColumn(label: Text(l10n.team)),
+                const DataColumn(label: Text('P')),
+                const DataColumn(label: Text('W')),
+                const DataColumn(label: Text('L')),
+                DataColumn(label: Text(l10n.t_nr)),
+                DataColumn(label: Text(l10n.pts)),
+                const DataColumn(label: Text('NRR')),
               ],
               rows: [
                 for (var index = 0; index < rows.length; index++)
@@ -930,9 +945,9 @@ class _PointsTableTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'NRR uses cumulative runs scored and conceded divided by legal balls. A completed all-out innings counts the full overs quota.',
-          style: TextStyle(color: AppTheme.textSecondary, fontSize: 11, height: 1.4),
+        Text(
+          l10n.nrr_uses_cumulative_runs_scored_and,
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11, height: 1.4),
         ),
       ],
     );
@@ -946,26 +961,27 @@ class _LeadersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final orange = _listFrom(tournament.leaderboards['orange_cap']);
     final purple = _listFrom(tournament.leaderboards['purple_cap']);
     if (orange.isEmpty && purple.isEmpty) {
-      return const _MessageState(
+      return _MessageState(
         icon: Icons.military_tech_outlined,
-        title: 'Player leaders appear here',
-        subtitle: 'The Orange Cap and Purple Cap lists update from completed tournament scorecards.',
+        title: l10n.player_leaders_appear_here,
+        subtitle: l10n.the_orange_cap_and_purple_cap,
       );
     }
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
       children: [
-        Text('Tournament leaders', style: Theme.of(context).textTheme.titleLarge),
+        Text(l10n.tournament_leaders, style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 4),
-        const Text('Live totals from completed fixtures.',
-            style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+        Text(l10n.live_totals_from_completed_fixtures,
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
         const SizedBox(height: 14),
         _LeaderListCard(
-          title: 'ORANGE CAP',
-          subtitle: 'Most tournament runs',
+          title: l10n.orange_cap,
+          subtitle: l10n.most_tournament_runs,
           color: AppTheme.accent,
           icon: Icons.sports_cricket_rounded,
           entries: orange,
@@ -974,8 +990,8 @@ class _LeadersTab extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _LeaderListCard(
-          title: 'PURPLE CAP',
-          subtitle: 'Most tournament wickets',
+          title: l10n.purple_cap,
+          subtitle: l10n.most_tournament_wickets,
           color: AppTheme.boundarySix,
           icon: Icons.sports_baseball_rounded,
           entries: purple,
@@ -1008,6 +1024,7 @@ class _LeaderListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(15, 15, 15, 8),
@@ -1037,9 +1054,9 @@ class _LeaderListCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             if (entries.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('No player stats yet.', style: TextStyle(color: AppTheme.textSecondary)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text(l10n.no_player_stats_yet, style: const TextStyle(color: AppTheme.textSecondary)),
               )
             else
               ...entries.take(10).toList().asMap().entries.map((indexed) {
@@ -1107,13 +1124,14 @@ class _RulePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: AppTheme.surfaceSoft,
         borderRadius: BorderRadius.circular(99),
       ),
-      child: Text('$label · $points pts',
+      child: Text(l10n.pointsShort(label, points),
           style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
     );
   }

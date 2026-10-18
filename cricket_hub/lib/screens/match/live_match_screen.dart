@@ -7,6 +7,7 @@ import '../../models/match_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/match_service.dart';
 import '../../services/notification_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Live Match Center: score summary, innings scorecards, commentary and
 /// per-match push-notification follow controls.
@@ -17,9 +18,10 @@ class LiveMatchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final matchId = ModalRoute.of(context)?.settings.arguments as String?;
     if (matchId == null || matchId.isEmpty) {
-      return const Scaffold(body: Center(child: Text('Match not found')));
+      return Scaffold(body: Center(child: Text(l10n.match_not_found)));
     }
     final matchService = context.read<MatchService>();
     final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
@@ -29,7 +31,7 @@ class LiveMatchScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Match Center'),
+          title: Text(l10n.match_center),
           actions: [
             if (uid.isNotEmpty)
               StreamBuilder<bool>(
@@ -69,10 +71,10 @@ class LiveMatchScreen extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             if (matchSnap.hasError) {
-              return const Center(child: Text('Couldn’t load the match.'));
+              return Center(child: Text(l10n.couldn_t_load_the_match));
             }
             final match = matchSnap.data;
-            if (match == null) return const Center(child: Text('Match not found'));
+            if (match == null) return Center(child: Text(l10n.match_not_found));
 
             return Column(
               children: [
@@ -104,6 +106,7 @@ class LiveMatchScreen extends StatelessWidget {
     required String matchId,
     required bool isFollowing,
   }) async {
+    final l10n = AppLocalizations.of(context);
     try {
       if (isFollowing) {
         await notifications.unfollowMatch(uid: uid, matchId: matchId);
@@ -121,7 +124,7 @@ class LiveMatchScreen extends StatelessWidget {
     } catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not update match alerts: $error')),
+        SnackBar(content: Text(l10n.errCouldNotUpdateAlerts('$error'))),
       );
     }
   }
@@ -134,6 +137,7 @@ class _LiveScoreHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final overs = '${match.ballsBowled ~/ 6}.${match.ballsBowled % 6}';
     final statusColor = match.isLive ? AppTheme.danger : AppTheme.primary;
     return Card(
@@ -146,7 +150,7 @@ class _LiveScoreHeader extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${match.teamAName}  vs  ${match.teamBName}',
+                    l10n.teamVsTeam(match.teamAName, match.teamBName),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
@@ -257,6 +261,7 @@ class _SummaryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final matchId = ModalRoute.of(context)?.settings.arguments as String?;
     final service = context.read<MatchService>();
     if (matchId == null) return const SizedBox.shrink();
@@ -275,19 +280,19 @@ class _SummaryTab extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 22),
               children: [
                 if (innings.isNotEmpty) ...[
-                  Text('Innings summary', style: Theme.of(context).textTheme.titleLarge),
+                  Text(l10n.innings_summary, style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 10),
                   ...innings.map((item) => _InningsSummaryCard(innings: item)),
                   const SizedBox(height: 15),
                 ],
-                Text('Recent balls', style: Theme.of(context).textTheme.titleLarge),
+                Text(l10n.recent_balls, style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 9),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(14),
                     child: recent.isEmpty
-                        ? const Text('No balls recorded yet.',
-                            style: TextStyle(color: AppTheme.textSecondary))
+                        ? Text(l10n.no_balls_recorded_yet,
+                            style: const TextStyle(color: AppTheme.textSecondary))
                         : Wrap(
                             spacing: 8,
                             runSpacing: 8,
@@ -306,7 +311,7 @@ class _SummaryTab extends StatelessWidget {
                         const SizedBox(width: 11),
                         Expanded(
                           child: Text(
-                            'Follow this match from the bell above to get a push alert when play starts or a wicket falls.',
+                            l10n.follow_this_match_from_the_bell,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
@@ -374,6 +379,7 @@ class _ScorecardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final matchId = ModalRoute.of(context)?.settings.arguments as String?;
     final service = context.read<MatchService>();
     if (matchId == null) return const SizedBox.shrink();
@@ -383,12 +389,12 @@ class _ScorecardTab extends StatelessWidget {
         final match = matchSnapshot.data;
         if (match == null) return const Center(child: CircularProgressIndicator());
         if (match.innings.isEmpty) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(28),
-              child: Text('The scorecard will fill in as innings are completed.',
+              padding: const EdgeInsets.all(28),
+              child: Text(l10n.the_scorecard_will_fill_in_as,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppTheme.textSecondary)),
+                  style: const TextStyle(color: AppTheme.textSecondary)),
             ),
           );
         }
@@ -421,6 +427,7 @@ class _InningsScorecard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final batting = _asMaps(innings['batting']);
     final bowling = _asMaps(innings['bowling']);
     final number = _int(innings['innings_number']);
@@ -448,7 +455,7 @@ class _InningsScorecard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Innings $number · ${(innings['team_name'] ?? 'Team') as String}',
+                    l10n.inningsHeader('$number', (innings['team_name'] ?? l10n.team) as String),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -482,12 +489,12 @@ class _InningsScorecard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _ScoreLine(
-              label: 'Extras',
+              label: l10n.extras,
               value: '$extrasTotal  (WD ${extras['wide']}, NB ${extras['no_ball']}, B ${extras['bye']}, LB ${extras['leg_bye']})',
             ),
-            _ScoreLine(label: 'Total', value: '$runs/$wickets  (${legalBalls ~/ 6}.${legalBalls % 6} ov)', bold: true),
+            _ScoreLine(label: l10n.total, value: '$runs/$wickets  (${legalBalls ~/ 6}.${legalBalls % 6} ov)', bold: true),
             const SizedBox(height: 15),
-            Text('Bowling', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.intlBowling, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 7),
             _ScoreTable(
               headings: const ['BOWLER', 'O', 'R', 'W', 'ECON'],
@@ -506,7 +513,7 @@ class _InningsScorecard extends StatelessWidget {
             ),
             if (fallOfWickets.isNotEmpty) ...[
               const SizedBox(height: 14),
-              Text('Fall of wickets', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.fall_of_wickets, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 6),
               Wrap(
                 spacing: 7,
@@ -600,6 +607,7 @@ class _CommentaryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final matchId = ModalRoute.of(context)?.settings.arguments as String?;
     if (matchId == null) return const SizedBox.shrink();
     final service = context.read<MatchService>();
@@ -611,9 +619,9 @@ class _CommentaryTab extends StatelessWidget {
         }
         final balls = snapshot.data ?? const <BallEvent>[];
         if (balls.isEmpty) {
-          return const Center(
-            child: Text('No balls yet — waiting for the first over!',
-                style: TextStyle(color: AppTheme.textSecondary)),
+          return Center(
+            child: Text(l10n.no_balls_yet_waiting_for_the,
+                style: const TextStyle(color: AppTheme.textSecondary)),
           );
         }
         return ListView.builder(
@@ -622,17 +630,18 @@ class _CommentaryTab extends StatelessWidget {
           itemBuilder: (context, index) {
             final ball = balls[index];
             final isBoundary = !ball.isWicket && (ball.runs == 4 || ball.runs == 6);
+            final extraName = ball.extraType == 'wide'
+                ? l10n.extraWide
+                : ball.extraType == 'no_ball'
+                    ? l10n.extraNoBall
+                    : ball.extraType.replaceAll('_', ' ');
             final eventLabel = ball.isWicket
-                ? 'WICKET! ${ball.playerOut} (${ball.wicketType})'
-                : ball.extraType == 'wide'
-                    ? 'Wide ball · ${ball.runs} run${ball.runs == 1 ? '' : 's'}'
-                    : ball.extraType == 'no_ball'
-                        ? 'No-ball · ${ball.runs} run${ball.runs == 1 ? '' : 's'}'
-                        : ball.extraType.isNotEmpty
-                            ? '${ball.extraType.replaceAll('_', ' ')} · ${ball.runs} run${ball.runs == 1 ? '' : 's'}'
-                            : isBoundary
-                                ? '${ball.runs} runs!'
-                                : '${ball.runs} run${ball.runs == 1 ? '' : 's'}';
+                ? l10n.wicketEvent(ball.playerOut, ball.wicketType)
+                : ball.extraType.isNotEmpty
+                    ? '$extraName · ${l10n.runsCount(ball.runs)}'
+                    : isBoundary
+                        ? l10n.runsExclaimed(ball.runs)
+                        : l10n.runsCount(ball.runs);
             return Card(
               margin: const EdgeInsets.only(bottom: 9),
               child: ListTile(
@@ -654,7 +663,7 @@ class _CommentaryTab extends StatelessWidget {
                 ),
                 title: Text(eventLabel, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text(
-                  'Inn ${ball.inningsNumber} · ${ball.overDisplay} · ${ball.bowlerName} to ${ball.strikerName}',
+                  l10n.ballDetail('${ball.inningsNumber}', ball.overDisplay, ball.bowlerName, ball.strikerName),
                 ),
               ),
             );

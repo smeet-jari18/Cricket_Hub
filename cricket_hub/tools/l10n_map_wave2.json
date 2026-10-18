@@ -1,0 +1,113 @@
+{
+  "_comment": "Wave 2 — first-run journey: auth, home, my cricket. Multi-line strings with escaped \\n and interpolated strings are patched separately.",
+  "files": {
+    "lib/screens/home/home_screen.dart": [
+      { "literal": "You’re all caught up.", "key": "homeAllCaughtUp" },
+      { "literal": "Bring your cricket community together.", "key": "homeHeroSubtitle" },
+      { "literal": "Live on the pitch", "key": "homeLiveOnPitch" },
+      { "literal": "Couldn’t load matches", "key": "homeErrMatches" },
+      { "literal": "Check your connection and try again.", "key": "checkConnection" },
+      { "literal": "No live matches right now", "key": "homeNoLive" },
+      { "literal": "The next great innings could be yours.", "key": "homeNoLiveSub" },
+      { "literal": "Your fixtures", "key": "homeYourFixtures" },
+      { "literal": "No fixtures yet", "key": "homeNoFixtures" },
+      { "literal": "Set up two teams and schedule your first game.", "key": "homeNoFixturesSub" },
+      { "literal": "Notifications", "key": "notificationsTooltip" },
+      { "literal": "Completed", "key": "matchStatusCompleted" },
+      { "literal": "Abandoned", "key": "matchStatusAbandoned" },
+      { "literal": "Scheduled", "key": "matchStatusScheduled" }
+    ],
+    "lib/screens/home/my_cricket_screen.dart": [
+      { "literal": "My Cricket", "key": "navMyCricket" },
+      { "literal": "Couldn’t load your teams. Please try again.", "key": "myCricketErrLoad" },
+      { "literal": "Your squads", "key": "myCricketYourSquads" },
+      { "literal": "Manage your teams and keep your playing group together.", "key": "myCricketSquadsSub" },
+      { "literal": "Your squad is ready for its first player.", "key": "myCricketEmptySquad" },
+      { "literal": "Remove player", "key": "removePlayer" },
+      { "literal": "Start with your first team", "key": "myCricketStartTitle" },
+      { "literal": "Add a team name and city, then invite your squad onto the field.", "key": "myCricketStartSub" },
+      { "literal": "Create your first team", "key": "myCricketCreateFirst" },
+      { "literal": "Add a player", "key": "addPlayerHint" },
+      { "literal": "Add player", "key": "addPlayerTooltip" }
+    ],
+    "lib/screens/auth/login_screen.dart": [
+      { "literal": "Welcome to CricketHub", "key": "loginEyebrow" },
+      { "literal": "Your team. Your ground. Your moment.", "key": "loginTagline" },
+      { "literal": "Enter a valid 10-digit mobile number.", "key": "loginErrMobile" },
+      { "literal": "Sign in to play", "key": "loginTitle" },
+      { "literal": "Use your mobile number to get a one-time code.", "key": "loginSubtitle" },
+      { "literal": "Mobile number", "key": "loginMobileLabel" },
+      { "literal": "OR", "key": "loginOr" },
+      { "literal": "Continue with Google", "key": "loginGoogle" },
+      { "literal": "By continuing, you agree to our Terms of Service and Privacy Policy.", "key": "loginTerms" }
+    ],
+    "lib/screens/auth/otp_screen.dart": [
+      { "literal": "Check your messages", "key": "otpHeadline" },
+      { "literal": "Verify number", "key": "otpTitle" },
+      { "literal": "Enter the 6-digit code.", "key": "otpErrCode" },
+      { "literal": "The code can take a few seconds to arrive. Keep this screen open.", "key": "otpHint" }
+    ],
+    "lib/screens/auth/profile_setup_screen.dart": [
+      { "literal": "Add your name to continue.", "key": "profileErrName" },
+      { "literal": "Player profile", "key": "profileTitle" },
+      { "literal": "Introduce yourself", "key": "profileHeadline" },
+      { "literal": "Add a few details so your teammates know who’s at the crease.", "key": "profileSubtitle" },
+      { "literal": "Player details", "key": "profileDetails" },
+      { "literal": "Display name", "key": "profileDisplayName" },
+      { "literal": "e.g. Rahul Sharma", "key": "profileNameHint" },
+      { "literal": "Batting style", "key": "profileBattingStyle" },
+      { "literal": "Bowling style", "key": "profileBowlingStyle" }
+    ]
+  },
+  "arb": {
+    "homeAllCaughtUp": { "en": "You’re all caught up.", "hi": "सब देख लिया — कुछ नया नहीं।", "ta": "எல்லாம் பார்த்துவிட்டீர்கள்." },
+    "homeHeroSubtitle": { "en": "Bring your cricket community together.", "hi": "अपनी क्रिकेट कम्युनिटी को साथ लाएँ।", "ta": "உங்கள் கிரிக்கெட் சமூகத்தை ஒன்றிணையுங்கள்." },
+    "homeLiveOnPitch": { "en": "Live on the pitch", "hi": "मैदान पर लाइव", "ta": "மைதானத்தில் நேரலை" },
+    "homeErrMatches": { "en": "Couldn’t load matches", "hi": "मैच लोड नहीं हो सके", "ta": "ஆட்டங்களை ஏற்ற முடியவில்லை" },
+    "homeNoLive": { "en": "No live matches right now", "hi": "अभी कोई लाइव मैच नहीं", "ta": "இப்போது நேரலை ஆட்டங்கள் இல்லை" },
+    "homeNoLiveSub": { "en": "The next great innings could be yours.", "hi": "अगली शानदार पारी आपकी हो सकती है।", "ta": "அடுத்த சிறந்த இன்னிங்ஸ் உங்களுடையதாக இருக்கலாம்." },
+    "homeYourFixtures": { "en": "Your fixtures", "hi": "आपके मैच", "ta": "உங்கள் ஆட்டங்கள்" },
+    "homeNoFixtures": { "en": "No fixtures yet", "hi": "अभी कोई मैच नहीं", "ta": "இன்னும் ஆட்டங்கள் இல்லை" },
+    "homeNoFixturesSub": { "en": "Set up two teams and schedule your first game.", "hi": "दो टीमें बनाएँ और अपना पहला मैच तय करें।", "ta": "இரண்டு அணிகளை உருவாக்கி உங்கள் முதல் ஆட்டத்தை திட்டமிடுங்கள்." },
+    "notificationsTooltip": { "en": "Notifications", "hi": "सूचनाएँ", "ta": "அறிவிப்புகள்" },
+    "matchStatusCompleted": { "en": "Completed", "hi": "पूरा हुआ", "ta": "நிறைவு" },
+    "matchStatusAbandoned": { "en": "Abandoned", "hi": "रद्द", "ta": "கைவிடப்பட்டது" },
+    "matchStatusScheduled": { "en": "Scheduled", "hi": "निर्धारित", "ta": "திட்டமிடப்பட்டது" },
+
+    "myCricketErrLoad": { "en": "Couldn’t load your teams. Please try again.", "hi": "आपकी टीमें लोड नहीं हो सकीं। फिर कोशिश करें।", "ta": "உங்கள் அணிகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்." },
+    "myCricketYourSquads": { "en": "Your squads", "hi": "आपकी टीमें", "ta": "உங்கள் அணிகள்" },
+    "myCricketSquadsSub": { "en": "Manage your teams and keep your playing group together.", "hi": "अपनी टीमें संभालें और खिलाड़ियों को साथ रखें।", "ta": "உங்கள் அணிகளை நிர்வகித்து வீரர்களை ஒன்றாக வைத்திருங்கள்." },
+    "myCricketEmptySquad": { "en": "Your squad is ready for its first player.", "hi": "आपकी टीम पहले खिलाड़ी के लिए तैयार है।", "ta": "உங்கள் அணி முதல் வீரருக்குத் தயாராக உள்ளது." },
+    "removePlayer": { "en": "Remove player", "hi": "खिलाड़ी हटाएँ", "ta": "வீரரை நீக்கு" },
+    "myCricketStartTitle": { "en": "Start with your first team", "hi": "अपनी पहली टीम से शुरू करें", "ta": "உங்கள் முதல் அணியுடன் தொடங்குங்கள்" },
+    "myCricketStartSub": { "en": "Add a team name and city, then invite your squad onto the field.", "hi": "टीम का नाम और शहर डालें, फिर अपने खिलाड़ियों को मैदान पर बुलाएँ।", "ta": "அணியின் பெயர் மற்றும் நகரத்தைச் சேர்த்து, உங்கள் வீரர்களை மைதானத்திற்கு அழையுங்கள்." },
+    "myCricketCreateFirst": { "en": "Create your first team", "hi": "अपनी पहली टीम बनाएँ", "ta": "உங்கள் முதல் அணியை உருவாக்குங்கள்" },
+    "addPlayerHint": { "en": "Add a player", "hi": "खिलाड़ी जोड़ें", "ta": "வீரரைச் சேர்" },
+    "addPlayerTooltip": { "en": "Add player", "hi": "खिलाड़ी जोड़ें", "ta": "வீரரைச் சேர்" },
+
+    "loginEyebrow": { "en": "Welcome to CricketHub", "hi": "CricketHub में आपका स्वागत है", "ta": "CricketHub-க்கு வரவேற்கிறோம்" },
+    "loginTagline": { "en": "Your team. Your ground. Your moment.", "hi": "आपकी टीम। आपका मैदान। आपका पल।", "ta": "உங்கள் அணி. உங்கள் மைதானம். உங்கள் தருணம்." },
+    "loginErrMobile": { "en": "Enter a valid 10-digit mobile number.", "hi": "सही 10 अंकों का मोबाइल नंबर डालें।", "ta": "சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்." },
+    "loginTitle": { "en": "Sign in to play", "hi": "खेलने के लिए साइन इन करें", "ta": "விளையாட உள்நுழையுங்கள்" },
+    "loginSubtitle": { "en": "Use your mobile number to get a one-time code.", "hi": "वन-टाइम कोड के लिए अपना मोबाइल नंबर डालें।", "ta": "ஒருமுறை குறியீட்டிற்கு உங்கள் மொபைல் எண்ணைப் பயன்படுத்தவும்." },
+    "loginMobileLabel": { "en": "Mobile number", "hi": "मोबाइल नंबर", "ta": "மொபைல் எண்" },
+    "loginOr": { "en": "OR", "hi": "या", "ta": "அல்லது" },
+    "loginGoogle": { "en": "Continue with Google", "hi": "Google से जारी रखें", "ta": "Google மூலம் தொடரவும்" },
+    "loginTerms": { "en": "By continuing, you agree to our Terms of Service and Privacy Policy.", "hi": "जारी रखने पर आप हमारी सेवा शर्तों और गोपनीयता नीति से सहमत होते हैं।", "ta": "தொடர்வதன் மூலம் எங்கள் சேவை விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கையை ஏற்கிறீர்கள்." },
+
+    "otpHeadline": { "en": "Check your messages", "hi": "अपने संदेश देखें", "ta": "உங்கள் செய்திகளைப் பாருங்கள்" },
+    "otpTitle": { "en": "Verify number", "hi": "नंबर सत्यापित करें", "ta": "எண்ணைச் சரிபார்" },
+    "otpErrCode": { "en": "Enter the 6-digit code.", "hi": "6 अंकों का कोड डालें।", "ta": "6 இலக்கக் குறியீட்டை உள்ளிடவும்." },
+    "otpHint": { "en": "The code can take a few seconds to arrive. Keep this screen open.", "hi": "कोड आने में कुछ सेकंड लग सकते हैं। यह स्क्रीन खुली रखें।", "ta": "குறியீடு வர சில வினாடிகள் ஆகலாம். இந்தத் திரையைத் திறந்தே வைத்திருங்கள்." },
+
+    "profileErrName": { "en": "Add your name to continue.", "hi": "जारी रखने के लिए अपना नाम जोड़ें।", "ta": "தொடர உங்கள் பெயரைச் சேர்க்கவும்." },
+    "profileTitle": { "en": "Player profile", "hi": "खिलाड़ी प्रोफ़ाइल", "ta": "வீரர் சுயவிவரம்" },
+    "profileHeadline": { "en": "Introduce yourself", "hi": "अपना परिचय दें", "ta": "உங்களை அறிமுகப்படுத்துங்கள்" },
+    "profileSubtitle": { "en": "Add a few details so your teammates know who’s at the crease.", "hi": "कुछ जानकारी जोड़ें ताकि साथी खिलाड़ी जानें कि क्रीज़ पर कौन है।", "ta": "க்ரீஸில் யார் என்று உங்கள் அணியினர் அறிய சில விவரங்களைச் சேர்க்கவும்." },
+    "profileDetails": { "en": "Player details", "hi": "खिलाड़ी की जानकारी", "ta": "வீரர் விவரங்கள்" },
+    "profileDisplayName": { "en": "Display name", "hi": "डिस्प्ले नाम", "ta": "காட்சிப் பெயர்" },
+    "profileNameHint": { "en": "e.g. Rahul Sharma", "hi": "जैसे राहुल शर्मा", "ta": "எ.கா. ராகுல் சர்மா" },
+    "profileBattingStyle": { "en": "Batting style", "hi": "बल्लेबाज़ी शैली", "ta": "பேட்டிங் பாணி" },
+    "profileBowlingStyle": { "en": "Bowling style", "hi": "गेंदबाज़ी शैली", "ta": "பந்துவீச்சு பாணி" }
+  }
+}

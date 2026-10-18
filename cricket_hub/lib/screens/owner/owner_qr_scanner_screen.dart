@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
 import '../../services/booking_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 9's `owner_qr_scanner_screen.dart`.
 ///
@@ -74,8 +75,9 @@ class _OwnerQrScannerScreenState extends State<OwnerQrScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan booking QR')),
+      appBar: AppBar(title: Text(l10n.scan_booking_qr)),
       body: kIsWeb || !(defaultTargetPlatform == TargetPlatform.android ||
               defaultTargetPlatform == TargetPlatform.iOS)
           ? _unsupported()
@@ -108,25 +110,26 @@ class _OwnerQrScannerScreenState extends State<OwnerQrScannerScreen> {
   }
 
   Widget _unsupported() {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.qr_code_scanner_rounded,
+            const Icon(Icons.qr_code_scanner_rounded,
                 size: 48, color: AppTheme.textSecondary),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              'Camera scanning runs in the Android and iOS app.',
+              l10n.camera_scanning_runs_in_the_android,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w700),
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'Open CricketHub on a phone to verify a booking QR.',
+              l10n.open_crickethub_on_a_phone_to,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textSecondary),
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
           ],
         ),
@@ -135,15 +138,16 @@ class _OwnerQrScannerScreenState extends State<OwnerQrScannerScreen> {
   }
 
   Widget _sheet() {
+    final l10n = AppLocalizations.of(context);
     if (_error != null) {
       return _panel(
         color: AppTheme.danger,
         icon: Icons.error_outline_rounded,
-        title: 'Not valid',
+        title: l10n.not_valid,
         body: _error!,
         action: TextButton(
           onPressed: _scanAgain,
-          child: const Text('Scan again'),
+          child: Text(l10n.scan_again),
         ),
       );
     }
@@ -152,7 +156,7 @@ class _OwnerQrScannerScreenState extends State<OwnerQrScannerScreen> {
       return _panel(
         color: AppTheme.boundaryFour,
         icon: Icons.verified_rounded,
-        title: 'Booking verified',
+        title: l10n.booking_verified,
         body: [
           if (b['resourceName'] != null) '${b['resourceName']}',
           if (b['date'] != null && b['slotStart'] != null)
@@ -161,14 +165,14 @@ class _OwnerQrScannerScreenState extends State<OwnerQrScannerScreen> {
         ].where((s) => s.isNotEmpty).join('\n'),
         action: TextButton(
           onPressed: _scanAgain,
-          child: const Text('Scan next'),
+          child: Text(l10n.scan_next),
         ),
       );
     }
     return _panel(
       color: AppTheme.textPrimary,
       icon: Icons.qr_code_scanner_rounded,
-      title: 'Point at the organizer’s QR',
+      title: l10n.point_at_the_organizer_s_qr,
       body: 'The booking is confirmed only if the code is valid and belongs '
           'to one of your grounds.',
     );

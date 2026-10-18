@@ -10,6 +10,7 @@ import '../../providers/scoring_engine.dart';
 import '../../providers/scoring_provider.dart';
 import '../../services/match_service.dart';
 import '../../widgets/score_button.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// THE MOST CRITICAL SCREEN (UI/UX doc Screen 2).
 /// Top 45% = context (score, batsmen, bowler)
@@ -70,12 +71,13 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final match = args?['match'] as CricketMatch?;
 
     if (match == null) {
-      return const Scaffold(body: Center(child: Text('Match not found')));
+      return Scaffold(body: Center(child: Text(l10n.match_not_found)));
     }
 
     return ChangeNotifierProvider(
@@ -88,7 +90,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('${s.battingTeamName} batting'),
+              title: Text(l10n.battingTeamLabel(s.battingTeamName)),
               actions: [
                 // UNDO — prominent & frictionless (UI/UX principle 3)
                 TextButton.icon(
@@ -96,8 +98,8 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                       ? null
                       : () => scoring.undo(),
                   icon: const Icon(Icons.undo, color: AppTheme.accentText),
-                  label: const Text('Undo',
-                      style: TextStyle(color: AppTheme.accentText)),
+                  label: Text(l10n.undo,
+                      style: const TextStyle(color: AppTheme.accentText)),
                 ),
               ],
             ),
@@ -109,10 +111,10 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                     width: double.infinity,
                     color: AppTheme.accent,
                     padding: const EdgeInsets.all(6),
-                    child: const Text(
-                      'You are offline. Scoring continues — syncs automatically.',
+                    child: Text(
+                      l10n.you_are_offline_scoring_continues_syncs,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -178,7 +180,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                                   onTap: () => _askByeRuns(scoring, true)),
                               const SizedBox(width: 8),
                               ScoreButton(
-                                label: 'WICKET',
+                                label: l10n.wicket,
                                 color: AppTheme.danger,
                                 textColor: Colors.white,
                                 flex: 2,
@@ -223,6 +225,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   }
 
   void _showOpenersDialog(BuildContext context, ScoringProvider scoring) {
+    final l10n = AppLocalizations.of(context);
     final c1 = TextEditingController();
     final c2 = TextEditingController();
     final c3 = TextEditingController();
@@ -231,7 +234,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
       context: context,
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Match Setup'),
+        title: Text(l10n.match_setup),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -240,19 +243,19 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                   controller: c1,
                   textCapitalization: TextCapitalization.words,
                   decoration:
-                      const InputDecoration(hintText: 'Striker name')),
+                      InputDecoration(hintText: l10n.striker_name)),
               const SizedBox(height: 12),
               TextField(
                   controller: c2,
                   textCapitalization: TextCapitalization.words,
                   decoration:
-                      const InputDecoration(hintText: 'Non-striker name')),
+                      InputDecoration(hintText: l10n.non_striker_name)),
               const SizedBox(height: 12),
               TextField(
                   controller: c3,
                   textCapitalization: TextCapitalization.words,
                   decoration:
-                      const InputDecoration(hintText: 'Opening bowler')),
+                      InputDecoration(hintText: l10n.opening_bowler)),
             ],
           ),
         ),
@@ -269,7 +272,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               scoring.setBowler(c3.text);
               Navigator.pop(dialogContext);
             },
-            child: const Text("Let's Play"),
+            child: Text(l10n.letsPlay),
           ),
         ],
       ),
@@ -277,6 +280,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   }
 
   void _showNewBatsmanDialog(BuildContext context, ScoringProvider scoring) {
+    final l10n = AppLocalizations.of(context);
     final c = TextEditingController();
     String? error;
     _batsmanDialogOpen = true;
@@ -286,7 +290,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (dialogContext, setDialogState) => AlertDialog(
-          title: const Text('WICKET! Next batter'),
+          title: Text(l10n.wicket_next_batter),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,17 +300,16 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
                 autofocus: true,
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
-                  hintText: 'New batter name',
+                  hintText: l10n.new_batter_name,
                   errorText: error,
                 ),
                 onSubmitted: (_) => _sendInNewBatsman(
                     scoring, dialogContext, c, (e) => setDialogState(() => error = e)),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'A batter who is already out (or already at the crease) '
-                'cannot come in again.',
-                style: TextStyle(
+              Text(
+                l10n.batterAlreadyUsed,
+                style: const TextStyle(
                     fontSize: 12, color: AppTheme.textSecondary),
               ),
             ],
@@ -315,7 +318,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
             TextButton(
               onPressed: () => _sendInNewBatsman(
                   scoring, dialogContext, c, (e) => setDialogState(() => error = e)),
-              child: const Text('Send in'),
+              child: Text(l10n.send_in),
             ),
           ],
         ),
@@ -347,6 +350,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   }
 
   void _showNewBowlerDialog(BuildContext context, ScoringProvider scoring) {
+    final l10n = AppLocalizations.of(context);
     final c = TextEditingController();
     String? error;
     _bowlerDialogOpen = true;
@@ -359,7 +363,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (dialogContext, setDialogState) => AlertDialog(
-        title: const Text('Over complete! Next bowler'),
+        title: Text(l10n.over_complete_next_bowler),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -382,7 +386,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               autofocus: true,
               textCapitalization: TextCapitalization.words,
               decoration: InputDecoration(
-                hintText: 'Or type a new bowler',
+                hintText: l10n.or_type_a_new_bowler,
                 errorText: error,
               ),
             ),
@@ -398,7 +402,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               scoring.setBowler(c.text);
               Navigator.pop(dialogContext);
             },
-            child: const Text('Continue'),
+            child: Text(l10n.continueLabel),
           ),
         ],
         ),
@@ -408,6 +412,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
   void _showInningsCompleteDialog(
       BuildContext context, ScoringProvider scoring, dynamic s) {
+    final l10n = AppLocalizations.of(context);
     final firstInnings = scoring.inningsNumber == 1;
     showDialog(
       context: context,
@@ -444,7 +449,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
               } catch (error) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Could not save innings: $error')),
+                  SnackBar(content: Text(l10n.errCouldNotSaveInnings('$error'))),
                 );
               }
             },
@@ -485,6 +490,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
 
   void _promptNumber(BuildContext context, String title,
       TextEditingController controller, VoidCallback onConfirm) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -497,14 +503,14 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               onConfirm();
               Navigator.pop(dialogContext);
             },
-            child: const Text('OK'),
+            child: Text(l10n.ok),
           ),
         ],
       ),
@@ -512,6 +518,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
   }
 
   void _askWicketType(ScoringProvider scoring) {
+    final l10n = AppLocalizations.of(context);
     const types = [
       'bowled',
       'caught',
@@ -523,7 +530,7 @@ class _ScoringDashboardScreenState extends State<ScoringDashboardScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => SimpleDialog(
-        title: const Text('How was the batter out?'),
+        title: Text(l10n.how_was_the_batter_out),
         children: types
             .map((t) => SimpleDialogOption(
                   onPressed: () {
@@ -548,6 +555,7 @@ class _ContextBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final bowler = s.bowlers[s.currentBowler];
 
     return Card(
@@ -611,9 +619,9 @@ class _ContextBlock extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'TARGET',
-                          style: TextStyle(
+                        Text(
+                          l10n.target,
+                          style: const TextStyle(
                             color: AppTheme.accentText,
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
@@ -629,7 +637,7 @@ class _ContextBlock extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Need ${s.runsNeeded}',
+                          l10n.needRuns(s.runsNeeded),
                           style: const TextStyle(
                             color: AppTheme.accentText,
                             fontSize: 10,
@@ -647,14 +655,14 @@ class _ContextBlock extends StatelessWidget {
                       color: AppTheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.circle, size: 7, color: AppTheme.primary),
-                        SizedBox(width: 6),
+                        const Icon(Icons.circle, size: 7, color: AppTheme.primary),
+                        const SizedBox(width: 6),
                         Text(
-                          'INNINGS 1',
-                          style: TextStyle(
+                          l10n.innings_1,
+                          style: const TextStyle(
                             color: AppTheme.primary,
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
@@ -683,9 +691,9 @@ class _ContextBlock extends StatelessWidget {
             const SizedBox(height: 5),
             Row(
               children: [
-                const Text(
-                  'THIS OVER',
-                  style: TextStyle(
+                Text(
+                  l10n.this_over,
+                  style: const TextStyle(
                     color: AppTheme.textSecondary,
                     fontSize: 9,
                     fontWeight: FontWeight.w800,
@@ -696,9 +704,9 @@ class _ContextBlock extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: s.thisOverBalls.isEmpty
-                        ? const [
-                            Text('Ready to bowl',
-                                style: TextStyle(
+                        ? [
+                            Text(l10n.ready_to_bowl,
+                                style: const TextStyle(
                                     color: AppTheme.textSecondary,
                                     fontSize: 10)),
                           ]
@@ -721,7 +729,7 @@ class _ContextBlock extends StatelessWidget {
                 const SizedBox(width: 5),
                 Expanded(
                   child: Text(
-                    'Bowling: ${s.currentBowler.isEmpty ? '—' : s.currentBowler}',
+                    l10n.bowlingLabel(s.currentBowler.isEmpty ? '—' : s.currentBowler),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

@@ -3,12 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class CareerStatsScreen extends StatelessWidget {
   const CareerStatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final user = context.watch<AuthProvider>().appUser;
     final stats = user?.careerStats ?? const <String, dynamic>{};
     final matches = _value(stats, 'matches_played');
@@ -60,7 +62,7 @@ class CareerStatsScreen extends StatelessWidget {
           children: [
             Expanded(
               child: _HeroStatCard(
-                label: 'MATCHES',
+                label: l10n.matches,
                 value: '$matches',
                 supporting: 'Career appearances',
                 icon: Icons.sports_cricket_rounded,
@@ -70,7 +72,7 @@ class CareerStatsScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: _HeroStatCard(
-                label: 'TOTAL RUNS',
+                label: l10n.total_runs,
                 value: '$runs',
                 supporting: '${_value(stats, 'fifties')} 50s · ${_value(stats, 'hundreds')} 100s',
                 icon: Icons.sports_baseball_outlined,
@@ -88,24 +90,24 @@ class CareerStatsScreen extends StatelessWidget {
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
           children: [
-            _StatCard(label: 'BATTING AVERAGE', value: _decimal(stats['batting_average'])),
-            _StatCard(label: 'STRIKE RATE', value: _decimal(stats['strike_rate'])),
-            _StatCard(label: 'WICKETS', value: '$wickets'),
-            _StatCard(label: 'ECONOMY', value: _decimal(stats['economy'])),
-            _StatCard(label: 'HIGH SCORE', value: '${_value(stats, 'high_score')}'),
-            _StatCard(label: 'BEST BOWLING', value: (stats['best_bowling'] ?? '—') as String),
+            _StatCard(label: l10n.batting_average, value: _decimal(stats['batting_average'])),
+            _StatCard(label: l10n.strike_rate, value: _decimal(stats['strike_rate'])),
+            _StatCard(label: l10n.menuWickets, value: '$wickets'),
+            _StatCard(label: l10n.economy, value: _decimal(stats['economy'])),
+            _StatCard(label: l10n.high_score, value: '${_value(stats, 'high_score')}'),
+            _StatCard(label: l10n.best_bowling, value: (stats['best_bowling'] ?? '—') as String),
             _StatCard(label: '4s / 6s', value: '${_value(stats, 'fours')} / ${_value(stats, 'sixes')}'),
-            _StatCard(label: '5-WICKET HAULS', value: '${_value(stats, 'five_wicket_hauls')}'),
+            _StatCard(label: l10n.k_5_wicket_hauls, value: '${_value(stats, 'five_wicket_hauls')}'),
           ],
         ),
         const SizedBox(height: 20),
         Row(
           children: [
             Expanded(
-              child: Text('Recent form',
+              child: Text(l10n.recent_form,
                   style: Theme.of(context).textTheme.titleLarge),
             ),
-            Text('LAST ${recent.length.clamp(0, 5)}',
+            Text(l10n.lastNForm(recent.length.clamp(0, 5)),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AppTheme.textSecondary,
                     )),

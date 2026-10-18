@@ -6,6 +6,7 @@ import '../../core/app_theme.dart';
 import '../../models/umpire_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/booking_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// One bookable window for an umpire.
 ///
@@ -18,7 +19,6 @@ import '../../services/booking_service.dart';
 class UmpireBookingWindow {
   const UmpireBookingWindow({
     required this.id,
-    required this.label,
     required this.start,
     required this.end,
     required this.durationMinutes,
@@ -26,7 +26,21 @@ class UmpireBookingWindow {
   });
 
   final String id;
-  final String label;
+
+  /// Window names live in the ARB files, so the label is resolved at build
+  /// time from the id instead of being baked into the const list.
+  String labelOf(AppLocalizations l10n) {
+    switch (id) {
+      case 'morning':
+        return l10n.morning;
+      case 'afternoon':
+        return l10n.afternoon;
+      case 'evening':
+        return l10n.evening;
+      default:
+        return l10n.full_day;
+    }
+  }
   final String start; // 'HH:mm'
   final String end; // 'HH:mm'
   final int durationMinutes;
@@ -35,7 +49,6 @@ class UmpireBookingWindow {
   static const List<UmpireBookingWindow> all = [
     UmpireBookingWindow(
       id: 'morning',
-      label: 'Morning',
       start: '06:00',
       end: '09:00',
       durationMinutes: 180,
@@ -43,7 +56,6 @@ class UmpireBookingWindow {
     ),
     UmpireBookingWindow(
       id: 'afternoon',
-      label: 'Afternoon',
       start: '12:00',
       end: '15:00',
       durationMinutes: 180,
@@ -51,7 +63,6 @@ class UmpireBookingWindow {
     ),
     UmpireBookingWindow(
       id: 'evening',
-      label: 'Evening',
       start: '17:00',
       end: '20:00',
       durationMinutes: 180,
@@ -59,7 +70,6 @@ class UmpireBookingWindow {
     ),
     UmpireBookingWindow(
       id: 'full_day',
-      label: 'Full day',
       start: '08:00',
       end: '20:00',
       durationMinutes: 720,
@@ -69,7 +79,6 @@ class UmpireBookingWindow {
 
   int get hours => durationMinutes ~/ 60;
 
-  String get labelWithTime => '$label · $start–$end';
 
   /// Base price in paise, before the platform fee.
   ///
@@ -103,11 +112,12 @@ class UmpireBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Umpire) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Book umpire')),
-        body: const Center(child: Text('No umpire selected.')),
+        appBar: AppBar(title: Text(l10n.book_umpire)),
+        body: Center(child: Text(l10n.noUmpireSelected)),
       );
     }
     return _BookingBody(umpire: arg);
@@ -170,6 +180,7 @@ class _BookingBodyState extends State<_BookingBody> {
   String get _rupees => '₹${(_basePaise / 100).round()}';
 
   Future<void> _book() async {
+    final l10n = AppLocalizations.of(context);
     final user = context.read<AuthProvider>().appUser;
     if (user == null) {
       _snack('Please sign in first.');
@@ -204,15 +215,14 @@ class _BookingBodyState extends State<_BookingBody> {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Umpire requested'),
+          title: Text(l10n.umpire_requested),
           content: Text(
-            'Pay $_rupees in cash to ${_umpire.displayName} on the day. '
-            'They will confirm the booking in the app once they receive it.',
+            l10n.payCashHelp('₹$_rupees', _umpire.displayName),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Got it'),
+              child: Text(l10n.got_it),
             ),
           ],
         ),
@@ -232,6 +242,7 @@ class _BookingBodyState extends State<_BookingBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final umpire = _umpire;
     final base = _basePaise;
     final fee = _window.platformFeePaise(
@@ -241,13 +252,13 @@ class _BookingBodyState extends State<_BookingBody> {
     final today = DateTime.now();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Book ${umpire.displayName}')),
+      appBar: AppBar(title: Text(l10n.bookUmpireName(umpire.displayName))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'PICK A DATE',
-            style: TextStyle(
+          Text(
+            l10n.pick_a_date,
+            style: const TextStyle(
               fontSize: 10,
               letterSpacing: 1,
               fontWeight: FontWeight.w800,
@@ -318,9 +329,9 @@ class _BookingBodyState extends State<_BookingBody> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'PICK A WINDOW',
-            style: TextStyle(
+          Text(
+            l10n.pick_a_window,
+            style: const TextStyle(
               fontSize: 10,
               letterSpacing: 1,
               fontWeight: FontWeight.w800,
@@ -346,9 +357,9 @@ class _BookingBodyState extends State<_BookingBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'PRICE BREAKDOWN',
-                    style: TextStyle(
+                  Text(
+                    l10n.price_breakdown,
+                    style: const TextStyle(
                       fontSize: 10,
                       letterSpacing: 1,
                       fontWeight: FontWeight.w800,
@@ -357,7 +368,7 @@ class _BookingBodyState extends State<_BookingBody> {
                   ),
                   const SizedBox(height: 10),
                   _moneyRow(
-                    '${_window.label} (${_window.hours}h × ₹${umpire.hourlyRate})',
+                    '${_window.labelOf(l10n)} (${_window.hours}h × ₹${umpire.hourlyRate})',
                     '₹${(base / 100).round()}',
                   ),
                   _moneyRow(
@@ -372,8 +383,7 @@ class _BookingBodyState extends State<_BookingBody> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Umpire receives ₹${((base - fee) / 100).round()} after the '
-                    'platform fee.',
+                    l10n.umpireReceives(((base - fee) / 100).round()),
                     style: const TextStyle(
                       fontSize: 11,
                       color: AppTheme.textSecondary,
@@ -384,20 +394,18 @@ class _BookingBodyState extends State<_BookingBody> {
             ),
           ),
           const SizedBox(height: 12),
-          const Card(
+          Card(
             color: AppTheme.accentContainer,
             child: Padding(
-              padding: EdgeInsets.all(14),
+              padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
-                  Icon(Icons.payments_outlined, size: 18),
-                  SizedBox(width: 10),
+                  const Icon(Icons.payments_outlined, size: 18),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Cash on ground: nothing is charged online. The umpire '
-                      'confirms the cash in the app, then this booking is '
-                      'locked in.',
-                      style: TextStyle(fontSize: 12),
+                      l10n.umpireCashHelp,
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ),
                 ],
@@ -463,6 +471,7 @@ class _WindowTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final price = window.basePricePaise(
       hourlyRate: hourlyRate,
       dayRate: dayRate,
@@ -495,12 +504,12 @@ class _WindowTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    window.label,
+                    window.labelOf(l10n),
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${window.start}–${window.end} · ${window.hours}h',
+                    l10n.windowLabel(window.start, window.end, window.hours),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppTheme.textSecondary,

@@ -6,6 +6,7 @@ import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/tournament_service.dart';
 import 'tournament_detail_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class CreateTournamentScreen extends StatefulWidget {
   const CreateTournamentScreen({super.key});
@@ -63,12 +64,13 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
   }
 
   Future<void> _create() async {
+    final l10n = AppLocalizations.of(context);
     if (!_formKey.currentState!.validate()) return;
     final uid = context.read<AuthProvider>().firebaseUser?.uid;
     if (uid == null || uid.isEmpty) return;
     if (_endDate != null && _endDate!.isBefore(_startDate)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('End date must be after the start date.')),
+        SnackBar(content: Text(l10n.end_date_must_be_after_the)),
       );
       return;
     }
@@ -100,16 +102,17 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       if (!mounted) return;
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not create tournament: $error')),
+        SnackBar(content: Text(l10n.errCouldNotCreateTournament('$error'))),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final dateFormat = DateFormat('EEE, d MMM yyyy');
     return Scaffold(
-      appBar: AppBar(title: const Text('Create tournament')),
+      appBar: AppBar(title: Text(l10n.createTournament)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -119,11 +122,11 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
                 children: [
-                  Text('Bring every fixture together',
+                  Text(l10n.bring_every_fixture_together,
                       style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 6),
                   Text(
-                    'Set the competition rules first. You can choose app teams and generate the schedule next.',
+                    l10n.set_the_competition_rules_first_you,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -136,17 +139,17 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Tournament details',
+                          Text(l10n.tournament_details,
                               style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(height: 14),
                           TextFormField(
                             controller: _nameController,
                             textCapitalization: TextCapitalization.words,
                             maxLength: 60,
-                            decoration: const InputDecoration(
-                              labelText: 'Tournament name',
-                              hintText: 'e.g. Ahmedabad Monsoon Cup',
-                              prefixIcon: Icon(Icons.emoji_events_outlined),
+                            decoration: InputDecoration(
+                              labelText: l10n.tournament_name,
+                              hintText: l10n.e_g_ahmedabad_monsoon_cup,
+                              prefixIcon: const Icon(Icons.emoji_events_outlined),
                               counterText: '',
                             ),
                             validator: (value) => (value ?? '').trim().isEmpty
@@ -158,10 +161,10 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                             controller: _locationController,
                             textCapitalization: TextCapitalization.words,
                             maxLength: 60,
-                            decoration: const InputDecoration(
-                              labelText: 'Location',
-                              hintText: 'City or ground',
-                              prefixIcon: Icon(Icons.place_outlined),
+                            decoration: InputDecoration(
+                              labelText: l10n.location,
+                              hintText: l10n.city_or_ground,
+                              prefixIcon: const Icon(Icons.place_outlined),
                               counterText: '',
                             ),
                             validator: (value) => (value ?? '').trim().isEmpty
@@ -170,13 +173,13 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                           ),
                           const SizedBox(height: 8),
                           _DateChoiceTile(
-                            label: 'Starts',
+                            label: l10n.starts,
                             value: dateFormat.format(_startDate),
                             onTap: () => _pickDate(isEnd: false),
                           ),
                           const SizedBox(height: 8),
                           _DateChoiceTile(
-                            label: 'Ends (optional)',
+                            label: l10n.ends_optional,
                             value: _endDate == null
                                 ? 'Add an end date'
                                 : dateFormat.format(_endDate!),
@@ -196,7 +199,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Competition format',
+                          Text(l10n.competition_format,
                               style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(height: 12),
                           Wrap(
@@ -206,13 +209,13 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               _FormatChip(
                                 selected: _format == 'round_robin',
                                 icon: Icons.sync_alt_rounded,
-                                label: 'Round robin',
+                                label: l10n.round_robin_2,
                                 onTap: () => setState(() => _format = 'round_robin'),
                               ),
                               _FormatChip(
                                 selected: _format == 'knockout',
                                 icon: Icons.account_tree_outlined,
-                                label: 'Knockout',
+                                label: l10n.knockout_2,
                                 onTap: () => setState(() => _format = 'knockout'),
                               ),
                             ],
@@ -228,7 +231,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                                 ?.copyWith(color: AppTheme.textSecondary),
                           ),
                           const SizedBox(height: 18),
-                          Text('Overs per match',
+                          Text(l10n.overs_per_match,
                               style: Theme.of(context).textTheme.titleMedium),
                           const SizedBox(height: 9),
                           Wrap(
@@ -237,7 +240,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                             children: [5, 10, 15, 20, 25, 30].map((value) {
                               final selected = _overs == value;
                               return ChoiceChip(
-                                label: Text('$value overs'),
+                                label: Text(l10n.oversCount(value)),
                                 selected: selected,
                                 showCheckmark: false,
                                 selectedColor: AppTheme.primary,
@@ -260,11 +263,11 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Points system',
+                          Text(l10n.points_system,
                               style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(height: 6),
                           Text(
-                            'Customize the default awards. NRR breaks points ties.',
+                            l10n.customize_the_default_awards_nrr_breaks,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
@@ -273,17 +276,17 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                           const SizedBox(height: 14),
                           Row(
                             children: [
-                              _PointsField(label: 'Win', controller: _winController),
+                              _PointsField(label: l10n.win, controller: _winController),
                               const SizedBox(width: 10),
-                              _PointsField(label: 'Tie', controller: _tieController),
+                              _PointsField(label: l10n.tie, controller: _tieController),
                             ],
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              _PointsField(label: 'Loss', controller: _lossController),
+                              _PointsField(label: l10n.loss, controller: _lossController),
                               const SizedBox(width: 10),
-                              _PointsField(label: 'No result', controller: _noResultController),
+                              _PointsField(label: l10n.no_result, controller: _noResultController),
                             ],
                           ),
                         ],
@@ -330,6 +333,7 @@ class _DateChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Material(
       color: AppTheme.surfaceSoft,
       borderRadius: BorderRadius.circular(12),
@@ -357,7 +361,7 @@ class _DateChoiceTile extends StatelessWidget {
               ),
               if (onClear != null)
                 IconButton(
-                  tooltip: 'Clear date',
+                  tooltip: l10n.clear_date,
                   onPressed: onClear,
                   icon: const Icon(Icons.close_rounded, size: 18),
                 )

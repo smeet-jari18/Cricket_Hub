@@ -10,6 +10,7 @@ import '../../services/match_service.dart';
 import '../../services/team_service.dart';
 import '../team/create_team_screen.dart';
 import 'toss_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Team and match-format setup before the toss.
 class CreateMatchScreen extends StatefulWidget {
@@ -29,20 +30,21 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final teamService = context.read<TeamService>();
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Set up a match')),
+      appBar: AppBar(title: Text(l10n.set_up_a_match)),
       body: StreamBuilder<List<Team>>(
         stream: teamService.teamsStream(),
         builder: (context, snapshot) {
           final teams = snapshot.data ?? const <Team>[];
           if (snapshot.hasError) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('Couldn’t load teams. Please try again.'),
+                padding: const EdgeInsets.all(24),
+                child: Text(l10n.couldn_t_load_teams_please_try),
               ),
             );
           }
@@ -76,11 +78,11 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Match day starts here',
+                              Text(l10n.match_day_starts_here,
                                   style: Theme.of(context).textTheme.titleLarge),
                               const SizedBox(height: 3),
                               Text(
-                                'Choose your teams and playing format.',
+                                l10n.choose_your_teams_and_playing_format,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
@@ -98,10 +100,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const _StepLabel(number: '01', label: 'Choose the sides'),
+                            _StepLabel(number: '01', label: l10n.choose_the_sides),
                             const SizedBox(height: 16),
                             _TeamPicker(
-                              label: 'Batting side A',
+                              label: l10n.batting_side_a,
                               teams: teams,
                               selected: _teamA,
                               exclude: _teamB,
@@ -109,7 +111,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                             ),
                             const SizedBox(height: 14),
                             _TeamPicker(
-                              label: 'Bowling side B',
+                              label: l10n.bowling_side_b,
                               teams: teams,
                               selected: _teamB,
                               exclude: _teamA,
@@ -130,7 +132,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                                     const SizedBox(width: 9),
                                     Expanded(
                                       child: Text(
-                                        'Create at least two teams before scheduling a match.',
+                                        l10n.create_at_least_two_teams_before,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -141,7 +143,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                                     TextButton(
                                       onPressed: () => Navigator.pushNamed(
                                           context, CreateTeamScreen.route),
-                                      child: const Text('Create'),
+                                      child: Text(l10n.create),
                                     ),
                                   ],
                                 ),
@@ -158,10 +160,10 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const _StepLabel(number: '02', label: 'Match format'),
+                            _StepLabel(number: '02', label: l10n.match_format),
                             const SizedBox(height: 5),
                             Text(
-                              'How long will you play?',
+                              l10n.how_long_will_you_play,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -174,7 +176,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                               children: [5, 10, 15, 20, 25].map((overs) {
                                 final selected = _overs == overs;
                                 return ChoiceChip(
-                                  label: Text('$overs overs'),
+                                  label: Text(l10n.oversCount(overs)),
                                   selected: selected,
                                   showCheckmark: false,
                                   selectedColor: AppTheme.primary,
@@ -203,7 +205,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
                                 const SizedBox(width: 7),
                                 Expanded(
                                   child: Text(
-                                    'Tennis ball by default · toss comes next',
+                                    l10n.tennis_ball_by_default_toss_comes,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall
@@ -245,6 +247,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
   }
 
   Future<void> _createMatch(BuildContext context, AuthProvider auth) async {
+    final l10n = AppLocalizations.of(context);
     setState(() => _saving = true);
 
     final match = CricketMatch(
@@ -274,7 +277,7 @@ class _CreateMatchScreenState extends State<CreateMatchScreen> {
     } catch (error) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not create match: $error')),
+        SnackBar(content: Text(l10n.errCouldNotCreateMatch('$error'))),
       );
       if (mounted) setState(() => _saving = false);
     }

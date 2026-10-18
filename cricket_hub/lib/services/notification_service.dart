@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../core/app_navigator.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// FCM match-follow service. Match topics keep fan delivery efficient; a
 /// private Firestore follow document lets the UI show the user's preference.
@@ -147,14 +148,24 @@ class NotificationService {
   }
 
   void _showForegroundMessage(RemoteMessage message) {
-    final title = message.notification?.title ?? 'CricketHub update';
-    final body = message.notification?.body ?? 'There is new match activity.';
+    // A service has no BuildContext of its own; the navigator key owns the root
+    // one. When it is unavailable (app backgrounded) we fall back to English —
+    // the notification *content* comes from the server anyway.
+    final rootContext = appNavigatorKey.currentContext;
+    final l10n = rootContext == null ? null : AppLocalizations.of(rootContext);
+
+    final title = message.notification?.title ??
+        l10n?.notificationFallbackTitle ??
+        'CricketHub update';
+    final body = message.notification?.body ??
+        l10n?.notificationFallbackBody ??
+        'There is new match activity.';
     appScaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text('$title · $body'),
         action: message.data['matchId'] is String
             ? SnackBarAction(
-                label: 'OPEN',
+                label: l10n?.notificationActionOpen ?? 'OPEN',
                 onPressed: () => _openMatchId(message.data['matchId'] as String),
               )
             : null,

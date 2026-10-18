@@ -6,6 +6,7 @@ import '../../models/ground_model.dart';
 import '../../models/umpire_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/admin_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Platform-admin queue: approve or send back the listings that owners and
 /// umpires submit.
@@ -25,11 +26,12 @@ class AdminVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
     if (uid == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Verification queue')),
-        body: const Center(child: Text('Please sign in.')),
+        appBar: AppBar(title: Text(l10n.menuVerificationQueue)),
+        body: Center(child: Text(l10n.commonPleaseSignIn)),
       );
     }
 
@@ -38,13 +40,13 @@ class AdminVerificationScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Verification queue')),
+            appBar: AppBar(title: Text(l10n.menuVerificationQueue)),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.data != true) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Verification queue')),
+            appBar: AppBar(title: Text(l10n.menuVerificationQueue)),
             body: const _NotAdmin(),
           );
         }
@@ -59,24 +61,24 @@ class _NotAdmin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.lock_outline_rounded, size: 48, color: AppTheme.textSecondary),
-            SizedBox(height: 16),
+            const Icon(Icons.lock_outline_rounded, size: 48, color: AppTheme.textSecondary),
+            const SizedBox(height: 16),
             Text(
-              'Admins only',
-              style: TextStyle(fontWeight: FontWeight.w700),
+              l10n.admins_only,
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'This queue is for CricketHub staff. Ask an existing admin to '
-              'add you under /admins in the Firebase Console.',
+              l10n.adminQueueHelp,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textSecondary),
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
           ],
         ),
@@ -90,11 +92,12 @@ class _AdminTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Verification queue'),
+          title: Text(l10n.menuVerificationQueue),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Grounds'),
@@ -122,6 +125,7 @@ class _GroundQueue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Ground>>(
       stream: context.read<AdminService>().pendingGroundsStream(),
       builder: (context, snapshot) {
@@ -133,9 +137,9 @@ class _GroundQueue extends StatelessWidget {
         }
         final grounds = snapshot.data ?? const <Ground>[];
         if (grounds.isEmpty) {
-          return const _Empty(
+          return _Empty(
             icon: Icons.stadium_outlined,
-            title: 'No grounds waiting',
+            title: l10n.no_grounds_waiting,
             body: 'New submissions from ground owners will appear here.',
           );
         }
@@ -165,6 +169,7 @@ class _GroundCardState extends State<_GroundCard> {
   bool _busy = false;
 
   Future<void> _decide({required bool approve}) async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final admin = context.read<AdminService>();
     setState(() => _busy = true);
@@ -184,7 +189,7 @@ class _GroundCardState extends State<_GroundCard> {
         ),
       );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errFailed('$e'))));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -192,6 +197,7 @@ class _GroundCardState extends State<_GroundCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final g = widget.ground;
     return Card(
       child: Padding(
@@ -222,7 +228,7 @@ class _GroundCardState extends State<_GroundCard> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _busy ? null : () => _decide(approve: false),
-                    child: const Text('Send back'),
+                    child: Text(l10n.send_back),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -250,6 +256,7 @@ class _UmpireQueue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Umpire>>(
       stream: context.read<AdminService>().pendingUmpiresStream(),
       builder: (context, snapshot) {
@@ -261,9 +268,9 @@ class _UmpireQueue extends StatelessWidget {
         }
         final umpires = snapshot.data ?? const <Umpire>[];
         if (umpires.isEmpty) {
-          return const _Empty(
+          return _Empty(
             icon: Icons.record_voice_over_outlined,
-            title: 'No umpires waiting',
+            title: l10n.no_umpires_waiting,
             body: 'New umpire profiles will appear here for verification.',
           );
         }
@@ -293,6 +300,7 @@ class _UmpireCardState extends State<_UmpireCard> {
   bool _busy = false;
 
   Future<void> _decide({required bool approve}) async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final admin = context.read<AdminService>();
     setState(() => _busy = true);
@@ -312,7 +320,7 @@ class _UmpireCardState extends State<_UmpireCard> {
         ),
       );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errFailed('$e'))));
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -320,6 +328,7 @@ class _UmpireCardState extends State<_UmpireCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final u = widget.umpire;
     return Card(
       child: Padding(
@@ -331,7 +340,7 @@ class _UmpireCardState extends State<_UmpireCard> {
                 style: const TextStyle(fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             Text(
-              '${u.city} · ${u.experienceYears} yrs · ₹${u.hourlyRate}/hr',
+              l10n.umpireListLine(u.city, u.experienceYears, u.hourlyRate),
               style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
             ),
             if (u.bio.isNotEmpty) ...[
@@ -359,7 +368,7 @@ class _UmpireCardState extends State<_UmpireCard> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _busy ? null : () => _decide(approve: false),
-                    child: const Text('Send back'),
+                    child: Text(l10n.send_back),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -445,6 +454,7 @@ class _ErrorBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -454,9 +464,9 @@ class _ErrorBox extends StatelessWidget {
             const Icon(Icons.error_outline_rounded,
                 size: 40, color: AppTheme.danger),
             const SizedBox(height: 12),
-            const Text(
-              'Could not load the queue',
-              style: TextStyle(fontWeight: FontWeight.w700),
+            Text(
+              l10n.could_not_load_the_queue,
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 6),
             Text(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/app_constants.dart';
 import '../../../core/app_theme.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 /// Bottom sheet for filter selection. Returns a Map or null on cancel.
 class GroundFilterSheet extends StatefulWidget {
@@ -40,6 +41,7 @@ class _GroundFilterSheetState extends State<GroundFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -49,7 +51,7 @@ class _GroundFilterSheetState extends State<GroundFilterSheet> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              Text('Filters', style: Theme.of(context).textTheme.titleLarge),
+              Text(l10n.filtersTitle, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               _section('Pitch type'),
               Wrap(
@@ -101,7 +103,7 @@ class _GroundFilterSheetState extends State<GroundFilterSheet> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -114,7 +116,7 @@ class _GroundFilterSheetState extends State<GroundFilterSheet> {
                           'amenities': _amenities.toList(),
                         });
                       },
-                      child: const Text('Apply'),
+                      child: Text(l10n.apply),
                     ),
                   ),
                 ],

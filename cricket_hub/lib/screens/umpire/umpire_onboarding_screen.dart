@@ -8,6 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/photo_picker.dart';
 import '../../services/storage_service.dart';
 import '../../services/umpire_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 10's `umpire_onboarding_screen.dart`.
 ///
@@ -59,6 +60,7 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
   }
 
   Future<void> _pickPhoto() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final picked = await _picker.pickFromGallery();
       if (picked == null) return;
@@ -76,11 +78,12 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Could not open the gallery: $e')));
+          .showSnackBar(SnackBar(content: Text(l10n.errCouldNotOpenGallery('$e'))));
     }
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context);
     if (!(_formKey.currentState?.validate() ?? false)) return;
     final user = context.read<AuthProvider>().appUser;
     if (user == null) return;
@@ -144,7 +147,7 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
+        SnackBar(content: Text(l10n.errCouldNotSave('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -153,22 +156,23 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Become an umpire')),
+      appBar: AppBar(title: Text(l10n.become_an_umpire)),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const Text(
-              'List yourself so organizers can book you for matches.',
-              style: TextStyle(color: AppTheme.textSecondary),
+            Text(
+              l10n.list_yourself_so_organizers_can_book,
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 20),
             TextFormField(
               controller: _name,
               textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(labelText: 'Full name'),
+              decoration: InputDecoration(labelText: l10n.full_name),
               validator: (v) =>
                   (v == null || v.trim().length < 3) ? 'Enter your name' : null,
             ),
@@ -176,13 +180,13 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
             TextFormField(
               controller: _phone,
               keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(labelText: 'Phone number'),
+              decoration: InputDecoration(labelText: l10n.phone_number),
               validator: (v) =>
                   (v == null || v.trim().length < 10) ? 'Enter a phone' : null,
             ),
             const SizedBox(height: 12),
             InputDecorator(
-              decoration: const InputDecoration(labelText: 'City'),
+              decoration: InputDecoration(labelText: l10n.city),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   isExpanded: true,
@@ -199,8 +203,8 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
             TextFormField(
               controller: _experience,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Years of experience',
+              decoration: InputDecoration(
+                labelText: l10n.years_of_experience,
               ),
             ),
             const SizedBox(height: 12),
@@ -210,8 +214,8 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
                   child: TextFormField(
                     controller: _hourly,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Hourly ₹',
+                    decoration: InputDecoration(
+                      labelText: l10n.hourly,
                     ),
                   ),
                 ),
@@ -220,7 +224,7 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
                   child: TextFormField(
                     controller: _day,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Day ₹'),
+                    decoration: InputDecoration(labelText: l10n.day),
                   ),
                 ),
               ],
@@ -231,16 +235,16 @@ class _UmpireOnboardingScreenState extends State<UmpireOnboardingScreen> {
               maxLines: 4,
               maxLength: 300,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'About you',
+              decoration: InputDecoration(
+                labelText: l10n.about_you,
                 alignLabelWithHint: true,
-                hintText: 'Leagues officiated, playing background…',
+                hintText: l10n.leagues_officiated_playing_background,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Profile photo',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            Text(
+              l10n.profile_photo,
+              style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 8),
             Row(

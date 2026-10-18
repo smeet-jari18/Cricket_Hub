@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../models/match_model.dart';
 import '../../services/match_service.dart';
 import 'scoring_dashboard_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Confirm the toss result and begin the live innings.
 class TossScreen extends StatefulWidget {
@@ -23,17 +24,18 @@ class _TossScreenState extends State<TossScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final match = args?['match'] as CricketMatch?;
     final matchId = (args?['matchId'] ?? '') as String;
 
     if (match == null) {
-      return const Scaffold(body: Center(child: Text('Match not found')));
+      return Scaffold(body: Center(child: Text(l10n.match_not_found)));
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('The toss')),
+      appBar: AppBar(title: Text(l10n.the_toss)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -42,12 +44,12 @@ class _TossScreenState extends State<TossScreen> {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
               children: [
                 Text(
-                  'One last call',
+                  l10n.one_last_call,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Confirm the toss, then the first ball is yours.',
+                  l10n.confirm_the_toss_then_the_first,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -61,7 +63,7 @@ class _TossScreenState extends State<TossScreen> {
                       children: [
                         Expanded(
                           child: _TeamLabel(
-                            label: 'SIDE A',
+                            label: l10n.side_a,
                             name: match.teamAName,
                           ),
                         ),
@@ -72,9 +74,9 @@ class _TossScreenState extends State<TossScreen> {
                             color: AppTheme.surfaceSoft,
                             borderRadius: BorderRadius.circular(99),
                           ),
-                          child: const Text(
-                            'VS',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.vs,
+                            style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
@@ -83,7 +85,7 @@ class _TossScreenState extends State<TossScreen> {
                         ),
                         Expanded(
                           child: _TeamLabel(
-                            label: 'SIDE B',
+                            label: l10n.side_b,
                             name: match.teamBName,
                             alignEnd: true,
                           ),
@@ -93,7 +95,7 @@ class _TossScreenState extends State<TossScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const _TossStep(number: '01', title: 'Who won the toss?'),
+                _TossStep(number: '01', title: l10n.who_won_the_toss),
                 const SizedBox(height: 10),
                 Row(
                   children: [
@@ -119,14 +121,14 @@ class _TossScreenState extends State<TossScreen> {
                   ],
                 ),
                 const SizedBox(height: 22),
-                const _TossStep(number: '02', title: 'What did they choose?'),
+                _TossStep(number: '02', title: l10n.what_did_they_choose),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: _TossCard(
                         icon: Icons.sports_cricket,
-                        title: 'Bat first',
+                        title: l10n.bat_first,
                         selected: _electedTo == 'bat',
                         onTap: () => setState(() => _electedTo = 'bat'),
                       ),
@@ -135,7 +137,7 @@ class _TossScreenState extends State<TossScreen> {
                     Expanded(
                       child: _TossCard(
                         icon: Icons.sports_baseball_outlined,
-                        title: 'Bowl first',
+                        title: l10n.bowl_first,
                         selected: _electedTo == 'bowl',
                         onTap: () => setState(() => _electedTo = 'bowl'),
                       ),
@@ -165,7 +167,7 @@ class _TossScreenState extends State<TossScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'You can undo scoring actions during the match.',
+                  l10n.you_can_undo_scoring_actions_during,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -181,6 +183,7 @@ class _TossScreenState extends State<TossScreen> {
   }
 
   Future<void> _startMatch(CricketMatch match, String matchId) async {
+    final l10n = AppLocalizations.of(context);
     final tossWinner = _tossWinnerTeamId;
     if (tossWinner == null) return;
     setState(() => _saving = true);
@@ -224,7 +227,7 @@ class _TossScreenState extends State<TossScreen> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not start match: $error')),
+        SnackBar(content: Text(l10n.errCouldNotStartMatch('$error'))),
       );
       setState(() => _saving = false);
     }

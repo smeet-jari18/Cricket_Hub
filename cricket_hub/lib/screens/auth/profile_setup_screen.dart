@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../home/main_shell.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// New-player profile setup.
 class ProfileSetupScreen extends StatefulWidget {
@@ -39,10 +40,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Add your name to continue.')),
+        SnackBar(content: Text(l10n.profileErrName)),
       );
       return;
     }
@@ -62,10 +64,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Player profile')),
+      appBar: AppBar(title: Text(l10n.profileTitle)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -86,13 +89,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Introduce yourself',
+                  l10n.profileHeadline,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Add a few details so your teammates know who’s at the crease.',
+                  l10n.profileSubtitle,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -106,7 +109,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Player details',
+                        Text(l10n.profileDetails,
                             style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 14),
                         TextField(
@@ -114,18 +117,18 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                           autofocus: true,
                           textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Display name',
-                            hintText: 'e.g. Rahul Sharma',
-                            prefixIcon: Icon(Icons.badge_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.profileDisplayName,
+                            hintText: l10n.profileNameHint,
+                            prefixIcon: const Icon(Icons.badge_outlined),
                           ),
                         ),
                         const SizedBox(height: 14),
                         DropdownButtonFormField<String>(
                           initialValue: _battingStyle,
-                          decoration: const InputDecoration(
-                            labelText: 'Batting style',
-                            prefixIcon: Icon(Icons.sports_cricket),
+                          decoration: InputDecoration(
+                            labelText: l10n.profileBattingStyle,
+                            prefixIcon: const Icon(Icons.sports_cricket),
                           ),
                           items: _battingOptions
                               .map((style) => DropdownMenuItem(
@@ -142,9 +145,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         const SizedBox(height: 14),
                         DropdownButtonFormField<String>(
                           initialValue: _bowlingStyle,
-                          decoration: const InputDecoration(
-                            labelText: 'Bowling style',
-                            prefixIcon: Icon(Icons.sports_baseball_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.profileBowlingStyle,
+                            prefixIcon: const Icon(Icons.sports_baseball_outlined),
                           ),
                           items: _bowlingOptions
                               .map((style) => DropdownMenuItem(

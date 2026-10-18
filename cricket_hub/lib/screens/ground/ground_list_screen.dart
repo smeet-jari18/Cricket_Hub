@@ -8,6 +8,7 @@ import '../../models/ground_model.dart';
 import '../../services/ground_service.dart';
 import 'ground_detail_screen.dart';
 import 'widgets/ground_filter_sheet.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Marketplace ground listing (Phase 3).
 /// Filter chip bar at top + sort + vertical list of GroundCards.
@@ -45,8 +46,9 @@ class _GroundListScreenState extends State<GroundListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Find a Ground')),
+      appBar: AppBar(title: Text(l10n.find_a_ground)),
       body: Column(
         children: [
           _buildFilterBar(context),
@@ -60,6 +62,7 @@ class _GroundListScreenState extends State<GroundListScreen> {
   }
 
   Widget _buildFilterBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
       child: Row(
@@ -70,11 +73,11 @@ class _GroundListScreenState extends State<GroundListScreen> {
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search_rounded, size: 20),
-                hintText: 'Search grounds, city, pitch...',
+                hintText: l10n.search_grounds_city_pitch,
                 suffixIcon: _search.isEmpty
                     ? null
                     : IconButton(
-                        tooltip: 'Clear search',
+                        tooltip: l10n.clear_search,
                         icon: const Icon(Icons.close_rounded, size: 18),
                         onPressed: () {
                           _searchCtrl.clear();
@@ -99,6 +102,7 @@ class _GroundListScreenState extends State<GroundListScreen> {
   }
 
   Widget _buildChipRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -124,12 +128,12 @@ class _GroundListScreenState extends State<GroundListScreen> {
           PopupMenuButton<String>(
             initialValue: _sortBy,
             onSelected: (v) => setState(() => _sortBy = v),
-            itemBuilder: (ctx) => const [
-              PopupMenuItem(value: 'rating', child: Text('Rating: High → Low')),
-              PopupMenuItem(value: 'price', child: Text('Price: Low → High')),
+            itemBuilder: (ctx) => [
+              PopupMenuItem(value: 'rating', child: Text(l10n.rating_high_low)),
+              PopupMenuItem(value: 'price', child: Text(l10n.price_low_high)),
               PopupMenuItem(
                   value: 'distance',
-                  child: Text('Distance (city centre)'),
+                  child: Text(l10n.distance_city_centre),
                 ),
             ],
             child: Container(
@@ -160,15 +164,16 @@ class _GroundListScreenState extends State<GroundListScreen> {
   }
 
   Widget _cityDropdown() {
+    final l10n = AppLocalizations.of(context);
     return PopupMenuButton<String>(
       initialValue: _city,
       onSelected: (v) => setState(() => _city = v),
-      itemBuilder: (ctx) => const [
-        PopupMenuItem(value: 'Ahmedabad', child: Text('Ahmedabad')),
-        PopupMenuItem(value: 'Mumbai', child: Text('Mumbai')),
-        PopupMenuItem(value: 'Bengaluru', child: Text('Bengaluru')),
-        PopupMenuItem(value: 'Hyderabad', child: Text('Hyderabad')),
-        PopupMenuItem(value: 'Pune', child: Text('Pune')),
+      itemBuilder: (ctx) => [
+        PopupMenuItem(value: 'Ahmedabad', child: Text(l10n.ahmedabad)),
+        PopupMenuItem(value: 'Mumbai', child: Text(l10n.mumbai)),
+        PopupMenuItem(value: 'Bengaluru', child: Text(l10n.bengaluru)),
+        PopupMenuItem(value: 'Hyderabad', child: Text(l10n.hyderabad)),
+        PopupMenuItem(value: 'Pune', child: Text(l10n.pune)),
       ],
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -246,11 +251,12 @@ class _GroundListScreenState extends State<GroundListScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
+          final l10n = AppLocalizations.of(context);
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: Text(
-                "Couldn't load grounds. Pull to refresh.",
+                l10n.errCouldNotLoadGrounds,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
@@ -297,6 +303,7 @@ class _GroundListScreenState extends State<GroundListScreen> {
   }
 
   Widget _emptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -313,11 +320,11 @@ class _GroundListScreenState extends State<GroundListScreen> {
                   size: 56, color: AppTheme.primary),
             ),
             const SizedBox(height: 16),
-            Text('No grounds match your filters',
+            Text(l10n.no_grounds_match_your_filters,
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 6),
             Text(
-              'Try removing a filter or switch city.',
+              l10n.try_removing_a_filter_or_switch,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -338,6 +345,7 @@ class GroundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: InkWell(
         onTap: () {
@@ -426,7 +434,7 @@ class GroundCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '₹${ground.priceWeekdayHourly}/hr',
+                          l10n.hourlyRate(ground.priceWeekdayHourly),
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium

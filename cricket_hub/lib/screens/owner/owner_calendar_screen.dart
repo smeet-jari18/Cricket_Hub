@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../models/ground_model.dart';
 import '../../services/ground_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 9's `owner_calendar_screen.dart` — the owner's view of a ground's
 /// availability, with the "block unavailable dates" half of FR-BOOK-01.
@@ -18,11 +19,12 @@ class OwnerCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Ground) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Availability')),
-        body: const Center(child: Text('No ground selected.')),
+        appBar: AppBar(title: Text(l10n.availabilityTitle)),
+        body: Center(child: Text(l10n.noGroundSelected)),
       );
     }
     return _Body(ground: arg);
@@ -58,6 +60,7 @@ class _BodyState extends State<_Body> {
       '${d.day.toString().padLeft(2, '0')}';
 
   Future<void> _toggle(String dateIso, bool blocked) async {
+    final l10n = AppLocalizations.of(context);
     setState(() => _pending[dateIso] = true);
 
     String? reason;
@@ -84,7 +87,7 @@ class _BodyState extends State<_Body> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not update: $e')),
+        SnackBar(content: Text(l10n.errCouldNotUpdate('$e'))),
       );
     } finally {
       if (mounted) setState(() => _pending.remove(dateIso));
@@ -92,23 +95,24 @@ class _BodyState extends State<_Body> {
   }
 
   Future<String?> _askReason() {
+    final l10n = AppLocalizations.of(context);
     final controller = TextEditingController();
     return showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Block this date?'),
+        title: Text(l10n.block_this_date),
         content: TextField(
           controller: controller,
           maxLength: 80,
-          decoration: const InputDecoration(
-            labelText: 'Reason (optional)',
-            hintText: 'Maintenance, private tournament…',
+          decoration: InputDecoration(
+            labelText: l10n.reason_optional,
+            hintText: l10n.maintenance_private_tournament,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(
@@ -117,7 +121,7 @@ class _BodyState extends State<_Body> {
                   ? 'Blocked by owner'
                   : controller.text.trim(),
             ),
-            child: const Text('Block date'),
+            child: Text(l10n.block_date),
           ),
         ],
       ),
@@ -126,13 +130,14 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final today = DateTime.now();
     final start = DateTime(today.year, today.month, today.day);
     final dates =
         List.generate(_daysAhead, (i) => start.add(Duration(days: i)));
 
     return Scaffold(
-      appBar: AppBar(title: Text('${_ground.name} · availability')),
+      appBar: AppBar(title: Text(l10n.groundAvailabilityHeader(_ground.name))),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: dates.length,

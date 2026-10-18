@@ -80,6 +80,8 @@ void main() {
       'languageHindi',
       'languageTamil',
       'menuLanguageSub',
+      // `{location} · {date}` — a pure format shell, same in every language.
+      'locationAndDate',
     };
 
     for (final code in ['hi', 'ta']) {
@@ -119,6 +121,48 @@ void main() {
         }
       }
     }
+  });
+
+  test('every message key is referenced by the app', () {
+    // Dead translations drift: a screen gets rewritten, the ARB keeps the old
+    // string, and translators keep paying for it. This fails the build instead.
+    final blob = <String>[];
+    for (final dir in ['lib', 'test']) {
+      for (final entity in Directory(dir).listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        if (entity.path.contains('l10n/generated')) continue;
+        blob.add(entity.readAsStringSync());
+      }
+    }
+    final source = blob.join('\n');
+    final dead = messageKeys(arbs['en']!)
+        .where((k) => !RegExp('\\.${RegExp.escape(k)}\\b').hasMatch(source))
+        .toList();
+
+    expect(dead, isEmpty, reason: 'unused ARB keys: ${dead.join(', ')}');
+  });
+
+  test('no translation runs away with the layout', () {
+    // Devanagari/Tamil are wider than Latin, and a string twice as long as its
+    // English twin will overflow a button on a 320px phone. Today's worst ratio
+    // is 1.89x, so 2.2x is a tripwire for *new* strings, not a lint on old ones.
+    const maxRatio = 2.2;
+    final english = arbs['en']!;
+    final offenders = <String>[];
+
+    for (final code in ['hi', 'ta']) {
+      for (final key in messageKeys(english)) {
+        final en = english[key] as String;
+        final other = arbs[code]![key] as String;
+        if (en.length < 25) continue; // short labels cannot run away
+        final ratio = other.length / en.length;
+        if (ratio > maxRatio) {
+          offenders.add('$code.$key is ${ratio.toStringAsFixed(2)}x English');
+        }
+      }
+    }
+
+    expect(offenders, isEmpty, reason: offenders.join(', '));
   });
 
   test('the app supports the three languages the PRD asks for', () {

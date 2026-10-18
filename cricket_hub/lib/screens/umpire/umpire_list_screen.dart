@@ -7,6 +7,7 @@ import '../../models/umpire_model.dart';
 import '../../services/umpire_service.dart';
 import '../../widgets/rating_stars.dart';
 import 'umpire_detail_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 10's `umpire_list_screen.dart`.
 ///
@@ -26,9 +27,10 @@ class _UmpireListScreenState extends State<UmpireListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Umpires'),
+        title: Text(l10n.umpiresTitle),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(52),
           child: Padding(
@@ -112,6 +114,7 @@ class _UmpireCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: InkWell(
         onTap: () => Navigator.pushNamed(
@@ -160,7 +163,7 @@ class _UmpireCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${umpire.experienceYears} yrs · ${umpire.matchesOfficiated} matches',
+                      l10n.umpireExpMatches(umpire.experienceYears, umpire.matchesOfficiated),
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -179,9 +182,9 @@ class _UmpireCard extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  const Text(
-                    'per hour',
-                    style: TextStyle(
+                  Text(
+                    l10n.perHour,
+                    style: const TextStyle(
                       fontSize: 10,
                       color: AppTheme.textSecondary,
                     ),

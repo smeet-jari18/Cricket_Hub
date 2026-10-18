@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../widgets/player_hero_banner.dart';
 import '../home/main_shell.dart';
 import 'otp_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Phone OTP and Google sign-in entry point.
 class LoginScreen extends StatefulWidget {
@@ -28,13 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _sendOtp() {
+    final l10n = AppLocalizations.of(context);
     final auth = context.read<AuthProvider>();
     auth.clearError();
 
     final phone = _phoneController.text.trim().replaceAll(RegExp(r'\s+'), '');
     if (phone.length != 10 || int.tryParse(phone) == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter a valid 10-digit mobile number.')),
+        SnackBar(content: Text(l10n.loginErrMobile)),
       );
       return;
     }
@@ -55,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
@@ -67,20 +70,20 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const PlayerHeroBanner(
-                    eyebrow: 'Welcome to CricketHub',
-                    title: 'Every match\nstarts here.',
-                    subtitle: 'Your team. Your ground. Your moment.',
+                  PlayerHeroBanner(
+                    eyebrow: l10n.loginEyebrow,
+                    title: l10n.loginHeadline,
+                    subtitle: l10n.loginTagline,
                     height: 226,
                   ),
                   const SizedBox(height: 26),
                   Text(
-                    'Sign in to play',
+                    l10n.loginTitle,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    'Use your mobile number to get a one-time code.',
+                    l10n.loginSubtitle,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -94,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Mobile number',
+                            l10n.loginMobileLabel,
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                           const SizedBox(height: 8),
@@ -164,14 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  const Row(
+                  Row(
                     children: [
-                      Expanded(child: Divider()),
+                      const Expanded(child: Divider()),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 14),
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
                         child: Text(
-                          'OR',
-                          style: TextStyle(
+                          l10n.loginOr,
+                          style: const TextStyle(
                             color: AppTheme.textSecondary,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
@@ -179,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      Expanded(child: Divider()),
+                      const Expanded(child: Divider()),
                     ],
                   ),
                   const SizedBox(height: 18),
@@ -196,11 +199,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           },
                     icon: const Icon(Icons.account_circle_outlined),
-                    label: const Text('Continue with Google'),
+                    label: Text(l10n.loginGoogle),
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    'By continuing, you agree to our Terms of Service and Privacy Policy.',
+                    l10n.loginTerms,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppTheme.textSecondary,

@@ -10,6 +10,7 @@ import 'umpire_availability_screen.dart';
 import 'umpire_booking_requests_screen.dart';
 import 'umpire_edit_screen.dart';
 import 'umpire_onboarding_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 10's `umpire_dashboard.dart` — the umpire's own home: status,
 /// earnings rates, rating, and a link to their availability calendar.
@@ -20,11 +21,12 @@ class UmpireDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
     if (uid == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Umpire')),
-        body: const Center(child: Text('Please sign in.')),
+        appBar: AppBar(title: Text(l10n.umpire)),
+        body: Center(child: Text(l10n.commonPleaseSignIn)),
       );
     }
 
@@ -33,14 +35,14 @@ class UmpireDashboard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Umpire')),
+            appBar: AppBar(title: Text(l10n.umpire)),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         final umpire = snapshot.data;
         if (umpire == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Umpire')),
+            appBar: AppBar(title: Text(l10n.umpire)),
             body: _NotRegistered(),
           );
         }
@@ -53,6 +55,7 @@ class UmpireDashboard extends StatelessWidget {
 class _NotRegistered extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -62,15 +65,15 @@ class _NotRegistered extends StatelessWidget {
             const Icon(Icons.record_voice_over_outlined,
                 size: 48, color: AppTheme.textSecondary),
             const SizedBox(height: 16),
-            const Text(
-              'You are not listed as an umpire',
-              style: TextStyle(fontWeight: FontWeight.w700),
+            Text(
+              l10n.you_are_not_listed_as_an,
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Create a profile and get verified to start taking matches.',
+            Text(
+              l10n.create_a_profile_and_get_verified,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textSecondary),
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 18),
             ElevatedButton(
@@ -78,7 +81,7 @@ class _NotRegistered extends StatelessWidget {
                 context,
                 UmpireOnboardingScreen.route,
               ),
-              child: const Text('Become an umpire'),
+              child: Text(l10n.become_an_umpire),
             ),
           ],
         ),
@@ -94,8 +97,9 @@ class _Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Umpire dashboard')),
+      appBar: AppBar(title: Text(l10n.menuUmpireDashboard)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -159,11 +163,10 @@ class _Dashboard extends StatelessWidget {
                   children: [
                     const Icon(Icons.info_outline_rounded, size: 18),
                     const SizedBox(width: 10),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Your profile is a draft. Submit it for verification '
-                        'so organizers can find you.',
-                        style: TextStyle(fontSize: 12),
+                        l10n.draftProfileHelp,
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ),
                     TextButton(
@@ -173,10 +176,10 @@ class _Dashboard extends StatelessWidget {
                             .submitForVerification(umpire.uid);
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Submitted.')),
+                          SnackBar(content: Text(l10n.submitted)),
                         );
                       },
-                      child: const Text('Submit'),
+                      child: Text(l10n.submit),
                     ),
                   ],
                 ),
@@ -188,8 +191,8 @@ class _Dashboard extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.event_available_rounded,
                   color: AppTheme.primary),
-              title: const Text('My availability'),
-              subtitle: const Text('Block dates you cannot officiate'),
+              title: Text(l10n.myAvailability),
+              subtitle: Text(l10n.block_dates_you_cannot_officiate),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.pushNamed(
                 context,
@@ -202,8 +205,8 @@ class _Dashboard extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.inbox_rounded, color: AppTheme.accent),
-              title: const Text('Booking requests'),
-              subtitle: const Text('Confirm cash you received from organizers'),
+              title: Text(l10n.booking_requests),
+              subtitle: Text(l10n.confirm_cash_you_received_from_organizers),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.pushNamed(
                 context,
@@ -215,8 +218,8 @@ class _Dashboard extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.edit_outlined, color: AppTheme.primary),
-              title: const Text('Edit profile'),
-              subtitle: const Text('Name, bio, experience and rates'),
+              title: Text(l10n.edit_profile),
+              subtitle: Text(l10n.name_bio_experience_and_rates),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => Navigator.pushNamed(
                 context,

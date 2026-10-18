@@ -6,8 +6,9 @@ import '../../models/booking_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/booking_service.dart';
 import 'booking_detail_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
-/// "My bookings" — everything the signed-in user booked as an organizer, plus
+/// l10n.menuMyBookings — everything the signed-in user booked as an organizer, plus
 /// every booking made on their grounds (they might be an owner too).
 ///
 /// Until now `organizerBookingsStream` / `counterpartyBookingsStream` existed
@@ -20,13 +21,14 @@ class MyBookingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My bookings'),
+          title: Text(l10n.menuMyBookings),
           bottom: const TabBar(
             labelColor: AppTheme.primary,
             unselectedLabelColor: AppTheme.textSecondary,
@@ -38,7 +40,7 @@ class MyBookingsScreen extends StatelessWidget {
           ),
         ),
         body: uid == null
-            ? const Center(child: Text('Please sign in.'))
+            ? Center(child: Text(l10n.commonPleaseSignIn))
             : TabBarView(
                 children: [
                   _BookingList(
@@ -77,13 +79,14 @@ class _BookingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Booking>>(
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return _Message(
             icon: Icons.error_outline_rounded,
-            title: 'Could not load bookings',
+            title: l10n.myBookingsErrLoad,
             body: '${snapshot.error}',
           );
         }

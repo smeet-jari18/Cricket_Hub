@@ -3,12 +3,7 @@
   "retry": "पुनः प्रयास करें",
   "cancel": "रद्द करें",
   "create": "बनाएँ",
-  "quickActionsTitle": "आज मैच डे बनाएँ",
-  "quickActionsBody": "चुनें कि आप क्या सेट करना चाहते हैं।",
-  "quickStartMatch": "मैच शुरू करें",
-  "quickStartMatchSub": "टीम चुनें, टॉस करें और स्कोरिंग शुरू करें",
   "quickCreateTeam": "टीम बनाएँ",
-  "quickCreateTeamSub": "अगले मैच के लिए टीम बनाएँ",
   "navHome": "होम",
   "navMyCricket": "मेरा क्रिकेट",
   "navTours": "टूर्नामेंट",
@@ -85,5 +80,976 @@
   "languageSystem": "डिवाइस की भाषा",
   "languageEnglish": "English",
   "languageHindi": "हिन्दी",
-  "languageTamil": "தமிழ்"
+  "languageTamil": "தமிழ்",
+  "notificationActionOpen": "खोलें",
+  "offlineBanner": "ऑफ़लाइन — स्कोरिंग चलती रहेगी, अपने आप सिंक हो जाएगी",
+  "splashTagline": "स्थानीय क्रिकेट. प्रो लेवल.",
+  "commonPleaseSignIn": "कृपया साइन इन करें।",
+  "myBookingsErrLoad": "बुकिंग लोड नहीं हो सकीं",
+  "filtersTitle": "फ़िल्टर",
+  "apply": "लागू करें",
+  "umpiresTitle": "अंपायर",
+  "perHour": "प्रति घंटा",
+  "followLive": "लाइव देखें",
+  "liveNowBadge": "अभी लाइव",
+  "confirmBooking": "बुकिंग पक्की करें",
+  "availabilityTitle": "उपलब्धता",
+  "noUmpireSelected": "कोई अंपायर चुना नहीं गया।",
+  "myAvailability": "मेरी उपलब्धता",
+  "chooseASlot": "स्लॉट चुनें",
+  "noGroundSelected": "कोई ग्राउंड चुना नहीं गया।",
+  "closedOnThisDate": "इस तारीख को बंद है",
+  "noSlotsConfigured": "कोई स्लॉट सेट नहीं है",
+  "continueLabel": "आगे बढ़ें",
+  "tournamentsTitle": "टूर्नामेंट",
+  "createTournament": "टूर्नामेंट बनाएँ",
+  "tournamentsErrLoad": "टूर्नामेंट लोड नहीं हो सके",
+  "checkConnection": "कनेक्शन जाँचें और फिर कोशिश करें।",
+  "tournamentsTagline": "स्थानीय कप, एक जगह।",
+  "tournamentsTaglineSub": "फ़िक्स्चर, अंक और खिलाड़ी लीडर एक ही जगह देखें।",
+  "notificationFallbackTitle": "CricketHub अपडेट",
+  "notificationFallbackBody": "मैच में नई गतिविधि है।",
+  "homeAllCaughtUp": "सब देख लिया — कुछ नया नहीं।",
+  "homeHeroSubtitle": "अपनी क्रिकेट कम्युनिटी को साथ लाएँ।",
+  "homeLiveOnPitch": "मैदान पर लाइव",
+  "homeErrMatches": "मैच लोड नहीं हो सके",
+  "homeNoLive": "अभी कोई लाइव मैच नहीं",
+  "homeNoLiveSub": "अगली शानदार पारी आपकी हो सकती है।",
+  "homeYourFixtures": "आपके मैच",
+  "homeNoFixtures": "अभी कोई मैच नहीं",
+  "homeNoFixturesSub": "दो टीमें बनाएँ और अपना पहला मैच तय करें।",
+  "notificationsTooltip": "सूचनाएँ",
+  "matchStatusCompleted": "पूरा हुआ",
+  "matchStatusAbandoned": "रद्द",
+  "matchStatusScheduled": "निर्धारित",
+  "myCricketErrLoad": "आपकी टीमें लोड नहीं हो सकीं। फिर कोशिश करें।",
+  "myCricketYourSquads": "आपकी टीमें",
+  "myCricketSquadsSub": "अपनी टीमें संभालें और खिलाड़ियों को साथ रखें।",
+  "myCricketEmptySquad": "आपकी टीम पहले खिलाड़ी के लिए तैयार है।",
+  "removePlayer": "खिलाड़ी हटाएँ",
+  "myCricketStartTitle": "अपनी पहली टीम से शुरू करें",
+  "myCricketStartSub": "टीम का नाम और शहर डालें, फिर अपने खिलाड़ियों को मैदान पर बुलाएँ।",
+  "myCricketCreateFirst": "अपनी पहली टीम बनाएँ",
+  "addPlayerHint": "खिलाड़ी जोड़ें",
+  "addPlayerTooltip": "खिलाड़ी जोड़ें",
+  "loginEyebrow": "CricketHub में आपका स्वागत है",
+  "loginTagline": "आपकी टीम। आपका मैदान। आपका पल।",
+  "loginErrMobile": "सही 10 अंकों का मोबाइल नंबर डालें।",
+  "loginTitle": "खेलने के लिए साइन इन करें",
+  "loginSubtitle": "वन-टाइम कोड के लिए अपना मोबाइल नंबर डालें।",
+  "loginMobileLabel": "मोबाइल नंबर",
+  "loginOr": "या",
+  "loginGoogle": "Google से जारी रखें",
+  "loginTerms": "जारी रखने पर आप हमारी सेवा शर्तों और गोपनीयता नीति से सहमत होते हैं।",
+  "otpHeadline": "अपने संदेश देखें",
+  "otpTitle": "नंबर सत्यापित करें",
+  "otpErrCode": "6 अंकों का कोड डालें।",
+  "otpHint": "कोड आने में कुछ सेकंड लग सकते हैं। यह स्क्रीन खुली रखें।",
+  "profileErrName": "जारी रखने के लिए अपना नाम जोड़ें।",
+  "profileTitle": "खिलाड़ी प्रोफ़ाइल",
+  "profileHeadline": "अपना परिचय दें",
+  "profileSubtitle": "कुछ जानकारी जोड़ें ताकि साथी खिलाड़ी जानें कि क्रीज़ पर कौन है।",
+  "profileDetails": "खिलाड़ी की जानकारी",
+  "profileDisplayName": "डिस्प्ले नाम",
+  "profileNameHint": "जैसे राहुल शर्मा",
+  "profileBattingStyle": "बल्लेबाज़ी शैली",
+  "profileBowlingStyle": "गेंदबाज़ी शैली",
+  "oversCount": "{count} ओवर",
+  "@oversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeHeroTitle": "आपका मैदान।\nआपका खेल।",
+  "loginHeadline": "हर मैच\nयहीं से शुरू होता है।",
+  "otpSentTo": "{phone} पर भेजा गया 6 अंकों का कोड डालें।",
+  "@otpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "k_0_full_day_booking_not_offered": "0 = पूरे दिन की बुकिंग उपलब्ध नहीं",
+  "k_5_wicket_hauls": "5 विकेट हॉल",
+  "about": "परिचय",
+  "about_you": "आपके बारे में",
+  "add_at_least_two_teams_before": "शेड्यूल बनाने से पहले कम से कम दो टीमें जोड़ें।",
+  "add_both_a_team_name_and": "टीम का नाम और शहर दोनों दर्ज करें।",
+  "add_ground": "ग्राउंड जोड़ें",
+  "add_photo": "फ़ोटो जोड़ें",
+  "add_to_calendar": "कैलेंडर में जोड़ें",
+  "address": "पता",
+  "admins_only": "केवल एडमिन",
+  "afternoon": "दोपहर",
+  "ahmedabad": "अहमदाबाद",
+  "amenities": "सुविधाएँ",
+  "ask_the_organizer_to_regenerate_the": "आयोजक से टूर्नामेंट शेड्यूल दोबारा बनाने को कहें।",
+  "batting_average": "बल्लेबाज़ी औसत",
+  "best_bowling": "सर्वश्रेष्ठ गेंदबाज़ी",
+  "back": "वापस",
+  "back_to_home": "होम पर वापस",
+  "bat_first": "पहले बल्लेबाज़ी",
+  "batting_side_a": "बल्लेबाज़ी टीम A",
+  "become_an_umpire": "अंपायर बनें",
+  "bengaluru": "बेंगलुरु",
+  "bio": "बायो",
+  "block_date": "तारीख ब्लॉक करें",
+  "block_dates_you_cannot_officiate": "जिन तारीखों में आप उपलब्ध नहीं, उन्हें ब्लॉक करें",
+  "block_this_date": "यह तारीख ब्लॉक करें?",
+  "book_this_ground": "यह ग्राउंड बुक करें",
+  "book_umpire": "अंपायर बुक करें",
+  "booking": "बुकिंग",
+  "booking_confirmed": "बुकिंग पक्की हो गई",
+  "booking_cancelled": "बुकिंग रद्द हो गई।",
+  "booking_confirmed_2": "बुकिंग पक्की",
+  "booking_details": "बुकिंग विवरण",
+  "booking_is_processing": "बुकिंग प्रोसेस हो रही है",
+  "booking_requests": "बुकिंग अनुरोध",
+  "booking_verified": "बुकिंग सत्यापित",
+  "bowl_first": "पहले गेंदबाज़ी",
+  "bowling_side_b": "गेंदबाज़ी टीम B",
+  "bring_every_fixture_together": "हर मुकाबला एक जगह",
+  "build_your_squad": "अपनी टीम बनाएँ",
+  "camera_scanning_runs_in_the_android": "कैमरा स्कैनिंग Android और iOS ऐप में चलती है।",
+  "cancel_booking": "बुकिंग रद्द करें",
+  "cancel_this_booking": "यह बुकिंग रद्द करें?",
+  "cash_received_booking_confirmed": "नकद मिला — बुकिंग पक्की।",
+  "certifications": "प्रमाणपत्र",
+  "choose_the_advancing_team": "आगे बढ़ने वाली टीम चुनें",
+  "choose_the_sides": "पक्ष चुनें",
+  "choose_tournament_teams": "टूर्नामेंट की टीमें चुनें",
+  "choose_your_teams_and_playing_format": "अपनी टीमें और खेल प्रारूप चुनें।",
+  "city": "शहर",
+  "city_or_ground": "शहर या ग्राउंड",
+  "clear_date": "तारीख हटाएँ",
+  "clear_search": "खोज साफ़ करें",
+  "closes": "बंद होता है",
+  "competition_format": "प्रतियोगिता प्रारूप",
+  "confirm_cash_you_received_from_organizers": "आयोजकों से मिली नकदी की पुष्टि करें",
+  "confirm_the_toss_then_the_first": "टॉस पक्का करें, फिर पहली गेंद आपकी।",
+  "confirmed": "पक्का",
+  "could_not_load_the_queue": "कतार लोड नहीं हो सकी",
+  "couldn_t_load_fixtures": "फ़िक्स्चर लोड नहीं हो सके",
+  "couldn_t_load_teams": "टीमें लोड नहीं हो सकीं।",
+  "couldn_t_load_teams_please_try": "टीमें लोड नहीं हो सकीं। फिर कोशिश करें।",
+  "couldn_t_load_the_match": "मैच लोड नहीं हो सका।",
+  "couldn_t_load_this_tournament": "यह टूर्नामेंट लोड नहीं हो सका",
+  "create_a_profile_and_get_verified": "प्रोफ़ाइल बनाएँ और सत्यापन के बाद मैच लेना शुरू करें।",
+  "create_a_team_before_building_your": "टूर्नामेंट बनाने से पहले एक टीम बनाएँ।",
+  "create_at_least_two_teams_before": "मैच तय करने से पहले कम से कम दो टीमें बनाएँ।",
+  "create_team": "टीम बनाएँ",
+  "create_your_first_ground": "अपना पहला ग्राउंड बनाएँ",
+  "customize_the_default_awards_nrr_breaks": "डिफ़ॉल्ट अंक बदलें। बराबर अंकों पर NRR से फ़ैसला होता है।",
+  "day_rate": "प्रति दिन दर (₹)",
+  "day": "प्रति दिन ₹",
+  "decline": "अस्वीकार करें",
+  "decline_this_request": "यह अनुरोध अस्वीकार करें?",
+  "directions": "दिशाएँ",
+  "distance_city_centre": "दूरी (शहर केंद्र)",
+  "economy": "इकॉनमी",
+  "earnings": "कमाई",
+  "edit_ground": "ग्राउंड संपादित करें",
+  "edit_profile": "प्रोफ़ाइल संपादित करें",
+  "end_date_must_be_after_the": "समाप्ति तारीख शुरुआत के बाद होनी चाहिए।",
+  "ends_optional": "समाप्ति (वैकल्पिक)",
+  "equal_points_are_ranked_by_net": "बराबर अंकों पर नेट रन रेट, फिर जीत से रैंक तय होती है।",
+  "evening": "शाम",
+  "experience": "अनुभव",
+  "experience_years": "अनुभव (वर्ष)",
+  "extras": "अतिरिक्त",
+  "fixtures": "फ़िक्स्चर",
+  "fall_of_wickets": "विकेट पतन",
+  "find_a_ground": "ग्राउंड खोजें",
+  "fixtures_aren_t_ready_yet": "फ़िक्स्चर अभी तैयार नहीं",
+  "follow_this_match_from_the_bell": "खेल शुरू होने या विकेट गिरने पर पुश अलर्ट पाने के लिए ऊपर बेल से इस मैच को फ़ॉलो करें।",
+  "full_day": "पूरा दिन",
+  "full_name": "पूरा नाम",
+  "full_day_rate": "पूरे दिन का रेट",
+  "full_day_rate_0_not_offered": "पूरे दिन का रेट ₹ (0 = उपलब्ध नहीं)",
+  "generate": "बनाएँ",
+  "generate_fixture_schedule": "फ़िक्स्चर शेड्यूल बनाएँ?",
+  "get_directions": "रास्ता देखें",
+  "give_your_side_a_name_and": "टीम को नाम और होम सिटी दें। अगले कदम में खिलाड़ी जोड़ सकते हैं।",
+  "got_it": "समझ गया",
+  "ground_name": "ग्राउंड का नाम",
+  "ground_owner": "ग्राउंड मालिक",
+  "high_score": "सर्वाधिक स्कोर",
+  "home_city": "होम सिटी",
+  "hourly_rate": "प्रति घंटा दर (₹)",
+  "hourly": "प्रति घंटा ₹",
+  "how_long_will_you_play": "आप कितनी देर खेलेंगे?",
+  "how_was_the_batter_out": "बल्लेबाज़ कैसे आउट हुआ?",
+  "hyderabad": "हैदराबाद",
+  "innings_1": "पारी 1",
+  "innings_summary": "पारी सारांश",
+  "it_may_have_been_removed_by": "हो सकता है आयोजक ने इसे हटा दिया हो।",
+  "keep_it": "रखें",
+  "knockout_2": "नॉकआउट",
+  "knockout_bracket": "नॉकआउट ब्रैकेट",
+  "league_standings": "लीग तालिका",
+  "leagues_officiated_playing_background": "किन लीगों में काम किया, खेल पृष्ठभूमि…",
+  "leave_a_review": "समीक्षा लिखें",
+  "list_your_ground": "अपना ग्राउंड लिस्ट करें",
+  "list_your_ground_and_start_taking": "अपना ग्राउंड लिस्ट करें और बुकिंग लेना शुरू करें।",
+  "list_yourself_so_organizers_can_book": "खुद को सूचीबद्ध करें ताकि आयोजक आपको मैचों के लिए बुक कर सकें।",
+  "live_totals_from_completed_fixtures": "पूरे फ़िक्स्चर से लाइव कुल।",
+  "location": "स्थान",
+  "loss": "हार",
+  "matches": "मैच",
+  "my_grounds": "मेरे ग्राउंड",
+  "maintenance_private_tournament": "रखरखाव, निजी टूर्नामेंट…",
+  "match_center": "मैच सेंटर",
+  "match_setup": "मैच सेटअप",
+  "match_closed_the_player_can_rate": "मैच समाप्त। खिलाड़ी अब आपको रेटिंग दे सकता है।",
+  "match_day_starts_here": "मैच का दिन यहीं से शुरू होता है",
+  "match_format": "मैच प्रारूप",
+  "match_not_found": "मैच नहीं मिला",
+  "money": "पैसा",
+  "morning": "सुबह",
+  "most_tournament_runs": "टूर्नामेंट में सर्वाधिक रन",
+  "most_tournament_wickets": "टूर्नामेंट में सर्वाधिक विकेट",
+  "mumbai": "मुंबई",
+  "nrr_uses_cumulative_runs_scored_and": "NRR में बनाए और दिए गए कुल रन वैध गेंदों से बाँटे जाते हैं। पूरी हुई ऑलआउट पारी में पूरा ओवर कोटा गिना जाता है।",
+  "name_bio_experience_and_rates": "नाम, बायो, अनुभव और दरें",
+  "new_batter_name": "नए बल्लेबाज़ का नाम",
+  "no_amenities_listed": "कोई सुविधा दर्ज नहीं",
+  "no_balls_recorded_yet": "अभी कोई गेंद दर्ज नहीं।",
+  "no_balls_yet_waiting_for_the": "अभी कोई गेंद नहीं — पहले ओवर का इंतज़ार!",
+  "no_booking_requests_yet": "अभी कोई बुकिंग अनुरोध नहीं",
+  "no_booking_selected": "कोई बुकिंग चुनी नहीं गई।",
+  "no_fixtures_found": "कोई फ़िक्स्चर नहीं मिला",
+  "no_grounds_match_your_filters": "किसी ग्राउंड से फ़िल्टर मेल नहीं खाते",
+  "no_grounds_waiting": "कोई ग्राउंड प्रतीक्षा में नहीं",
+  "no_grounds_yet": "अभी कोई ग्राउंड नहीं",
+  "no_player_stats_yet": "अभी कोई खिलाड़ी आँकड़े नहीं।",
+  "no_result": "कोई परिणाम नहीं",
+  "no_reviews_yet": "अभी कोई समीक्षा नहीं",
+  "no_reviews_yet_2": "अभी कोई समीक्षा नहीं।",
+  "no_teams_added_yet_choose_teams": "अभी कोई टीम नहीं जोड़ी। आगे बढ़ने के लिए अपनी CricketHub टीम सूची से टीमें चुनें।",
+  "no_umpire_profile_loaded": "कोई अंपायर प्रोफ़ाइल लोड नहीं।",
+  "no_umpires_waiting": "कोई अंपायर प्रतीक्षा में नहीं",
+  "non_striker_name": "नॉन-स्ट्राइकर का नाम",
+  "none_listed_yet": "अभी कुछ दर्ज नहीं।",
+  "not_valid": "मान्य नहीं",
+  "not_yet": "अभी नहीं",
+  "notes": "नोट्स",
+  "ok": "ठीक",
+  "orange_cap": "ऑरेंज कैप",
+  "overs": "ओवर",
+  "one_last_call": "आख़िरी फ़ैसला",
+  "open_crickethub_on_a_phone_to": "बुकिंग QR जाँचने के लिए फ़ोन पर CricketHub खोलें।",
+  "open_calendar": "कैलेंडर खोलें",
+  "opening_bowler": "शुरुआती गेंदबाज़",
+  "opens": "खुलता है",
+  "or_type_a_new_bowler": "या नया गेंदबाज़ लिखें",
+  "over_complete_next_bowler": "ओवर पूरा! अगला गेंदबाज़",
+  "overs_per_match": "प्रति मैच ओवर",
+  "pick_a_date": "तारीख चुनें",
+  "pick_a_window": "समय चुनें",
+  "price_breakdown": "कीमत का विवरण",
+  "pts": "अंक",
+  "purple_cap": "पर्पल कैप",
+  "participating_teams": "भाग लेने वाली टीमें",
+  "payout_earned": "कमाया भुगतान",
+  "pending_settlement": "निपटान बाकी",
+  "people": "लोग",
+  "phone_number": "फ़ोन नंबर",
+  "photos": "फ़ोटो",
+  "pick_a_rating_from_1_to": "पहले 1 से 5 में रेटिंग चुनें।",
+  "pick_your_slot": "अपना स्लॉट चुनें",
+  "pitch_quality_lights_changing_rooms_staff": "पिच की गुणवत्ता, लाइटें, चेंजिंग रूम, स्टाफ़…",
+  "pitch_type": "पिच प्रकार",
+  "player_leaders_appear_here": "खिलाड़ी लीडर यहाँ दिखेंगे",
+  "point_at_the_organizer_s_qr": "आयोजक के QR पर कैमरा रखें",
+  "points_and_nrr_are_calculated_automatically": "हर पूरे फ़िक्स्चर के बाद अंक और NRR अपने आप जुड़ते हैं।",
+  "points_configuration": "अंक सेटिंग",
+  "points_system": "अंक प्रणाली",
+  "price_low_high": "कीमत: कम → ज़्यादा",
+  "pricing": "कीमत",
+  "profile_photo": "प्रोफ़ाइल फ़ोटो",
+  "profile_updated": "प्रोफ़ाइल अपडेट हुई।",
+  "pune": "पुणे",
+  "reviews": "समीक्षाएँ",
+  "rating_high_low": "रेटिंग: ज़्यादा → कम",
+  "ready_to_bowl": "गेंदबाज़ी के लिए तैयार",
+  "reason_optional": "कारण (वैकल्पिक)",
+  "recent_balls": "हालिया गेंदें",
+  "recent_form": "हालिया फ़ॉर्म",
+  "refund": "रिफ़ंड",
+  "request_declined": "अनुरोध अस्वीकार हुआ।",
+  "resolve_tie": "टाई सुलझाएँ",
+  "reviews_come_from_a_completed_booking": "समीक्षाएँ पूरी हुई बुकिंग से आती हैं।",
+  "round_robin_2": "राउंड रॉबिन",
+  "show_this_at_the_ground": "ग्राउंड पर यह दिखाएँ",
+  "side_a": "टीम A",
+  "side_b": "टीम B",
+  "strike_rate": "स्ट्राइक रेट",
+  "save_selected_teams": "चुनी टीमें सहेजें",
+  "scan_qr": "QR स्कैन करें",
+  "scan_a_booking_qr": "बुकिंग QR स्कैन करें",
+  "scan_again": "फिर स्कैन करें",
+  "scan_booking_qr": "बुकिंग QR स्कैन करें",
+  "scan_next": "अगला स्कैन करें",
+  "search_grounds_city_pitch": "ग्राउंड, शहर, पिच खोजें...",
+  "send_back": "वापस भेजें",
+  "send_in": "भेजें",
+  "set_the_competition_rules_first_you": "पहले प्रतियोगिता के नियम तय करें। अगले कदम में ऐप टीमें चुनकर शेड्यूल बना सकते हैं।",
+  "set_up_a_match": "मैच तैयार करें",
+  "share": "शेयर करें",
+  "slot_length": "स्लॉट अवधि",
+  "starts": "शुरू",
+  "striker_name": "स्ट्राइकर का नाम",
+  "submit": "भेजें",
+  "submitted": "भेज दिया।",
+  "t_nr": "टाई/ना",
+  "target": "लक्ष्य",
+  "team": "टीम",
+  "teams": "टीमें",
+  "this_over": "यह ओवर",
+  "today": "आज",
+  "total_net_payout": "कुल शुद्ध भुगतान",
+  "total_runs": "कुल रन",
+  "team_details": "टीम विवरण",
+  "team_name": "टीम का नाम",
+  "tennis_ball_by_default_toss_comes": "डिफ़ॉल्ट रूप से टेनिस बॉल · अगला कदम टॉस",
+  "thanks_for_the_review": "समीक्षा के लिए धन्यवाद!",
+  "the_orange_cap_and_purple_cap": "ऑरेंज कैप और पर्पल कैप सूचियाँ पूरे टूर्नामेंट स्कोरकार्ड से अपडेट होती हैं।",
+  "the_ground_owner_scans_this_to": "ग्राउंड मालिक इसे स्कैन करके बुकिंग जाँचता है।",
+  "the_organizer_can_add_teams_and": "आयोजक ओवरव्यू से टीमें जोड़कर शेड्यूल बना सकता है।",
+  "the_organizer_is_still_preparing_the": "आयोजक अभी टीम सूची और फ़िक्स्चर तैयार कर रहा है।",
+  "the_scorecard_will_fill_in_as": "पारी पूरी होने पर स्कोरकार्ड भरता जाएगा।",
+  "the_table_is_ready_for_play": "तालिका खेल के लिए तैयार है",
+  "the_toss": "टॉस",
+  "there_is_no_league_points_table": "नॉकआउट मैचों के लिए लीग अंक तालिका नहीं होती। हर राउंड फ़िक्स्चर टैब में देखें।",
+  "tie": "टाई",
+  "tied_fixture_organizer_decision_required": "बराबर फ़िक्स्चर · आयोजक का फ़ैसला ज़रूरी",
+  "total": "कुल",
+  "tournament_details": "टूर्नामेंट विवरण",
+  "tournament_leaders": "टूर्नामेंट लीडर",
+  "tournament_name": "टूर्नामेंट का नाम",
+  "tournament_not_found": "टूर्नामेंट नहीं मिला",
+  "try_removing_a_filter_or_switch": "कोई फ़िल्टर हटाएँ या शहर बदलें।",
+  "umpire": "अंपायर",
+  "umpire_requested": "अंपायर अनुरोध भेजा",
+  "undo": "पूर्ववत करें",
+  "up_to_5_photos_5mb_each": "5 फ़ोटो तक, हर एक 5MB। पहली कवर इमेज बनेगी।",
+  "vs": "बनाम",
+  "weekly_settlements": "साप्ताहिक निपटान",
+  "wicket": "विकेट",
+  "wicket_next_batter": "विकेट! अगला बल्लेबाज़",
+  "weekday_rate_per_hour": "कार्यदिवस प्रति घंटा रेट",
+  "weekday_hr": "कार्यदिवस ₹/घंटा",
+  "weekend_rate_per_hour": "सप्ताहांत प्रति घंटा रेट",
+  "weekend_hr": "सप्ताहांत ₹/घंटा",
+  "weeks": "सप्ताह",
+  "what_did_they_choose": "उन्होंने क्या चुना?",
+  "when_where": "कब और कहाँ",
+  "who_won_the_toss": "टॉस किसने जीता?",
+  "win": "जीत",
+  "winners_advance_automatically_fixtures_marked_tbd": "विजेता अपने आप आगे बढ़ते हैं। TBD फ़िक्स्चर पिछला राउंड पूरा होने पर खुलते हैं।",
+  "years_of_experience": "अनुभव के वर्ष",
+  "you_are_not_listed_as_an": "आप अंपायर के रूप में सूचीबद्ध नहीं हैं",
+  "you_are_offline_scoring_continues_syncs": "आप ऑफ़लाइन हैं। स्कोरिंग जारी रहेगी — अपने आप सिंक होगी।",
+  "you_can_rate_an_umpire_after": "पूरी बुकिंग के बाद अंपायर को रेटिंग दे सकते हैं।",
+  "you_can_undo_scoring_actions_during": "मैच के दौरान स्कोरिंग क्रियाएँ पूर्ववत कर सकते हैं।",
+  "your_rating_helps_other_organizers_pick": "आपकी रेटिंग से दूसरे आयोजक अच्छा ग्राउंड चुन पाते हैं।",
+  "e_g_ahmedabad": "जैसे अहमदाबाद",
+  "e_g_ahmedabad_monsoon_cup": "जैसे अहमदाबाद मानसून कप",
+  "e_g_ahmedabad_strikers": "जैसे अहमदाबाद स्ट्राइकर्स",
+  "unverified": "असत्यापित",
+  "errFailed": "विफल: {error}",
+  "@errFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotConfirm": "पुष्टि नहीं हो सकी: {error}",
+  "@errCouldNotConfirm": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCloseBooking": "बुकिंग बंद नहीं हो सकी: {error}",
+  "@errCouldNotCloseBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCancel": "रद्द नहीं हो सका: {error}",
+  "@errCouldNotCancel": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotPostReview": "समीक्षा पोस्ट नहीं हो सकी: {error}",
+  "@errCouldNotPostReview": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateMatch": "मैच नहीं बन सका: {error}",
+  "@errCouldNotCreateMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotStartMatch": "मैच शुरू नहीं हो सका: {error}",
+  "@errCouldNotStartMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdateAlerts": "मैच अलर्ट अपडेट नहीं हो सके: {error}",
+  "@errCouldNotUpdateAlerts": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveInnings": "पारी सहेजी नहीं जा सकी: {error}",
+  "@errCouldNotSaveInnings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdate": "अपडेट नहीं हो सका: {error}",
+  "@errCouldNotUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTeam": "टीम नहीं बन सकी: {error}",
+  "@errCouldNotCreateTeam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTournament": "टूर्नामेंट नहीं बन सका: {error}",
+  "@errCouldNotCreateTournament": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveTeams": "टीमें सहेजी नहीं जा सकीं: {error}",
+  "@errCouldNotSaveTeams": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotGenerateFixtures": "फ़िक्स्चर नहीं बन सके: {error}",
+  "@errCouldNotGenerateFixtures": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotResolveTie": "टाई नहीं सुलझी: {error}",
+  "@errCouldNotResolveTie": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotLoadBookings": "बुकिंग लोड नहीं हो सकीं: {error}",
+  "@errCouldNotLoadBookings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotDecline": "अस्वीकार नहीं हो सका: {error}",
+  "@errCouldNotDecline": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSave": "सहेजा नहीं जा सका: {error}",
+  "@errCouldNotSave": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotOpenGallery": "गैलरी नहीं खुल सकी: {error}",
+  "@errCouldNotOpenGallery": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminQueueHelp": "यह कतार CricketHub स्टाफ़ के लिए है। Firebase Console में /admins के तहत खुद को जोड़ने के लिए किसी मौजूदा एडमिन से कहें।",
+  "@adminQueueHelp": {
+    "placeholders": {}
+  },
+  "cancellationPolicyConsent": "\"Pay & Book\" दबाकर आप रद्दीकरण नीति से सहमत होते हैं (24 घंटे पहले तक पूरा रिफ़ंड, 12 घंटे पहले तक 50%, उसके बाद कोई रिफ़ंड नहीं)।",
+  "@cancellationPolicyConsent": {
+    "placeholders": {}
+  },
+  "ownerCashConfirmHelp": "खिलाड़ी आपको ग्राउंड पर नकद देता है। यहाँ पुष्टि करें ताकि उसका QR चेक-इन के लिए मान्य हो जाए।",
+  "@ownerCashConfirmHelp": {
+    "placeholders": {}
+  },
+  "pickSlotHelp": "तारीख और स्लॉट चुनने के लिए कैलेंडर इस्तेमाल करें, या नीचे \"यह ग्राउंड बुक करें\" दबाएँ।",
+  "@pickSlotHelp": {
+    "placeholders": {}
+  },
+  "batterAlreadyUsed": "जो बल्लेबाज़ पहले ही आउट है (या क्रीज़ पर है) वह दोबारा नहीं आ सकता।",
+  "@batterAlreadyUsed": {
+    "placeholders": {}
+  },
+  "groundVerificationHelp": "आपका ग्राउंड सत्यापन के लिए एडमिन के पास जाता है। मंज़ूरी के बाद आप बुकिंग ले सकते हैं।",
+  "@groundVerificationHelp": {
+    "placeholders": {}
+  },
+  "managedByCricketHub": "सत्यापन स्थिति और रेटिंग CricketHub संभालता है — इन्हें यहाँ बदला नहीं जा सकता।",
+  "@managedByCricketHub": {
+    "placeholders": {}
+  },
+  "managedByCricketHubUmpire": "सत्यापित स्थिति, रेटिंग और मैच संख्या CricketHub संभालता है — इन्हें यहाँ बदला नहीं जा सकता।",
+  "@managedByCricketHubUmpire": {
+    "placeholders": {}
+  },
+  "noPendingRequestsHelp": "कोई लंबित अनुरोध नहीं। नई बुकिंग यहाँ दिखेंगी।",
+  "@noPendingRequestsHelp": {
+    "placeholders": {}
+  },
+  "umpireRequestHelp": "जब कोई आयोजक आपको बुक करता है, अनुरोध यहाँ आता है। नकद मिलने पर उसे पक्का करें।",
+  "@umpireRequestHelp": {
+    "placeholders": {}
+  },
+  "declineRequestHelp": "आयोजक को बताया जाएगा कि आप उपलब्ध नहीं हैं। उनका स्लॉट किसी और के लिए खुल जाएगा।",
+  "@declineRequestHelp": {
+    "placeholders": {}
+  },
+  "draftProfileHelp": "आपकी प्रोफ़ाइल ड्राफ़्ट है। सत्यापन के लिए भेजें ताकि आयोजक आपको ढूँढ सकें।",
+  "@draftProfileHelp": {
+    "placeholders": {}
+  },
+  "umpireCashHelp": "ग्राउंड पर नकद: ऑनलाइन कुछ नहीं कटता। अंपायर ऐप में नकद की पुष्टि करता है, फिर यह बुकिंग पक्की हो जाती है।",
+  "@umpireCashHelp": {
+    "placeholders": {}
+  },
+  "payCashHelp": "उस दिन {name} को {amount} नकद दें। राशि मिलने पर वे ऐप में बुकिंग पक्की करेंगे।",
+  "@payCashHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "umpireReceives": "प्लेटफ़ॉर्म शुल्क के बाद अंपायर को ₹{amount} मिलते हैं।",
+  "@umpireReceives": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "howWasName": "{name} कैसा रहा?",
+  "@howWasName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamReadyForMatchDay": "{name} मैच के दिन के लिए तैयार है।",
+  "@teamReadyForMatchDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingStatusLabel": "स्थिति: {status}",
+  "@bookingStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsSelectedOf": "{selected}/{max} चुनी · कम से कम 2 ज़रूरी",
+  "@teamsSelectedOf": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "teamsSavedCount": "{count} टीमें सहेजी गईं।",
+  "@teamsSavedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleReadyCount": "शेड्यूल तैयार · {count} फ़िक्स्चर बने।",
+  "@scheduleReadyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "locationAndDate": "{location} · {date}",
+  "@locationAndDate": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cityAndPlayers": "{city} · {count} खिलाड़ी",
+  "@cityAndPlayers": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cityAndRate": "{city} · ₹{rate}/घंटा",
+  "@cityAndRate": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "weekdayAndPitch": "कार्यदिवस • {pitch}",
+  "@weekdayAndPitch": {
+    "placeholders": {
+      "pitch": {
+        "type": "String"
+      }
+    }
+  },
+  "groundAvailabilityHeader": "{name} · उपलब्धता",
+  "@groundAvailabilityHeader": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "weekOf": "{date} वाला सप्ताह",
+  "@weekOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesShort": "{minutes} मिनट",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsShort": "{label} · {points} अंक",
+  "@pointsShort": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "roundLabel": "राउंड {round}",
+  "@roundLabel": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "byeAdvances": "{round} · बाय — अपने आप आगे",
+  "@byeAdvances": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "waitingForResult": "{round} · पिछले परिणाम की प्रतीक्षा",
+  "@waitingForResult": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingFixture": "{round} · फ़िक्स्चर लोड हो रहा है",
+  "@loadingFixture": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "teamVsTeam": "{a} बनाम {b}",
+  "@teamVsTeam": {
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "bookUmpireName": "{name} को बुक करें",
+  "@bookUmpireName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "windowLabel": "{start}–{end} · {hours}घं",
+  "@windowLabel": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "battingTeamLabel": "{team} बल्लेबाज़ी",
+  "@battingTeamLabel": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "bowlingLabel": "गेंदबाज़ी: {bowler}",
+  "@bowlingLabel": {
+    "placeholders": {
+      "bowler": {
+        "type": "String"
+      }
+    }
+  },
+  "needRuns": "{runs} चाहिए",
+  "@needRuns": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
+  "lastNForm": "पिछले {count}",
+  "@lastNForm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireExpMatches": "{years} वर्ष · {matches} मैच",
+  "@umpireExpMatches": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireListLine": "{city} · {years} वर्ष · ₹{rate}/घंटा",
+  "@umpireListLine": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "years": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "countLive": "{count} लाइव",
+  "@countLive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countMatches": "{count} मैच",
+  "@countMatches": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hourlyRate": "₹{rate}/घंटा",
+  "@hourlyRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "oversShort": "{value} ओवर",
+  "@oversShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsCount": "{count, plural, =0{कोई टीम नहीं} =1{1 टीम} other{{count} टीमें}}",
+  "@teamsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingsCount": "{count, plural, =1{1 बुकिंग} other{{count} बुकिंग}}",
+  "@bookingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errCouldNotLoadGrounds": "ग्राउंड लोड नहीं हो सके। रीफ़्रेश के लिए खींचें।",
+  "letsPlay": "चलिए खेलें",
+  "inningsHeader": "पारी {number} · {team}",
+  "@inningsHeader": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "ballDetail": "पारी {innings} · {over} · {bowler} को {striker}",
+  "@ballDetail": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      },
+      "over": {
+        "type": "String"
+      },
+      "bowler": {
+        "type": "String"
+      },
+      "striker": {
+        "type": "String"
+      }
+    }
+  },
+  "slotsSelected": "{count, plural, =0{कोई स्लॉट नहीं चुना} =1{1 स्लॉट} other{{count} स्लॉट}}",
+  "@slotsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsCount": "{count, plural, =1{1 रन} other{{count} रन}}",
+  "@runsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsExclaimed": "{count, plural, =1{1 रन!} other{{count} रन!}}",
+  "@runsExclaimed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extraWide": "वाइड बॉल",
+  "extraNoBall": "नो-बॉल",
+  "wicketEvent": "विकेट! {player} ({type})",
+  "@wicketEvent": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "quickActionsTitle": "आप क्या करना चाहते हैं?",
+  "quickActionsBody": "मैच शुरू करें, टीम बनाएँ, या ग्राउंड खोजें।",
+  "quickStartMatch": "मैच शुरू करें",
+  "quickStartMatchSub": "टीमें, टॉस और लाइव स्कोरिंग",
+  "quickCreateTeamSub": "खिलाड़ी जोड़ें और टीम शुरू करें"
 }

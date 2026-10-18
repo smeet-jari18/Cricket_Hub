@@ -1,0 +1,123 @@
+{
+  "_comment": "Wave 1 — the 14 files with <=6 user-facing strings each.",
+  "files": {
+    "lib/services/notification_service.dart": [
+      { "literal": "OPEN", "key": "notificationActionOpen" }
+    ],
+    "lib/widgets/offline_banner.dart": [
+      { "literal": "Offline — scoring continues, syncs automatically", "key": "offlineBanner" }
+    ],
+    "lib/screens/splash_screen.dart": [
+      { "literal": "Local cricket. Pro level.", "key": "splashTagline" }
+    ],
+    "lib/screens/booking/my_bookings_screen.dart": [
+      { "literal": "My bookings", "key": "menuMyBookings" },
+      { "literal": "Please sign in.", "key": "commonPleaseSignIn" },
+      { "literal": "Could not load bookings", "key": "myBookingsErrLoad" }
+    ],
+    "lib/screens/ground/widgets/ground_filter_sheet.dart": [
+      { "literal": "Filters", "key": "filtersTitle" },
+      { "literal": "Cancel", "key": "cancel" },
+      { "literal": "Apply", "key": "apply" }
+    ],
+    "lib/screens/umpire/umpire_list_screen.dart": [
+      { "literal": "Umpires", "key": "umpiresTitle" },
+      { "literal": "per hour", "key": "perHour" }
+    ],
+    "lib/widgets/live_match_card.dart": [
+      { "literal": "Follow live", "key": "followLive" },
+      { "literal": "LIVE NOW", "key": "liveNowBadge" }
+    ],
+    "lib/screens/booking/booking_checkout_screen.dart": [
+      { "literal": "Confirm booking", "key": "confirmBooking" }
+    ],
+    "lib/screens/umpire/umpire_availability_screen.dart": [
+      { "literal": "Availability", "key": "availabilityTitle" },
+      { "literal": "No umpire selected.", "key": "noUmpireSelected" },
+      { "literal": "My availability", "key": "myAvailability" }
+    ],
+    "lib/screens/ground/ground_calendar_screen.dart": [
+      { "literal": "Choose a slot", "key": "chooseASlot" },
+      { "literal": "No ground selected.", "key": "noGroundSelected" },
+      { "literal": "Closed on this date", "key": "closedOnThisDate" },
+      { "literal": "No slots configured", "key": "noSlotsConfigured" },
+      { "literal": "Continue", "key": "continueLabel" }
+    ],
+    "lib/screens/tournament/tournaments_screen.dart": [
+      { "literal": "Tournaments", "key": "tournamentsTitle" },
+      { "literal": "Create tournament", "key": "createTournament" },
+      { "literal": "Couldn’t load tournaments", "key": "tournamentsErrLoad" },
+      { "literal": "Check your connection and try again.", "key": "checkConnection" },
+      { "literal": "Local cups, sorted.", "key": "tournamentsTagline" },
+      { "literal": "Follow fixtures, points and player leaders from one place.", "key": "tournamentsTaglineSub" }
+    ]
+  },
+  "arb": {
+    "notificationActionOpen": { "en": "OPEN", "hi": "खोलें", "ta": "திற" },
+    "offlineBanner": {
+      "en": "Offline — scoring continues, syncs automatically",
+      "hi": "ऑफ़लाइन — स्कोरिंग चलती रहेगी, अपने आप सिंक हो जाएगी",
+      "ta": "ஆஃப்லைன் — ஸ்கோரிங் தொடரும், தானாக ஒத்திசைக்கும்"
+    },
+    "splashTagline": {
+      "en": "Local cricket. Pro level.",
+      "hi": "स्थानीय क्रिकेट. प्रो लेवल.",
+      "ta": "உள்ளூர் கிரிக்கெட். நிபுணர் நிலை."
+    },
+    "commonPleaseSignIn": {
+      "en": "Please sign in.",
+      "hi": "कृपया साइन इन करें।",
+      "ta": "தயவுசெய்து உள்நுழையவும்."
+    },
+    "myBookingsErrLoad": {
+      "en": "Could not load bookings",
+      "hi": "बुकिंग लोड नहीं हो सकीं",
+      "ta": "முன்பதிவுகளை ஏற்ற முடியவில்லை"
+    },
+    "filtersTitle": { "en": "Filters", "hi": "फ़िल्टर", "ta": "வடிகட்டிகள்" },
+    "apply": { "en": "Apply", "hi": "लागू करें", "ta": "பயன்படுத்து" },
+    "umpiresTitle": { "en": "Umpires", "hi": "अंपायर", "ta": "நடுவர்கள்" },
+    "perHour": { "en": "per hour", "hi": "प्रति घंटा", "ta": "ஒரு மணிநேரத்திற்கு" },
+    "followLive": { "en": "Follow live", "hi": "लाइव देखें", "ta": "நேரலையில் பின்தொடர்" },
+    "liveNowBadge": { "en": "LIVE NOW", "hi": "अभी लाइव", "ta": "இப்போது நேரலை" },
+    "confirmBooking": { "en": "Confirm booking", "hi": "बुकिंग पक्की करें", "ta": "முன்பதிவை உறுதிசெய்" },
+    "availabilityTitle": { "en": "Availability", "hi": "उपलब्धता", "ta": "கிடைக்கும் நேரம்" },
+    "noUmpireSelected": {
+      "en": "No umpire selected.",
+      "hi": "कोई अंपायर चुना नहीं गया।",
+      "ta": "நடுவர் யாரும் தேர்ந்தெடுக்கப்படவில்லை."
+    },
+    "myAvailability": { "en": "My availability", "hi": "मेरी उपलब्धता", "ta": "என் கிடைக்கும் நேரம்" },
+    "chooseASlot": { "en": "Choose a slot", "hi": "स्लॉट चुनें", "ta": "ஒரு நேரத்தைத் தேர்ந்தெடுக்கவும்" },
+    "noGroundSelected": {
+      "en": "No ground selected.",
+      "hi": "कोई ग्राउंड चुना नहीं गया।",
+      "ta": "மைதானம் எதுவும் தேர்ந்தெடுக்கப்படவில்லை."
+    },
+    "closedOnThisDate": { "en": "Closed on this date", "hi": "इस तारीख को बंद है", "ta": "இந்தத் தேதியில் மூடப்பட்டுள்ளது" },
+    "noSlotsConfigured": { "en": "No slots configured", "hi": "कोई स्लॉट सेट नहीं है", "ta": "நேரங்கள் எதுவும் அமைக்கப்படவில்லை" },
+    "continueLabel": { "en": "Continue", "hi": "आगे बढ़ें", "ta": "தொடரவும்" },
+    "tournamentsTitle": { "en": "Tournaments", "hi": "टूर्नामेंट", "ta": "போட்டிகள்" },
+    "createTournament": { "en": "Create tournament", "hi": "टूर्नामेंट बनाएँ", "ta": "போட்டியை உருவாக்கு" },
+    "tournamentsErrLoad": {
+      "en": "Couldn’t load tournaments",
+      "hi": "टूर्नामेंट लोड नहीं हो सके",
+      "ta": "போட்டிகளை ஏற்ற முடியவில்லை"
+    },
+    "checkConnection": {
+      "en": "Check your connection and try again.",
+      "hi": "कनेक्शन जाँचें और फिर कोशिश करें।",
+      "ta": "இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்."
+    },
+    "tournamentsTagline": {
+      "en": "Local cups, sorted.",
+      "hi": "स्थानीय कप, एक जगह।",
+      "ta": "உள்ளூர் கோப்பைகள், ஒரே இடத்தில்."
+    },
+    "tournamentsTaglineSub": {
+      "en": "Follow fixtures, points and player leaders from one place.",
+      "hi": "फ़िक्स्चर, अंक और खिलाड़ी लीडर एक ही जगह देखें।",
+      "ta": "ஆட்ட அட்டவணை, புள்ளிகள் மற்றும் வீரர் முன்னணியை ஒரே இடத்தில் பாருங்கள்."
+    }
+  }
+}

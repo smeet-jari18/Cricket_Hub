@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/team_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Create a club or local side.
 class CreateTeamScreen extends StatefulWidget {
@@ -28,12 +29,13 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
   }
 
   Future<void> _createTeam() async {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     final city = _cityController.text.trim();
 
     if (name.isEmpty || city.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Add both a team name and a city.')),
+        SnackBar(content: Text(l10n.add_both_a_team_name_and)),
       );
       return;
     }
@@ -49,12 +51,12 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$name is ready for match day.')),
+        SnackBar(content: Text(l10n.teamReadyForMatchDay(name))),
       );
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not create team: $error')),
+        SnackBar(content: Text(l10n.errCouldNotCreateTeam('$error'))),
       );
       setState(() => _saving = false);
     }
@@ -62,8 +64,9 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Create a team')),
+      appBar: AppBar(title: Text(l10n.quickCreateTeam)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -84,13 +87,13 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Build your squad',
+                  l10n.build_your_squad,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Give your side a name and a home city. You can add players next.',
+                  l10n.give_your_side_a_name_and,
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
@@ -104,17 +107,17 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Team details',
+                        Text(l10n.team_details,
                             style: Theme.of(context).textTheme.titleLarge),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _nameController,
                           textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Team name',
-                            hintText: 'e.g. Ahmedabad Strikers',
-                            prefixIcon: Icon(Icons.groups_rounded),
+                          decoration: InputDecoration(
+                            labelText: l10n.team_name,
+                            hintText: l10n.e_g_ahmedabad_strikers,
+                            prefixIcon: const Icon(Icons.groups_rounded),
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -125,10 +128,10 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
                           onSubmitted: (_) {
                             if (!_saving) _createTeam();
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Home city',
-                            hintText: 'e.g. Ahmedabad',
-                            prefixIcon: Icon(Icons.location_on_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.home_city,
+                            hintText: l10n.e_g_ahmedabad,
+                            prefixIcon: const Icon(Icons.location_on_outlined),
                           ),
                         ),
                         const SizedBox(height: 20),

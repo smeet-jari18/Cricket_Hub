@@ -8,6 +8,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/photo_picker.dart';
 import '../../services/storage_service.dart';
 import '../../services/ground_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 9's `owner_create_ground_screen.dart` — the 4-step wizard described
 /// in `CricketHub_Implementation_Plan_Phase3.md` ("Ground owner onboarding
@@ -183,8 +184,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('List your ground')),
+      appBar: AppBar(title: Text(l10n.list_your_ground)),
       body: Column(
         children: [
           _StepBar(step: _step, steps: _steps),
@@ -214,7 +216,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
                     onPressed: _busy
                         ? null
                         : () => setState(() => _step -= 1),
-                    child: const Text('Back'),
+                    child: Text(l10n.back),
                   ),
                 ),
               if (_step > 0) const SizedBox(width: 10),
@@ -270,6 +272,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
   }
 
   Widget _buildStep() {
+    final l10n = AppLocalizations.of(context);
     switch (_step) {
       case 0:
         return Column(
@@ -279,7 +282,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
             TextFormField(
               controller: _name,
               textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(labelText: 'Ground name'),
+              decoration: InputDecoration(labelText: l10n.ground_name),
               validator: (v) => (v == null || v.trim().length < 3)
                   ? 'Enter at least 3 characters'
                   : null,
@@ -287,7 +290,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _city,
-              decoration: const InputDecoration(labelText: 'City'),
+              decoration: InputDecoration(labelText: l10n.city),
               validator: (v) => (v == null || v.trim().isEmpty)
                   ? 'City is required'
                   : null,
@@ -297,8 +300,8 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               controller: _address,
               maxLines: 2,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Address',
+              decoration: InputDecoration(
+                labelText: l10n.address,
                 alignLabelWithHint: true,
               ),
               validator: (v) => (v == null || v.trim().length < 8)
@@ -319,8 +322,8 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
                   child: TextFormField(
                     controller: _weekday,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Weekday ₹/hr',
+                    decoration: InputDecoration(
+                      labelText: l10n.weekday_hr,
                     ),
                   ),
                 ),
@@ -329,8 +332,8 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
                   child: TextFormField(
                     controller: _weekend,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Weekend ₹/hr',
+                    decoration: InputDecoration(
+                      labelText: l10n.weekend_hr,
                     ),
                   ),
                 ),
@@ -340,8 +343,8 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
             TextFormField(
               controller: _fullDay,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Full-day rate ₹ (0 = not offered)',
+              decoration: InputDecoration(
+                labelText: l10n.full_day_rate_0_not_offered,
               ),
             ),
             const SizedBox(height: 20),
@@ -349,7 +352,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               children: [
                 Expanded(
                   child: _TimeField(
-                    label: 'Opens',
+                    label: l10n.opens,
                     value: _open,
                     onPick: (t) => setState(() => _open = t),
                   ),
@@ -357,7 +360,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: _TimeField(
-                    label: 'Closes',
+                    label: l10n.closes,
                     value: _close,
                     onPick: (t) => setState(() => _close = t),
                   ),
@@ -365,9 +368,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Slot length',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            Text(
+              l10n.slot_length,
+              style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -375,7 +378,7 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               children: [
                 for (final m in AppConstants.slotDurationPresets)
                   ChoiceChip(
-                    label: Text('$m min'),
+                    label: Text(l10n.minutesShort(m)),
                     selected: _slotMinutes == m,
                     onSelected: (_) => setState(() => _slotMinutes = m),
                   ),
@@ -389,9 +392,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _StepTitle('Pitch & amenities'),
-            const Text(
-              'Pitch type',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            Text(
+              l10n.pitch_type,
+              style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -406,9 +409,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               ],
             ),
             const SizedBox(height: 22),
-            const Text(
-              'Amenities',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            Text(
+              l10n.amenities,
+              style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -430,9 +433,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Photos',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+            Text(
+              l10n.photos,
+              style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
             ),
             const SizedBox(height: 8),
             _PhotoStrip(
@@ -441,9 +444,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               onRemove: (i) => setState(() => _photos.removeAt(i)),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Up to 5 photos, 5MB each. The first one becomes the cover image.',
-              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            Text(
+              l10n.up_to_5_photos_5mb_each,
+              style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
             ),
           ],
         );
@@ -475,10 +478,9 @@ class _OwnerCreateGroundScreenState extends State<OwnerCreateGroundScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Your ground goes to an admin for verification. You can take '
-              'bookings once it is approved.',
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            Text(
+              l10n.groundVerificationHelp,
+              style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
             ),
           ],
         );
@@ -615,6 +617,7 @@ class _PhotoStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SizedBox(
       height: 96,
       child: ListView(
@@ -665,13 +668,13 @@ class _PhotoStrip extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppTheme.border),
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add_a_photo_outlined,
+                    const Icon(Icons.add_a_photo_outlined,
                         color: AppTheme.primary, size: 22),
-                    SizedBox(height: 6),
-                    Text('Add photo', style: TextStyle(fontSize: 10)),
+                    const SizedBox(height: 6),
+                    Text(l10n.add_photo, style: const TextStyle(fontSize: 10)),
                   ],
                 ),
               ),

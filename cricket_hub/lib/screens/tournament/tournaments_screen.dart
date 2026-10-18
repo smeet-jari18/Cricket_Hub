@@ -7,6 +7,7 @@ import '../../models/tournament_model.dart';
 import '../../services/tournament_service.dart';
 import 'create_tournament_screen.dart';
 import 'tournament_detail_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class TournamentsScreen extends StatefulWidget {
   const TournamentsScreen({super.key});
@@ -20,13 +21,14 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final service = context.read<TournamentService>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tournaments'),
+        title: Text(l10n.tournamentsTitle),
         actions: [
           IconButton.filledTonal(
-            tooltip: 'Create tournament',
+            tooltip: l10n.createTournament,
             onPressed: () => Navigator.pushNamed(
               context,
               CreateTournamentScreen.route,
@@ -44,10 +46,10 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return const _StateCard(
+            return _StateCard(
               icon: Icons.cloud_off_outlined,
-              title: 'Couldn’t load tournaments',
-              subtitle: 'Check your connection and try again.',
+              title: l10n.tournamentsErrLoad,
+              subtitle: l10n.checkConnection,
             );
           }
           final all = snapshot.data ?? const <Tournament>[];
@@ -67,11 +69,11 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 112),
             children: [
-              Text('Local cups, sorted.',
+              Text(l10n.tournamentsTagline,
                   style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 5),
               Text(
-                'Follow fixtures, points and player leaders from one place.',
+                l10n.tournamentsTaglineSub,
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
@@ -109,7 +111,7 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
                   subtitle: all.isEmpty
                       ? 'Create your competition, add teams and let CricketHub build the schedule.'
                       : 'Try another filter, or create a new competition.',
-                  actionLabel: all.isEmpty ? 'Create tournament' : null,
+                  actionLabel: all.isEmpty ? l10n.createTournament : null,
                   onAction: all.isEmpty
                       ? () => Navigator.pushNamed(context, CreateTournamentScreen.route)
                       : null,
@@ -141,6 +143,7 @@ class _TournamentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final status = _status(tournament);
     final date = tournament.startAt == null
         ? 'Date to be confirmed'
@@ -187,7 +190,7 @@ class _TournamentCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '${tournament.location}  ·  $date',
+                      l10n.locationAndDate(tournament.location, date),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context)

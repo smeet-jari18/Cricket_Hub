@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../models/booking_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/booking_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// The umpire's inbox: every `kind == 'umpire'` booking where they are the
 /// counterparty.
@@ -20,16 +21,17 @@ class UmpireBookingRequestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
     if (uid == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Booking requests')),
-        body: const Center(child: Text('Please sign in.')),
+        appBar: AppBar(title: Text(l10n.booking_requests)),
+        body: Center(child: Text(l10n.commonPleaseSignIn)),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking requests')),
+      appBar: AppBar(title: Text(l10n.booking_requests)),
       body: StreamBuilder<List<Booking>>(
         stream: context.read<BookingService>().counterpartyBookingsStream(uid),
         builder: (context, snapshot) {
@@ -41,7 +43,7 @@ class UmpireBookingRequestsScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Could not load bookings: ${snapshot.error}',
+                  l10n.errCouldNotLoadBookings('${snapshot.error}'),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: AppTheme.danger),
                 ),
@@ -77,19 +79,18 @@ class UmpireBookingRequestsScreen extends StatelessWidget {
                   ),
                 const SizedBox(height: 12),
               ] else
-                const Card(
+                Card(
                   color: AppTheme.primaryContainer,
                   child: Padding(
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 18),
-                        SizedBox(width: 10),
+                        const Icon(Icons.check_circle_outline_rounded, size: 18),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'No pending requests. New bookings will show up '
-                            'here.',
-                            style: TextStyle(fontSize: 13),
+                            l10n.noPendingRequestsHelp,
+                            style: const TextStyle(fontSize: 13),
                           ),
                         ),
                       ],
@@ -119,24 +120,24 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final l10n = AppLocalizations.of(context);
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(32),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.inbox_outlined, size: 48, color: AppTheme.textSecondary),
-            SizedBox(height: 16),
+            const Icon(Icons.inbox_outlined, size: 48, color: AppTheme.textSecondary),
+            const SizedBox(height: 16),
             Text(
-              'No booking requests yet',
-              style: TextStyle(fontWeight: FontWeight.w700),
+              l10n.no_booking_requests_yet,
+              style: const TextStyle(fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'When an organizer books you, the request lands here. Confirm it '
-              'once you have the cash.',
+              l10n.umpireRequestHelp,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textSecondary),
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
           ],
         ),
@@ -180,23 +181,23 @@ class _RequestCardState extends State<_RequestCard> {
   Booking get _b => widget.booking;
 
   Future<void> _decline() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Decline this request?'),
-        content: const Text(
-          'The organizer will be told you cannot officiate. Their slot is '
-          'freed for someone else.',
+        title: Text(l10n.decline_this_request),
+        content: Text(
+          l10n.declineRequestHelp,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Keep it'),
+            child: Text(l10n.keep_it),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Decline',
-                style: TextStyle(color: AppTheme.danger)),
+            child: Text(l10n.decline,
+                style: const TextStyle(color: AppTheme.danger)),
           ),
         ],
       ),
@@ -208,11 +209,11 @@ class _RequestCardState extends State<_RequestCard> {
     try {
       await context.read<BookingService>().declineUmpireBooking(_b.id);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Request declined.')),
+        SnackBar(content: Text(l10n.request_declined)),
       );
     } catch (e) {
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not decline: $e')),
+        SnackBar(content: Text(l10n.errCouldNotDecline('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -220,6 +221,7 @@ class _RequestCardState extends State<_RequestCard> {
   }
 
   Future<void> _confirmCash() async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
     try {
@@ -227,11 +229,11 @@ class _RequestCardState extends State<_RequestCard> {
       // an umpire booking only allow the `status` + `updated_at` fields.
       await context.read<BookingService>().confirmUmpireCodBooking(_b.id);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Cash received — booking confirmed.')),
+        SnackBar(content: Text(l10n.cash_received_booking_confirmed)),
       );
     } catch (e) {
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not confirm: $e')),
+        SnackBar(content: Text(l10n.errCouldNotConfirm('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -240,6 +242,7 @@ class _RequestCardState extends State<_RequestCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final color = _b.isConfirmed ? AppTheme.boundaryFour : AppTheme.accent;
     return Card(
       child: Padding(
@@ -296,9 +299,9 @@ class _RequestCardState extends State<_RequestCard> {
                   onPressed: _busy ? null : _decline,
                   icon: const Icon(Icons.close_rounded,
                       size: 18, color: AppTheme.danger),
-                  label: const Text(
-                    'Decline',
-                    style: TextStyle(color: AppTheme.danger),
+                  label: Text(
+                    l10n.decline,
+                    style: const TextStyle(color: AppTheme.danger),
                   ),
                 ),
               ),

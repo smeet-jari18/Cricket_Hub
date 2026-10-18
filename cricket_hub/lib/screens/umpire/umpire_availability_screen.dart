@@ -7,6 +7,7 @@ import '../../core/app_theme.dart';
 import '../../models/ground_model.dart';
 import '../../models/umpire_model.dart';
 import '../../services/umpire_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 10's `umpire_availability_screen.dart`.
 ///
@@ -20,11 +21,12 @@ class UmpireAvailabilityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Umpire) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Availability')),
-        body: const Center(child: Text('No umpire selected.')),
+        appBar: AppBar(title: Text(l10n.availabilityTitle)),
+        body: Center(child: Text(l10n.noUmpireSelected)),
       );
     }
     return _Body(umpire: arg);
@@ -57,6 +59,7 @@ class _BodyState extends State<_Body> {
       '${d.day.toString().padLeft(2, '0')}';
 
   Future<void> _setBlocked(String iso, bool blocked) async {
+    final l10n = AppLocalizations.of(context);
     setState(() => _pending.add(iso));
     try {
       await _col.doc(iso).set({
@@ -68,7 +71,7 @@ class _BodyState extends State<_Body> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not update: $e')),
+        SnackBar(content: Text(l10n.errCouldNotUpdate('$e'))),
       );
     } finally {
       if (mounted) setState(() => _pending.remove(iso));
@@ -77,13 +80,14 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final today = DateTime.now();
     final start = DateTime(today.year, today.month, today.day);
     final dates =
         List.generate(_daysAhead, (i) => start.add(Duration(days: i)));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My availability')),
+      appBar: AppBar(title: Text(l10n.myAvailability)),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: dates.length,

@@ -9,6 +9,7 @@ import '../../widgets/live_match_card.dart';
 import '../../widgets/player_hero_banner.dart';
 import '../match/create_match_screen.dart';
 import '../match/live_match_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Daylight-first home for grassroots players, captains and scorers.
 class HomeScreen extends StatelessWidget {
@@ -16,6 +17,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthProvider>();
     final matchService = context.read<MatchService>();
     final displayName = auth.appUser?.displayName.trim();
@@ -44,15 +46,15 @@ class HomeScreen extends StatelessWidget {
                     firstName: firstName,
                     onNotificationsTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('You’re all caught up.')),
+                        SnackBar(content: Text(l10n.homeAllCaughtUp)),
                       );
                     },
                   ),
                   const SizedBox(height: 18),
                   PlayerHeroBanner(
                     eyebrow: 'The local game, elevated',
-                    title: 'Your ground.\nYour game.',
-                    subtitle: 'Bring your cricket community together.',
+                    title: l10n.homeHeroTitle,
+                    subtitle: l10n.homeHeroSubtitle,
                     actionLabel: 'Start a match',
                     onAction: () =>
                         Navigator.pushNamed(context, CreateMatchScreen.route),
@@ -60,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _SectionHeading(
-                    title: 'Live on the pitch',
+                    title: l10n.homeLiveOnPitch,
                     trailing: liveMatches.isEmpty
                         ? null
                         : _CountPill(count: liveMatches.length),
@@ -70,16 +72,16 @@ class HomeScreen extends StatelessWidget {
                       matches.isEmpty)
                     const _LoadingCard()
                   else if (snapshot.hasError)
-                    const _InlineNotice(
+                    _InlineNotice(
                       icon: Icons.cloud_off_outlined,
-                      title: 'Couldn’t load matches',
-                      subtitle: 'Check your connection and try again.',
+                      title: l10n.homeErrMatches,
+                      subtitle: l10n.checkConnection,
                     )
                   else if (liveMatches.isEmpty)
-                    const _InlineNotice(
+                    _InlineNotice(
                       icon: Icons.sports_cricket,
-                      title: 'No live matches right now',
-                      subtitle: 'The next great innings could be yours.',
+                      title: l10n.homeNoLive,
+                      subtitle: l10n.homeNoLiveSub,
                     )
                   else
                     SizedBox(
@@ -105,10 +107,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                   const SizedBox(height: 24),
                   _SectionHeading(
-                    title: 'Your fixtures',
+                    title: l10n.homeYourFixtures,
                     trailing: otherMatches.isNotEmpty
                         ? Text(
-                            '${otherMatches.length} matches',
+                            l10n.countMatches(otherMatches.length),
                             style: Theme.of(context).textTheme.labelMedium
                                 ?.copyWith(color: AppTheme.textSecondary),
                           )
@@ -121,8 +123,8 @@ class HomeScreen extends StatelessWidget {
                   else if (otherMatches.isEmpty)
                     _InlineNotice(
                       icon: Icons.calendar_month_outlined,
-                      title: 'No fixtures yet',
-                      subtitle: 'Set up two teams and schedule your first game.',
+                      title: l10n.homeNoFixtures,
+                      subtitle: l10n.homeNoFixturesSub,
                       actionLabel: 'Create match',
                       onAction: () => Navigator.pushNamed(
                         context,
@@ -164,6 +166,7 @@ class _HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final hour = DateTime.now().hour;
     final greeting = hour < 12
         ? 'Good morning'
@@ -205,7 +208,7 @@ class _HomeHeader extends StatelessWidget {
         ),
         IconButton.filledTonal(
           onPressed: onNotificationsTap,
-          tooltip: 'Notifications',
+          tooltip: l10n.notificationsTooltip,
           style: IconButton.styleFrom(
             backgroundColor: AppTheme.surface,
             foregroundColor: AppTheme.textPrimary,
@@ -243,6 +246,7 @@ class _CountPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -255,7 +259,7 @@ class _CountPill extends StatelessWidget {
           const Icon(Icons.circle, size: 7, color: AppTheme.danger),
           const SizedBox(width: 6),
           Text(
-            '$count live',
+            l10n.countLive(count),
             style: const TextStyle(
               color: Color(0xFFB42318),
               fontSize: 11,
@@ -276,6 +280,7 @@ class _FixtureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isCompleted = match.isCompleted;
     final statusColor = isCompleted ? AppTheme.textSecondary : AppTheme.primary;
     final statusBackground =
@@ -308,14 +313,15 @@ class _FixtureCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${match.teamAName}  vs  ${match.teamBName}',
+                      l10n.teamVsTeam(match.teamAName, match.teamBName),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '${match.totalOvers} overs  ·  ${_statusText(match.status)}',
+                      '${l10n.oversCount(match.totalOvers)}  ·  '
+                      '${_statusText(l10n, match.status)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.textSecondary,
                           ),
@@ -332,14 +338,16 @@ class _FixtureCard extends StatelessWidget {
     );
   }
 
-  String _statusText(String status) {
+  /// Status label for a fixture. Takes the localizations explicitly because
+  /// this helper has no BuildContext of its own.
+  String _statusText(AppLocalizations l10n, String status) {
     switch (status) {
       case 'completed':
-        return 'Completed';
+        return l10n.matchStatusCompleted;
       case 'abandoned':
-        return 'Abandoned';
+        return l10n.matchStatusAbandoned;
       default:
-        return 'Scheduled';
+        return l10n.matchStatusScheduled;
     }
   }
 }

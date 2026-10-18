@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/app_theme.dart';
 import '../../models/umpire_model.dart';
 import '../../services/umpire_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Edits the fields an umpire is allowed to change on their own document.
 ///
@@ -19,11 +20,12 @@ class UmpireEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Umpire) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Edit profile')),
-        body: const Center(child: Text('No umpire profile loaded.')),
+        appBar: AppBar(title: Text(l10n.edit_profile)),
+        body: Center(child: Text(l10n.no_umpire_profile_loaded)),
       );
     }
     return _Body(umpire: arg);
@@ -69,6 +71,7 @@ class _BodyState extends State<_Body> {
   // file, so it can be unit-tested without a widget or Firestore.
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context);
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     setState(() => _busy = true);
@@ -87,12 +90,12 @@ class _BodyState extends State<_Body> {
       if (!mounted) return;
       Navigator.pop(context);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Profile updated.')),
+        SnackBar(content: Text(l10n.profile_updated)),
       );
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
+        SnackBar(content: Text(l10n.errCouldNotSave('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -101,8 +104,9 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit profile')),
+      appBar: AppBar(title: Text(l10n.edit_profile)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -111,7 +115,7 @@ class _BodyState extends State<_Body> {
             TextFormField(
               controller: _name,
               textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(labelText: 'Display name'),
+              decoration: InputDecoration(labelText: l10n.profileDisplayName),
               validator: validateUmpireName,
             ),
             const SizedBox(height: 14),
@@ -119,8 +123,8 @@ class _BodyState extends State<_Body> {
               controller: _bio,
               maxLines: 4,
               maxLength: 500,
-              decoration: const InputDecoration(
-                labelText: 'Bio',
+              decoration: InputDecoration(
+                labelText: l10n.bio,
                 alignLabelWithHint: true,
               ),
             ),
@@ -128,8 +132,8 @@ class _BodyState extends State<_Body> {
             TextFormField(
               controller: _experience,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Experience (years)',
+              decoration: InputDecoration(
+                labelText: l10n.experience_years,
               ),
               validator: validateUmpireExperience,
             ),
@@ -137,8 +141,8 @@ class _BodyState extends State<_Body> {
             TextFormField(
               controller: _hourly,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Hourly rate (₹)',
+              decoration: InputDecoration(
+                labelText: l10n.hourly_rate,
                 prefixText: '₹ ',
               ),
               validator: validateUmpireHourly,
@@ -147,18 +151,17 @@ class _BodyState extends State<_Body> {
             TextFormField(
               controller: _day,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Day rate (₹)',
+              decoration: InputDecoration(
+                labelText: l10n.day_rate,
                 prefixText: '₹ ',
-                helperText: '0 = full-day booking not offered',
+                helperText: l10n.k_0_full_day_booking_not_offered,
               ),
               validator: validateUmpireDay,
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Verified status, ratings and match counts are managed by '
-              'CricketHub — they are not editable here.',
-              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            Text(
+              l10n.managedByCricketHubUmpire,
+              style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
             ),
           ],
         ),

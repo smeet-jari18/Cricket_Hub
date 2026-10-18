@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/review_service.dart';
 import '../../widgets/rating_stars.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Arguments for [LeaveReviewScreen] — either a ground or an umpire target.
 class LeaveReviewArgs {
@@ -31,11 +32,12 @@ class LeaveReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is! LeaveReviewArgs) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Leave a review')),
-        body: const Center(child: Text('No booking selected.')),
+        appBar: AppBar(title: Text(l10n.leave_a_review)),
+        body: Center(child: Text(l10n.no_booking_selected)),
       );
     }
     return _Body(args: args);
@@ -65,19 +67,20 @@ class _BodyState extends State<_Body> {
   }
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context);
     if (widget.args.bookingId.trim().isEmpty) {
       // Rules reject a review without a completed booking — fail early with a
       // readable message instead of a PERMISSION_DENIED from Firestore.
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Reviews come from a completed booking.'),
+        SnackBar(
+          content: Text(l10n.reviews_come_from_a_completed_booking),
         ),
       );
       return;
     }
     if (_rating == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pick a rating from 1 to 5 first.')),
+        SnackBar(content: Text(l10n.pick_a_rating_from_1_to)),
       );
       return;
     }
@@ -109,12 +112,12 @@ class _BodyState extends State<_Body> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Thanks for the review!')),
+        SnackBar(content: Text(l10n.thanks_for_the_review)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not post review: $e')),
+        SnackBar(content: Text(l10n.errCouldNotPostReview('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -123,23 +126,24 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final name = widget.args.groundName.isEmpty
         ? 'this ground'
         : widget.args.groundName;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Leave a review')),
+      appBar: AppBar(title: Text(l10n.leave_a_review)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           Text(
-            'How was $name?',
+            l10n.howWasName(name),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Your rating helps other organizers pick a good ground.',
-            style: TextStyle(color: AppTheme.textSecondary),
+          Text(
+            l10n.your_rating_helps_other_organizers_pick,
+            style: const TextStyle(color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 24),
           Center(
@@ -165,8 +169,8 @@ class _BodyState extends State<_Body> {
             maxLines: 5,
             maxLength: _maxChars,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              hintText: 'Pitch quality, lights, changing rooms, staff…',
+            decoration: InputDecoration(
+              hintText: l10n.pitch_quality_lights_changing_rooms_staff,
               alignLabelWithHint: true,
             ),
           ),

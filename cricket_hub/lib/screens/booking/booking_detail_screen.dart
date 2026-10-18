@@ -7,6 +7,7 @@ import '../../models/booking_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/booking_service.dart';
 import 'leave_review_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 11's `booking_detail_screen.dart`.
 ///
@@ -20,11 +21,12 @@ class BookingDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Booking) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Booking')),
-        body: const Center(child: Text('No booking selected.')),
+        appBar: AppBar(title: Text(l10n.booking)),
+        body: Center(child: Text(l10n.no_booking_selected)),
       );
     }
 
@@ -80,16 +82,17 @@ class _BodyState extends State<_Body> {
   // ---------------------------------------------------------------------------
 
   Future<void> _confirmCash() async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
     try {
       await context.read<BookingService>().confirmCodBooking(_b.id);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Cash received — booking confirmed.')),
+        SnackBar(content: Text(l10n.cash_received_booking_confirmed)),
       );
     } catch (e) {
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not confirm: $e')),
+        SnackBar(content: Text(l10n.errCouldNotConfirm('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -97,16 +100,17 @@ class _BodyState extends State<_Body> {
   }
 
   Future<void> _markCompleted() async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
     try {
       await context.read<BookingService>().markBookingCompleted(_b.id);
       messenger.showSnackBar(
-        const SnackBar(content: Text('Match closed. The player can rate you now.')),
+        SnackBar(content: Text(l10n.match_closed_the_player_can_rate)),
       );
     } catch (e) {
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not close the booking: $e')),
+        SnackBar(content: Text(l10n.errCouldNotCloseBooking('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -114,13 +118,14 @@ class _BodyState extends State<_Body> {
   }
 
   Future<void> _cancel() async {
+    final l10n = AppLocalizations.of(context);
     final refundPaise = _b.computeRefundAmountPaise();
     final refund = '₹${(refundPaise / 100).round()}';
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Cancel this booking?'),
+        title: Text(l10n.cancel_this_booking),
         content: Text(
           refundPaise > 0
               ? 'You will get $refund back, based on how close the slot is.'
@@ -129,12 +134,12 @@ class _BodyState extends State<_Body> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Keep it'),
+            child: Text(l10n.keep_it),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Cancel booking',
-                style: TextStyle(color: AppTheme.danger)),
+            child: Text(l10n.cancel_booking,
+                style: const TextStyle(color: AppTheme.danger)),
           ),
         ],
       ),
@@ -148,12 +153,12 @@ class _BodyState extends State<_Body> {
           .cancelBooking(bookingId: _b.id, reason: 'Cancelled by organizer');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Booking cancelled.')),
+        SnackBar(content: Text(l10n.booking_cancelled)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not cancel: $e')),
+        SnackBar(content: Text(l10n.errCouldNotCancel('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -182,18 +187,19 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
     final isOrganizer = uid != null && uid == _b.organizerUid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking details')),
+      appBar: AppBar(title: Text(l10n.booking_details)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           _Header(booking: _b),
           const SizedBox(height: 16),
           _Section(
-            title: 'When & where',
+            title: l10n.when_where,
             rows: [
               ('Ground', _b.resourceName.isEmpty ? '—' : _b.resourceName),
               ('Date', _b.date),
@@ -203,7 +209,7 @@ class _BodyState extends State<_Body> {
           ),
           const SizedBox(height: 12),
           _Section(
-            title: 'Money',
+            title: l10n.money,
             rows: [
               ('Total paid', _b.amountDisplay),
               ('Platform fee', _b.platformFeeDisplay),
@@ -217,7 +223,7 @@ class _BodyState extends State<_Body> {
           ),
           const SizedBox(height: 12),
           _Section(
-            title: 'People',
+            title: l10n.people,
             rows: [
               ('Organizer', _b.organizerName.isEmpty ? '—' : _b.organizerName),
               ('Ground owner',
@@ -226,12 +232,12 @@ class _BodyState extends State<_Body> {
           ),
           if (_b.notes != null && _b.notes!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            _Section(title: 'Notes', rows: [('Note', _b.notes!)]),
+            _Section(title: l10n.notes, rows: [('Note', _b.notes!)]),
           ],
           if (_b.refundAmountPaise > 0) ...[
             const SizedBox(height: 12),
             _Section(
-              title: 'Refund',
+              title: l10n.refund,
               rows: [
                 ('Amount', '₹${(_b.refundAmountPaise / 100).round()}'),
                 ('Status', _b.refundStatus),
@@ -261,11 +267,10 @@ class _BodyState extends State<_Body> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
-              'The player pays you in cash at the ground. Confirm here so '
-              'their QR becomes valid for check-in.',
+            Text(
+              l10n.ownerCashConfirmHelp,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+              style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
             ),
           ],
           if (_canMarkCompleted) ...[
@@ -423,14 +428,15 @@ class _QrCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            const Text(
-              'SHOW THIS AT THE GROUND',
-              style: TextStyle(
+            Text(
+              l10n.show_this_at_the_ground,
+              style: const TextStyle(
                 fontSize: 10,
                 letterSpacing: 1,
                 fontWeight: FontWeight.w800,
@@ -445,10 +451,10 @@ class _QrCard extends StatelessWidget {
               backgroundColor: Colors.white,
             ),
             const SizedBox(height: 10),
-            const Text(
-              'The ground owner scans this to verify your booking.',
+            Text(
+              l10n.the_ground_owner_scans_this_to,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+              style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
             ),
           ],
         ),

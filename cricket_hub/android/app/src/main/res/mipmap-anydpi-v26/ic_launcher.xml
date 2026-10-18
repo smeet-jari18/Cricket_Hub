@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 8+ draws the icon in two layers so launchers can mask it (circle,
+     squircle, rounded square) and animate it. The foreground keeps the mark in
+     the middle 56% of the canvas; `tools/make_icons.py` renders it that way. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>

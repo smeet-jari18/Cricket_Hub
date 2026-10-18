@@ -7,6 +7,7 @@ import '../../models/ground_model.dart';
 import '../../services/ground_service.dart';
 import '../booking/booking_checkout_screen.dart';
 import '../booking/checkout_args.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Calendar + slot picker for a single ground.
 ///
@@ -25,11 +26,12 @@ class GroundCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final ground = ModalRoute.of(context)?.settings.arguments;
     if (ground is! Ground) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Choose a slot')),
-        body: const Center(child: Text('No ground selected.')),
+        appBar: AppBar(title: Text(l10n.chooseASlot)),
+        body: Center(child: Text(l10n.noGroundSelected)),
       );
     }
     return _CalendarBody(ground: ground);
@@ -178,6 +180,7 @@ class _CalendarBodyState extends State<_CalendarBody> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final dates = List.generate(
       _daysAhead,
       (i) {
@@ -213,16 +216,16 @@ class _CalendarBodyState extends State<_CalendarBody> {
                 if (day?.blocked ?? false) {
                   return _EmptyState(
                     icon: Icons.block_rounded,
-                    title: 'Closed on this date',
+                    title: l10n.closedOnThisDate,
                     message: (day?.blockReason?.isNotEmpty ?? false)
                         ? day!.blockReason!
                         : 'The ground owner has blocked this date.',
                   );
                 }
                 if (keys.isEmpty) {
-                  return const _EmptyState(
+                  return _EmptyState(
                     icon: Icons.schedule_rounded,
-                    title: 'No slots configured',
+                    title: l10n.noSlotsConfigured,
                     message:
                         'This ground has no opening hours set up yet.',
                   );
@@ -420,6 +423,7 @@ class _CheckoutBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -435,9 +439,7 @@ class _CheckoutBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    pickedCount == 0
-                        ? 'No slot selected'
-                        : '$pickedCount slot${pickedCount == 1 ? '' : 's'}',
+                    l10n.slotsSelected(pickedCount),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppTheme.textSecondary,
@@ -458,7 +460,7 @@ class _CheckoutBar extends StatelessWidget {
               width: 160,
               child: ElevatedButton(
                 onPressed: onContinue,
-                child: const Text('Continue'),
+                child: Text(l10n.continueLabel),
               ),
             ),
           ],

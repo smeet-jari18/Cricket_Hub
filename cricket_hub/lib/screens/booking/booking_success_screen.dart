@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/app_theme.dart';
 import '../../models/booking_model.dart';
 import '../../services/booking_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Booking confirmation screen with QR code + action buttons.
 class BookingSuccessScreen extends StatelessWidget {
@@ -15,9 +16,10 @@ class BookingSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking confirmed'),
+        title: Text(l10n.booking_confirmed_2),
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<Booking?>(
@@ -40,6 +42,7 @@ class BookingSuccessScreen extends StatelessWidget {
   }
 
   Widget _content(BuildContext context, Booking booking) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
@@ -47,7 +50,7 @@ class BookingSuccessScreen extends StatelessWidget {
         const _SuccessHero(),
         const SizedBox(height: 20),
         Text(
-          'Booking Confirmed',
+          l10n.booking_confirmed,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
@@ -73,7 +76,7 @@ class BookingSuccessScreen extends StatelessWidget {
           onPressed: () {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
-          child: const Text('Back to home'),
+          child: Text(l10n.back_to_home),
         ),
       ],
     );
@@ -162,6 +165,7 @@ class BookingSuccessScreen extends StatelessWidget {
   }
 
   Widget _actionsRow(BuildContext context, Booking booking) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
@@ -170,7 +174,7 @@ class BookingSuccessScreen extends StatelessWidget {
               // Add to calendar.
             },
             icon: const Icon(Icons.event_rounded, size: 16),
-            label: const Text('Add to calendar'),
+            label: Text(l10n.add_to_calendar),
           ),
         ),
         const SizedBox(width: 8),
@@ -180,7 +184,7 @@ class BookingSuccessScreen extends StatelessWidget {
               // Open directions.
             },
             icon: const Icon(Icons.directions_rounded, size: 16),
-            label: const Text('Directions'),
+            label: Text(l10n.directions),
           ),
         ),
         const SizedBox(width: 8),
@@ -190,7 +194,7 @@ class BookingSuccessScreen extends StatelessWidget {
               // Share booking.
             },
             icon: const Icon(Icons.ios_share_rounded, size: 16),
-            label: const Text('Share'),
+            label: Text(l10n.share),
           ),
         ),
       ],
@@ -198,6 +202,7 @@ class BookingSuccessScreen extends StatelessWidget {
   }
 
   Widget _pending(BuildContext context, Booking booking) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -211,12 +216,12 @@ class BookingSuccessScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Booking is processing',
+              l10n.booking_is_processing,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 4),
             Text(
-              'Status: ${booking.status}',
+              l10n.bookingStatusLabel(booking.status),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

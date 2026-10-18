@@ -52,6 +52,36 @@ SKIP_VALUES = re.compile(
 # language names shown on the picker (each name is written in its own script).
 ALLOWLIST = {"CricketHub", "English · हिन्दी · தமிழ்"}
 
+# Files that stay in English on purpose, with the reason. The gate prints these
+# on every run, so an exemption can never quietly become a hiding place.
+EXEMPT = {
+    "lib/screens/bootstrap_error_screen.dart":
+        "boot-failure diagnostics: it must render before AppLocalizations is "
+        "safe to use (see bootstrap_error_screen_test.dart)",
+}
+
+
+
+def has_words(literal: str) -> bool:
+    """True when the literal has English text outside its `${…}` holes.
+
+    `'${d.day}/${d.month}'` renders two numbers — nothing to translate. Keeping
+    those in the count would make the gate cry wolf and hide the real work.
+    """
+    depth, stripped = 0, []
+    for i, ch in enumerate(literal):
+        if ch == '$' and i + 1 < len(literal) and literal[i + 1] == '{':
+            depth += 1
+            continue
+        if depth:
+            if ch == '{':
+                depth += 1
+            elif ch == '}':
+                depth -= 1
+            continue
+        stripped.append(ch)
+    # `$runs/$wickets` is a bare value too — drop the shorthand interpolations.
+    return bool(re.search(r"[A-Za-z]{2,}", re.sub(r"\$[A-Za-z_]\w*", "", "".join(stripped))))
 
 def scan() -> list[dict]:
     rows = []
@@ -60,12 +90,14 @@ def scan() -> list[dict]:
         if GENERATED in rel:
             continue
         source = path.read_text(encoding="utf-8")
+        if rel in EXEMPT:
+            continue
         literals = [
             value
             for value in TEXT_CONTEXT.findall(source)
             if not SKIP_VALUES.match(value)
             # "$count", "${line.runs}" — runtime values, nothing to translate.
-            and not value.lstrip().startswith('$')
+            and has_words(value)
             and value not in ALLOWLIST
         ]
         migrated = "AppLocalizations" in source
@@ -107,6 +139,11 @@ def main() -> int:
         localized_share = 100 * (1 - total_literals / total_literals)
         print(f"\n  (raw share is only meaningful once files are migrated; "
               f"{localized_share:.0f}% is the floor, not the answer)")
+
+    if EXEMPT:
+        print("\n  Deliberately English (exempt, with reason):")
+        for rel, reason in EXEMPT.items():
+            print(f"    {rel}\n      {reason}")
 
     print("\n  Localized verticals this round:")
     for row in migrated:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_theme.dart';
 import '../models/match_model.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Horizontal live-match card on the home feed.
 class LiveMatchCard extends StatelessWidget {
@@ -18,6 +19,7 @@ class LiveMatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final overs = '${match.ballsBowled ~/ 6}.${match.ballsBowled % 6}';
 
     return SizedBox(
@@ -36,7 +38,7 @@ class LiveMatchCard extends StatelessWidget {
                     const _LivePill(),
                     const Spacer(),
                     Text(
-                      '${match.totalOvers} overs',
+                      l10n.oversCount(match.totalOvers),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             color: AppTheme.textSecondary,
                             letterSpacing: 0.2,
@@ -57,11 +59,11 @@ class LiveMatchCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _TeamName(name: match.teamAName),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
                               child: Text(
-                                'VS',
-                                style: TextStyle(
+                                l10n.vs,
+                                style: const TextStyle(
                                   color: AppTheme.textSecondary,
                                   fontSize: 9,
                                   fontWeight: FontWeight.w800,
@@ -89,7 +91,7 @@ class LiveMatchCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            '$overs ov',
+                            l10n.oversShort(overs),
                             style: Theme.of(context).textTheme.labelMedium
                                 ?.copyWith(color: AppTheme.textSecondary),
                           ),
@@ -104,7 +106,7 @@ class LiveMatchCard extends StatelessWidget {
                         size: 15, color: AppTheme.primary),
                     const SizedBox(width: 5),
                     Text(
-                      'Follow live',
+                      l10n.followLive,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             color: AppTheme.primary,
                             letterSpacing: 0.1,
@@ -129,20 +131,21 @@ class _LivePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
         color: const Color(0xFFFFE4E3),
         borderRadius: BorderRadius.circular(99),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.circle, size: 7, color: AppTheme.danger),
-          SizedBox(width: 6),
+          const Icon(Icons.circle, size: 7, color: AppTheme.danger),
+          const SizedBox(width: 6),
           Text(
-            'LIVE NOW',
-            style: TextStyle(
+            l10n.liveNowBadge,
+            style: const TextStyle(
               color: Color(0xFFB42318),
               fontSize: 10,
               fontWeight: FontWeight.w800,

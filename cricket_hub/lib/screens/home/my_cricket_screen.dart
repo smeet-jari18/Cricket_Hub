@@ -7,6 +7,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/team_service.dart';
 import '../team/create_team_screen.dart';
 import 'career_stats_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Personal cricket hub: team management and server-aggregated career stats.
 class MyCricketScreen extends StatelessWidget {
@@ -14,6 +15,7 @@ class MyCricketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().firebaseUser?.uid ?? '';
     final teamService = context.read<TeamService>();
     if (uid.isEmpty) {
@@ -24,7 +26,7 @@ class MyCricketScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My Cricket'),
+          title: Text(l10n.navMyCricket),
           bottom: const TabBar(
             indicatorColor: AppTheme.primary,
             tabs: [
@@ -52,6 +54,7 @@ class _TeamsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Team>>(
       stream: teamService.myTeamsStream(uid),
       builder: (context, snapshot) {
@@ -59,10 +62,10 @@ class _TeamsTab extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Text('Couldn’t load your teams. Please try again.'),
+              padding: const EdgeInsets.all(24),
+              child: Text(l10n.myCricketErrLoad),
             ),
           );
         }
@@ -71,10 +74,10 @@ class _TeamsTab extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
           children: [
-            Text('Your squads', style: Theme.of(context).textTheme.headlineMedium),
+            Text(l10n.myCricketYourSquads, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 5),
             Text(
-              'Manage your teams and keep your playing group together.',
+              l10n.myCricketSquadsSub,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
@@ -87,7 +90,7 @@ class _TeamsTab extends StatelessWidget {
               )
             else ...[
               Text(
-                '${teams.length} ${teams.length == 1 ? 'team' : 'teams'}',
+                l10n.teamsCount(teams.length),
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -112,6 +115,7 @@ class _TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
@@ -131,7 +135,7 @@ class _TeamCard extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 3),
           child: Text(
-            '${team.city}  ·  ${team.roster.length} players',
+            l10n.cityAndPlayers(team.city, team.roster.length),
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -142,13 +146,13 @@ class _TeamCard extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 8),
           if (team.roster.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Your squad is ready for its first player.',
-                  style: TextStyle(color: AppTheme.textSecondary),
+                  l10n.myCricketEmptySquad,
+                  style: const TextStyle(color: AppTheme.textSecondary),
                 ),
               ),
             )
@@ -164,7 +168,7 @@ class _TeamCard extends StatelessWidget {
                   ),
                   title: Text(player, style: Theme.of(context).textTheme.bodyMedium),
                   trailing: IconButton(
-                    tooltip: 'Remove player',
+                    tooltip: l10n.removePlayer,
                     icon: const Icon(Icons.close_rounded,
                         size: 18, color: AppTheme.textSecondary),
                     onPressed: () => context
@@ -187,6 +191,7 @@ class _EmptyTeams extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -202,12 +207,12 @@ class _EmptyTeams extends StatelessWidget {
               child: const Icon(Icons.groups_rounded, size: 32, color: AppTheme.primary),
             ),
             const SizedBox(height: 14),
-            Text('Start with your first team',
+            Text(l10n.myCricketStartTitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 6),
             Text(
-              'Add a team name and city, then invite your squad onto the field.',
+              l10n.myCricketStartSub,
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -218,7 +223,7 @@ class _EmptyTeams extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onCreate,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Create your first team'),
+              label: Text(l10n.myCricketCreateFirst),
             ),
           ],
         ),
@@ -255,6 +260,7 @@ class _AddPlayerFieldState extends State<_AddPlayerField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
@@ -263,16 +269,16 @@ class _AddPlayerFieldState extends State<_AddPlayerField> {
             textCapitalization: TextCapitalization.words,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _addPlayer(),
-            decoration: const InputDecoration(
-              hintText: 'Add a player',
-              prefixIcon: Icon(Icons.person_add_alt_1_rounded),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: InputDecoration(
+              hintText: l10n.addPlayerHint,
+              prefixIcon: const Icon(Icons.person_add_alt_1_rounded),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
           ),
         ),
         const SizedBox(width: 8),
         IconButton.filledTonal(
-          tooltip: 'Add player',
+          tooltip: l10n.addPlayerTooltip,
           onPressed: _addPlayer,
           icon: const Icon(Icons.add_rounded),
         ),

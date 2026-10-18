@@ -3,12 +3,7 @@
   "retry": "Retry",
   "cancel": "Cancel",
   "create": "Create",
-  "quickActionsTitle": "Make it a match day",
-  "quickActionsBody": "Pick what you want to set up.",
-  "quickStartMatch": "Start a match",
-  "quickStartMatchSub": "Choose teams, toss and start scoring",
   "quickCreateTeam": "Create a team",
-  "quickCreateTeamSub": "Build a squad for your next game",
   "navHome": "Home",
   "navMyCricket": "My Cricket",
   "navTours": "Tours",
@@ -85,5 +80,976 @@
   "languageSystem": "Device language",
   "languageEnglish": "English",
   "languageHindi": "हिन्दी",
-  "languageTamil": "தமிழ்"
+  "languageTamil": "தமிழ்",
+  "notificationActionOpen": "OPEN",
+  "offlineBanner": "Offline — scoring continues, syncs automatically",
+  "splashTagline": "Local cricket. Pro level.",
+  "commonPleaseSignIn": "Please sign in.",
+  "myBookingsErrLoad": "Could not load bookings",
+  "filtersTitle": "Filters",
+  "apply": "Apply",
+  "umpiresTitle": "Umpires",
+  "perHour": "per hour",
+  "followLive": "Follow live",
+  "liveNowBadge": "LIVE NOW",
+  "confirmBooking": "Confirm booking",
+  "availabilityTitle": "Availability",
+  "noUmpireSelected": "No umpire selected.",
+  "myAvailability": "My availability",
+  "chooseASlot": "Choose a slot",
+  "noGroundSelected": "No ground selected.",
+  "closedOnThisDate": "Closed on this date",
+  "noSlotsConfigured": "No slots configured",
+  "continueLabel": "Continue",
+  "tournamentsTitle": "Tournaments",
+  "createTournament": "Create tournament",
+  "tournamentsErrLoad": "Couldn’t load tournaments",
+  "checkConnection": "Check your connection and try again.",
+  "tournamentsTagline": "Local cups, sorted.",
+  "tournamentsTaglineSub": "Follow fixtures, points and player leaders from one place.",
+  "notificationFallbackTitle": "CricketHub update",
+  "notificationFallbackBody": "There is new match activity.",
+  "homeAllCaughtUp": "You’re all caught up.",
+  "homeHeroSubtitle": "Bring your cricket community together.",
+  "homeLiveOnPitch": "Live on the pitch",
+  "homeErrMatches": "Couldn’t load matches",
+  "homeNoLive": "No live matches right now",
+  "homeNoLiveSub": "The next great innings could be yours.",
+  "homeYourFixtures": "Your fixtures",
+  "homeNoFixtures": "No fixtures yet",
+  "homeNoFixturesSub": "Set up two teams and schedule your first game.",
+  "notificationsTooltip": "Notifications",
+  "matchStatusCompleted": "Completed",
+  "matchStatusAbandoned": "Abandoned",
+  "matchStatusScheduled": "Scheduled",
+  "myCricketErrLoad": "Couldn’t load your teams. Please try again.",
+  "myCricketYourSquads": "Your squads",
+  "myCricketSquadsSub": "Manage your teams and keep your playing group together.",
+  "myCricketEmptySquad": "Your squad is ready for its first player.",
+  "removePlayer": "Remove player",
+  "myCricketStartTitle": "Start with your first team",
+  "myCricketStartSub": "Add a team name and city, then invite your squad onto the field.",
+  "myCricketCreateFirst": "Create your first team",
+  "addPlayerHint": "Add a player",
+  "addPlayerTooltip": "Add player",
+  "loginEyebrow": "Welcome to CricketHub",
+  "loginTagline": "Your team. Your ground. Your moment.",
+  "loginErrMobile": "Enter a valid 10-digit mobile number.",
+  "loginTitle": "Sign in to play",
+  "loginSubtitle": "Use your mobile number to get a one-time code.",
+  "loginMobileLabel": "Mobile number",
+  "loginOr": "OR",
+  "loginGoogle": "Continue with Google",
+  "loginTerms": "By continuing, you agree to our Terms of Service and Privacy Policy.",
+  "otpHeadline": "Check your messages",
+  "otpTitle": "Verify number",
+  "otpErrCode": "Enter the 6-digit code.",
+  "otpHint": "The code can take a few seconds to arrive. Keep this screen open.",
+  "profileErrName": "Add your name to continue.",
+  "profileTitle": "Player profile",
+  "profileHeadline": "Introduce yourself",
+  "profileSubtitle": "Add a few details so your teammates know who’s at the crease.",
+  "profileDetails": "Player details",
+  "profileDisplayName": "Display name",
+  "profileNameHint": "e.g. Rahul Sharma",
+  "profileBattingStyle": "Batting style",
+  "profileBowlingStyle": "Bowling style",
+  "oversCount": "{count} overs",
+  "@oversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeHeroTitle": "Your ground.\nYour game.",
+  "loginHeadline": "Every match\nstarts here.",
+  "otpSentTo": "Enter the 6-digit code we sent to {phone}.",
+  "@otpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "k_0_full_day_booking_not_offered": "0 = full-day booking not offered",
+  "k_5_wicket_hauls": "5-WICKET HAULS",
+  "about": "About",
+  "about_you": "About you",
+  "add_at_least_two_teams_before": "Add at least two teams before generating the schedule.",
+  "add_both_a_team_name_and": "Add both a team name and a city.",
+  "add_ground": "Add ground",
+  "add_photo": "Add photo",
+  "add_to_calendar": "Add to calendar",
+  "address": "Address",
+  "admins_only": "Admins only",
+  "afternoon": "Afternoon",
+  "ahmedabad": "Ahmedabad",
+  "amenities": "Amenities",
+  "ask_the_organizer_to_regenerate_the": "Ask the organizer to regenerate the tournament schedule.",
+  "batting_average": "BATTING AVERAGE",
+  "best_bowling": "BEST BOWLING",
+  "back": "Back",
+  "back_to_home": "Back to home",
+  "bat_first": "Bat first",
+  "batting_side_a": "Batting side A",
+  "become_an_umpire": "Become an umpire",
+  "bengaluru": "Bengaluru",
+  "bio": "Bio",
+  "block_date": "Block date",
+  "block_dates_you_cannot_officiate": "Block dates you cannot officiate",
+  "block_this_date": "Block this date?",
+  "book_this_ground": "Book this ground",
+  "book_umpire": "Book umpire",
+  "booking": "Booking",
+  "booking_confirmed": "Booking Confirmed",
+  "booking_cancelled": "Booking cancelled.",
+  "booking_confirmed_2": "Booking confirmed",
+  "booking_details": "Booking details",
+  "booking_is_processing": "Booking is processing",
+  "booking_requests": "Booking requests",
+  "booking_verified": "Booking verified",
+  "bowl_first": "Bowl first",
+  "bowling_side_b": "Bowling side B",
+  "bring_every_fixture_together": "Bring every fixture together",
+  "build_your_squad": "Build your squad",
+  "camera_scanning_runs_in_the_android": "Camera scanning runs in the Android and iOS app.",
+  "cancel_booking": "Cancel booking",
+  "cancel_this_booking": "Cancel this booking?",
+  "cash_received_booking_confirmed": "Cash received — booking confirmed.",
+  "certifications": "Certifications",
+  "choose_the_advancing_team": "Choose the advancing team",
+  "choose_the_sides": "Choose the sides",
+  "choose_tournament_teams": "Choose tournament teams",
+  "choose_your_teams_and_playing_format": "Choose your teams and playing format.",
+  "city": "City",
+  "city_or_ground": "City or ground",
+  "clear_date": "Clear date",
+  "clear_search": "Clear search",
+  "closes": "Closes",
+  "competition_format": "Competition format",
+  "confirm_cash_you_received_from_organizers": "Confirm cash you received from organizers",
+  "confirm_the_toss_then_the_first": "Confirm the toss, then the first ball is yours.",
+  "confirmed": "Confirmed",
+  "could_not_load_the_queue": "Could not load the queue",
+  "couldn_t_load_fixtures": "Couldn’t load fixtures",
+  "couldn_t_load_teams": "Couldn’t load teams.",
+  "couldn_t_load_teams_please_try": "Couldn’t load teams. Please try again.",
+  "couldn_t_load_the_match": "Couldn’t load the match.",
+  "couldn_t_load_this_tournament": "Couldn’t load this tournament",
+  "create_a_profile_and_get_verified": "Create a profile and get verified to start taking matches.",
+  "create_a_team_before_building_your": "Create a team before building your tournament.",
+  "create_at_least_two_teams_before": "Create at least two teams before scheduling a match.",
+  "create_team": "Create team",
+  "create_your_first_ground": "Create your first ground",
+  "customize_the_default_awards_nrr_breaks": "Customize the default awards. NRR breaks points ties.",
+  "day_rate": "Day rate (₹)",
+  "day": "Day ₹",
+  "decline": "Decline",
+  "decline_this_request": "Decline this request?",
+  "directions": "Directions",
+  "distance_city_centre": "Distance (city centre)",
+  "economy": "ECONOMY",
+  "earnings": "Earnings",
+  "edit_ground": "Edit ground",
+  "edit_profile": "Edit profile",
+  "end_date_must_be_after_the": "End date must be after the start date.",
+  "ends_optional": "Ends (optional)",
+  "equal_points_are_ranked_by_net": "Equal points are ranked by net run rate, then wins.",
+  "evening": "Evening",
+  "experience": "Experience",
+  "experience_years": "Experience (years)",
+  "extras": "Extras",
+  "fixtures": "FIXTURES",
+  "fall_of_wickets": "Fall of wickets",
+  "find_a_ground": "Find a Ground",
+  "fixtures_aren_t_ready_yet": "Fixtures aren’t ready yet",
+  "follow_this_match_from_the_bell": "Follow this match from the bell above to get a push alert when play starts or a wicket falls.",
+  "full_day": "Full day",
+  "full_name": "Full name",
+  "full_day_rate": "Full-day rate",
+  "full_day_rate_0_not_offered": "Full-day rate ₹ (0 = not offered)",
+  "generate": "Generate",
+  "generate_fixture_schedule": "Generate fixture schedule?",
+  "get_directions": "Get directions",
+  "give_your_side_a_name_and": "Give your side a name and a home city. You can add players next.",
+  "got_it": "Got it",
+  "ground_name": "Ground name",
+  "ground_owner": "Ground owner",
+  "high_score": "HIGH SCORE",
+  "home_city": "Home city",
+  "hourly_rate": "Hourly rate (₹)",
+  "hourly": "Hourly ₹",
+  "how_long_will_you_play": "How long will you play?",
+  "how_was_the_batter_out": "How was the batter out?",
+  "hyderabad": "Hyderabad",
+  "innings_1": "INNINGS 1",
+  "innings_summary": "Innings summary",
+  "it_may_have_been_removed_by": "It may have been removed by its organizer.",
+  "keep_it": "Keep it",
+  "knockout_2": "Knockout",
+  "knockout_bracket": "Knockout bracket",
+  "league_standings": "League standings",
+  "leagues_officiated_playing_background": "Leagues officiated, playing background…",
+  "leave_a_review": "Leave a review",
+  "list_your_ground": "List your ground",
+  "list_your_ground_and_start_taking": "List your ground and start taking bookings.",
+  "list_yourself_so_organizers_can_book": "List yourself so organizers can book you for matches.",
+  "live_totals_from_completed_fixtures": "Live totals from completed fixtures.",
+  "location": "Location",
+  "loss": "Loss",
+  "matches": "MATCHES",
+  "my_grounds": "MY GROUNDS",
+  "maintenance_private_tournament": "Maintenance, private tournament…",
+  "match_center": "Match Center",
+  "match_setup": "Match Setup",
+  "match_closed_the_player_can_rate": "Match closed. The player can rate you now.",
+  "match_day_starts_here": "Match day starts here",
+  "match_format": "Match format",
+  "match_not_found": "Match not found",
+  "money": "Money",
+  "morning": "Morning",
+  "most_tournament_runs": "Most tournament runs",
+  "most_tournament_wickets": "Most tournament wickets",
+  "mumbai": "Mumbai",
+  "nrr_uses_cumulative_runs_scored_and": "NRR uses cumulative runs scored and conceded divided by legal balls. A completed all-out innings counts the full overs quota.",
+  "name_bio_experience_and_rates": "Name, bio, experience and rates",
+  "new_batter_name": "New batter name",
+  "no_amenities_listed": "No amenities listed",
+  "no_balls_recorded_yet": "No balls recorded yet.",
+  "no_balls_yet_waiting_for_the": "No balls yet — waiting for the first over!",
+  "no_booking_requests_yet": "No booking requests yet",
+  "no_booking_selected": "No booking selected.",
+  "no_fixtures_found": "No fixtures found",
+  "no_grounds_match_your_filters": "No grounds match your filters",
+  "no_grounds_waiting": "No grounds waiting",
+  "no_grounds_yet": "No grounds yet",
+  "no_player_stats_yet": "No player stats yet.",
+  "no_result": "No result",
+  "no_reviews_yet": "No reviews yet",
+  "no_reviews_yet_2": "No reviews yet.",
+  "no_teams_added_yet_choose_teams": "No teams added yet. Choose teams from your CricketHub team list to continue.",
+  "no_umpire_profile_loaded": "No umpire profile loaded.",
+  "no_umpires_waiting": "No umpires waiting",
+  "non_striker_name": "Non-striker name",
+  "none_listed_yet": "None listed yet.",
+  "not_valid": "Not valid",
+  "not_yet": "Not yet",
+  "notes": "Notes",
+  "ok": "OK",
+  "orange_cap": "ORANGE CAP",
+  "overs": "OVERS",
+  "one_last_call": "One last call",
+  "open_crickethub_on_a_phone_to": "Open CricketHub on a phone to verify a booking QR.",
+  "open_calendar": "Open calendar",
+  "opening_bowler": "Opening bowler",
+  "opens": "Opens",
+  "or_type_a_new_bowler": "Or type a new bowler",
+  "over_complete_next_bowler": "Over complete! Next bowler",
+  "overs_per_match": "Overs per match",
+  "pick_a_date": "PICK A DATE",
+  "pick_a_window": "PICK A WINDOW",
+  "price_breakdown": "PRICE BREAKDOWN",
+  "pts": "PTS",
+  "purple_cap": "PURPLE CAP",
+  "participating_teams": "Participating teams",
+  "payout_earned": "Payout earned",
+  "pending_settlement": "Pending settlement",
+  "people": "People",
+  "phone_number": "Phone number",
+  "photos": "Photos",
+  "pick_a_rating_from_1_to": "Pick a rating from 1 to 5 first.",
+  "pick_your_slot": "Pick your slot",
+  "pitch_quality_lights_changing_rooms_staff": "Pitch quality, lights, changing rooms, staff…",
+  "pitch_type": "Pitch type",
+  "player_leaders_appear_here": "Player leaders appear here",
+  "point_at_the_organizer_s_qr": "Point at the organizer’s QR",
+  "points_and_nrr_are_calculated_automatically": "Points and NRR are calculated automatically after each completed fixture.",
+  "points_configuration": "Points configuration",
+  "points_system": "Points system",
+  "price_low_high": "Price: Low → High",
+  "pricing": "Pricing",
+  "profile_photo": "Profile photo",
+  "profile_updated": "Profile updated.",
+  "pune": "Pune",
+  "reviews": "REVIEWS",
+  "rating_high_low": "Rating: High → Low",
+  "ready_to_bowl": "Ready to bowl",
+  "reason_optional": "Reason (optional)",
+  "recent_balls": "Recent balls",
+  "recent_form": "Recent form",
+  "refund": "Refund",
+  "request_declined": "Request declined.",
+  "resolve_tie": "Resolve tie",
+  "reviews_come_from_a_completed_booking": "Reviews come from a completed booking.",
+  "round_robin_2": "Round robin",
+  "show_this_at_the_ground": "SHOW THIS AT THE GROUND",
+  "side_a": "SIDE A",
+  "side_b": "SIDE B",
+  "strike_rate": "STRIKE RATE",
+  "save_selected_teams": "Save selected teams",
+  "scan_qr": "Scan QR",
+  "scan_a_booking_qr": "Scan a booking QR",
+  "scan_again": "Scan again",
+  "scan_booking_qr": "Scan booking QR",
+  "scan_next": "Scan next",
+  "search_grounds_city_pitch": "Search grounds, city, pitch...",
+  "send_back": "Send back",
+  "send_in": "Send in",
+  "set_the_competition_rules_first_you": "Set the competition rules first. You can choose app teams and generate the schedule next.",
+  "set_up_a_match": "Set up a match",
+  "share": "Share",
+  "slot_length": "Slot length",
+  "starts": "Starts",
+  "striker_name": "Striker name",
+  "submit": "Submit",
+  "submitted": "Submitted.",
+  "t_nr": "T/NR",
+  "target": "TARGET",
+  "team": "TEAM",
+  "teams": "TEAMS",
+  "this_over": "THIS OVER",
+  "today": "TODAY",
+  "total_net_payout": "TOTAL NET PAYOUT",
+  "total_runs": "TOTAL RUNS",
+  "team_details": "Team details",
+  "team_name": "Team name",
+  "tennis_ball_by_default_toss_comes": "Tennis ball by default · toss comes next",
+  "thanks_for_the_review": "Thanks for the review!",
+  "the_orange_cap_and_purple_cap": "The Orange Cap and Purple Cap lists update from completed tournament scorecards.",
+  "the_ground_owner_scans_this_to": "The ground owner scans this to verify your booking.",
+  "the_organizer_can_add_teams_and": "The organizer can add teams and generate the schedule from Overview.",
+  "the_organizer_is_still_preparing_the": "The organizer is still preparing the team list and fixtures.",
+  "the_scorecard_will_fill_in_as": "The scorecard will fill in as innings are completed.",
+  "the_table_is_ready_for_play": "The table is ready for play",
+  "the_toss": "The toss",
+  "there_is_no_league_points_table": "There is no league points table for elimination matches. Follow each round in the Fixtures tab.",
+  "tie": "Tie",
+  "tied_fixture_organizer_decision_required": "Tied fixture · organizer decision required",
+  "total": "Total",
+  "tournament_details": "Tournament details",
+  "tournament_leaders": "Tournament leaders",
+  "tournament_name": "Tournament name",
+  "tournament_not_found": "Tournament not found",
+  "try_removing_a_filter_or_switch": "Try removing a filter or switch city.",
+  "umpire": "Umpire",
+  "umpire_requested": "Umpire requested",
+  "undo": "Undo",
+  "up_to_5_photos_5mb_each": "Up to 5 photos, 5MB each. The first one becomes the cover image.",
+  "vs": "VS",
+  "weekly_settlements": "WEEKLY SETTLEMENTS",
+  "wicket": "WICKET",
+  "wicket_next_batter": "WICKET! Next batter",
+  "weekday_rate_per_hour": "Weekday rate per hour",
+  "weekday_hr": "Weekday ₹/hr",
+  "weekend_rate_per_hour": "Weekend rate per hour",
+  "weekend_hr": "Weekend ₹/hr",
+  "weeks": "Weeks",
+  "what_did_they_choose": "What did they choose?",
+  "when_where": "When & where",
+  "who_won_the_toss": "Who won the toss?",
+  "win": "Win",
+  "winners_advance_automatically_fixtures_marked_tbd": "Winners advance automatically. Fixtures marked TBD unlock when the previous round is complete.",
+  "years_of_experience": "Years of experience",
+  "you_are_not_listed_as_an": "You are not listed as an umpire",
+  "you_are_offline_scoring_continues_syncs": "You are offline. Scoring continues — syncs automatically.",
+  "you_can_rate_an_umpire_after": "You can rate an umpire after a completed booking.",
+  "you_can_undo_scoring_actions_during": "You can undo scoring actions during the match.",
+  "your_rating_helps_other_organizers_pick": "Your rating helps other organizers pick a good ground.",
+  "e_g_ahmedabad": "e.g. Ahmedabad",
+  "e_g_ahmedabad_monsoon_cup": "e.g. Ahmedabad Monsoon Cup",
+  "e_g_ahmedabad_strikers": "e.g. Ahmedabad Strikers",
+  "unverified": "unverified",
+  "errFailed": "Failed: {error}",
+  "@errFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotConfirm": "Could not confirm: {error}",
+  "@errCouldNotConfirm": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCloseBooking": "Could not close the booking: {error}",
+  "@errCouldNotCloseBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCancel": "Could not cancel: {error}",
+  "@errCouldNotCancel": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotPostReview": "Could not post review: {error}",
+  "@errCouldNotPostReview": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateMatch": "Could not create match: {error}",
+  "@errCouldNotCreateMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotStartMatch": "Could not start match: {error}",
+  "@errCouldNotStartMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdateAlerts": "Could not update match alerts: {error}",
+  "@errCouldNotUpdateAlerts": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveInnings": "Could not save innings: {error}",
+  "@errCouldNotSaveInnings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdate": "Could not update: {error}",
+  "@errCouldNotUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTeam": "Could not create team: {error}",
+  "@errCouldNotCreateTeam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTournament": "Could not create tournament: {error}",
+  "@errCouldNotCreateTournament": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveTeams": "Could not save teams: {error}",
+  "@errCouldNotSaveTeams": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotGenerateFixtures": "Could not generate fixtures: {error}",
+  "@errCouldNotGenerateFixtures": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotResolveTie": "Could not resolve the tie: {error}",
+  "@errCouldNotResolveTie": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotLoadBookings": "Could not load bookings: {error}",
+  "@errCouldNotLoadBookings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotDecline": "Could not decline: {error}",
+  "@errCouldNotDecline": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSave": "Could not save: {error}",
+  "@errCouldNotSave": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotOpenGallery": "Could not open the gallery: {error}",
+  "@errCouldNotOpenGallery": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminQueueHelp": "This queue is for CricketHub staff. Ask an existing admin to add you under /admins in the Firebase Console.",
+  "@adminQueueHelp": {
+    "placeholders": {}
+  },
+  "cancellationPolicyConsent": "By tapping \"Pay & Book\", you agree to the cancellation policy (full refund up to 24h before, 50% up to 12h before, no refund thereafter).",
+  "@cancellationPolicyConsent": {
+    "placeholders": {}
+  },
+  "ownerCashConfirmHelp": "The player pays you in cash at the ground. Confirm here so their QR becomes valid for check-in.",
+  "@ownerCashConfirmHelp": {
+    "placeholders": {}
+  },
+  "pickSlotHelp": "Use the calendar to pick a date and slots, or tap \"Book this ground\" below.",
+  "@pickSlotHelp": {
+    "placeholders": {}
+  },
+  "batterAlreadyUsed": "A batter who is already out (or already at the crease) cannot come in again.",
+  "@batterAlreadyUsed": {
+    "placeholders": {}
+  },
+  "groundVerificationHelp": "Your ground goes to an admin for verification. You can take bookings once it is approved.",
+  "@groundVerificationHelp": {
+    "placeholders": {}
+  },
+  "managedByCricketHub": "Verification status and ratings are managed by CricketHub — they are not editable here.",
+  "@managedByCricketHub": {
+    "placeholders": {}
+  },
+  "managedByCricketHubUmpire": "Verified status, ratings and match counts are managed by CricketHub — they are not editable here.",
+  "@managedByCricketHubUmpire": {
+    "placeholders": {}
+  },
+  "noPendingRequestsHelp": "No pending requests. New bookings will show up here.",
+  "@noPendingRequestsHelp": {
+    "placeholders": {}
+  },
+  "umpireRequestHelp": "When an organizer books you, the request lands here. Confirm it once you have the cash.",
+  "@umpireRequestHelp": {
+    "placeholders": {}
+  },
+  "declineRequestHelp": "The organizer will be told you cannot officiate. Their slot is freed for someone else.",
+  "@declineRequestHelp": {
+    "placeholders": {}
+  },
+  "draftProfileHelp": "Your profile is a draft. Submit it for verification so organizers can find you.",
+  "@draftProfileHelp": {
+    "placeholders": {}
+  },
+  "umpireCashHelp": "Cash on ground: nothing is charged online. The umpire confirms the cash in the app, then this booking is locked in.",
+  "@umpireCashHelp": {
+    "placeholders": {}
+  },
+  "payCashHelp": "Pay {amount} in cash to {name} on the day. They will confirm the booking in the app once they receive it.",
+  "@payCashHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "umpireReceives": "Umpire receives ₹{amount} after the platform fee.",
+  "@umpireReceives": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "howWasName": "How was {name}?",
+  "@howWasName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamReadyForMatchDay": "{name} is ready for match day.",
+  "@teamReadyForMatchDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingStatusLabel": "Status: {status}",
+  "@bookingStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsSelectedOf": "{selected}/{max} selected · at least 2 required",
+  "@teamsSelectedOf": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "teamsSavedCount": "{count} teams saved.",
+  "@teamsSavedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleReadyCount": "Schedule ready · {count} fixtures created.",
+  "@scheduleReadyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "locationAndDate": "{location} · {date}",
+  "@locationAndDate": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cityAndPlayers": "{city} · {count} players",
+  "@cityAndPlayers": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cityAndRate": "{city} · ₹{rate}/hr",
+  "@cityAndRate": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "weekdayAndPitch": "Weekday • {pitch}",
+  "@weekdayAndPitch": {
+    "placeholders": {
+      "pitch": {
+        "type": "String"
+      }
+    }
+  },
+  "groundAvailabilityHeader": "{name} · availability",
+  "@groundAvailabilityHeader": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "weekOf": "Week of {date}",
+  "@weekOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesShort": "{minutes} min",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsShort": "{label} · {points} pts",
+  "@pointsShort": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "roundLabel": "Round {round}",
+  "@roundLabel": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "byeAdvances": "{round} · BYE — advances automatically",
+  "@byeAdvances": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "waitingForResult": "{round} · Waiting for previous result",
+  "@waitingForResult": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingFixture": "{round} · Loading fixture",
+  "@loadingFixture": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "teamVsTeam": "{a} vs {b}",
+  "@teamVsTeam": {
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "bookUmpireName": "Book {name}",
+  "@bookUmpireName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "windowLabel": "{start}–{end} · {hours}h",
+  "@windowLabel": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "battingTeamLabel": "{team} batting",
+  "@battingTeamLabel": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "bowlingLabel": "Bowling: {bowler}",
+  "@bowlingLabel": {
+    "placeholders": {
+      "bowler": {
+        "type": "String"
+      }
+    }
+  },
+  "needRuns": "Need {runs}",
+  "@needRuns": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
+  "lastNForm": "LAST {count}",
+  "@lastNForm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireExpMatches": "{years} yrs · {matches} matches",
+  "@umpireExpMatches": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireListLine": "{city} · {years} yrs · ₹{rate}/hr",
+  "@umpireListLine": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "years": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "countLive": "{count} live",
+  "@countLive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countMatches": "{count} matches",
+  "@countMatches": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hourlyRate": "₹{rate}/hr",
+  "@hourlyRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "oversShort": "{value} ov",
+  "@oversShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsCount": "{count, plural, =0{No teams} =1{1 team} other{{count} teams}}",
+  "@teamsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingsCount": "{count, plural, =1{1 booking} other{{count} bookings}}",
+  "@bookingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errCouldNotLoadGrounds": "Couldn't load grounds. Pull to refresh.",
+  "letsPlay": "Let's Play",
+  "inningsHeader": "Innings {number} · {team}",
+  "@inningsHeader": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "ballDetail": "Inn {innings} · {over} · {bowler} to {striker}",
+  "@ballDetail": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      },
+      "over": {
+        "type": "String"
+      },
+      "bowler": {
+        "type": "String"
+      },
+      "striker": {
+        "type": "String"
+      }
+    }
+  },
+  "slotsSelected": "{count, plural, =0{No slot selected} =1{1 slot} other{{count} slots}}",
+  "@slotsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsCount": "{count, plural, =1{1 run} other{{count} runs}}",
+  "@runsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsExclaimed": "{count, plural, =1{1 run!} other{{count} runs!}}",
+  "@runsExclaimed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extraWide": "Wide ball",
+  "extraNoBall": "No-ball",
+  "wicketEvent": "WICKET! {player} ({type})",
+  "@wicketEvent": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "quickActionsTitle": "What do you want to do?",
+  "quickActionsBody": "Start a match, build a team, or find a ground.",
+  "quickStartMatch": "Start a match",
+  "quickStartMatchSub": "Set up teams, toss and live scoring",
+  "quickCreateTeamSub": "Add players and start a squad"
 }

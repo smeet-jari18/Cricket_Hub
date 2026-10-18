@@ -9,6 +9,7 @@ import '../../services/ground_service.dart';
 import '../../services/review_service.dart';
 import '../../widgets/rating_stars.dart';
 import 'ground_calendar_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Ground detail screen with 4 tabs: Overview, Calendar, Reviews, Location.
 class GroundDetailScreen extends StatefulWidget {
@@ -60,6 +61,7 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -77,9 +79,9 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('₹${_ground!.priceWeekdayHourly}/hr',
+                          Text(l10n.hourlyRate(_ground!.priceWeekdayHourly),
                               style: Theme.of(context).textTheme.titleLarge),
-                          Text('Weekday • ${_ground!.pitchType}',
+                          Text(l10n.weekdayAndPitch(_ground!.pitchType),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -97,7 +99,7 @@ class _GroundDetailScreenState extends State<GroundDetailScreen>
                           arguments: _ground!,
                         ),
                         icon: const Icon(Icons.event_available_rounded, size: 18),
-                        label: const Text('Book this ground'),
+                        label: Text(l10n.book_this_ground),
                       ),
                     ),
                   ],
@@ -264,13 +266,14 @@ class OverviewTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        Text('Amenities', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.amenities, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 10),
         if (ground.amenities.isEmpty)
-          Text('No amenities listed',
+          Text(l10n.no_amenities_listed,
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
@@ -289,7 +292,7 @@ class OverviewTab extends StatelessWidget {
                 .toList(),
           ),
         const SizedBox(height: 20),
-        Text('Pricing', style: Theme.of(context).textTheme.titleMedium),
+        Text(l10n.pricing, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 10),
         Card(
           child: Padding(
@@ -353,6 +356,7 @@ class CalendarTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -362,12 +366,11 @@ class CalendarTab extends StatelessWidget {
             const Icon(Icons.event_available_rounded,
                 size: 64, color: AppTheme.primary),
             const SizedBox(height: 12),
-            Text('Pick your slot',
+            Text(l10n.pick_your_slot,
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
-              'Use the calendar to pick a date and slots, or tap '
-              '"Book this ground" below.',
+              l10n.pickSlotHelp,
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -381,7 +384,7 @@ class CalendarTab extends StatelessWidget {
                 GroundCalendarScreen.route,
                 arguments: ground,
               ),
-              child: const Text('Open calendar'),
+              child: Text(l10n.open_calendar),
             ),
           ],
         ),
@@ -397,6 +400,7 @@ class ReviewsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Review>>(
       stream: context.read<ReviewService>().groundReviewsStream(ground.id),
       builder: (context, snapshot) {
@@ -414,7 +418,7 @@ class ReviewsTab extends StatelessWidget {
                   const Icon(Icons.reviews_outlined,
                       size: 64, color: AppTheme.textSecondary),
                   const SizedBox(height: 8),
-                  Text('No reviews yet',
+                  Text(l10n.no_reviews_yet,
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
@@ -494,12 +498,13 @@ class LocationTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Address', style: Theme.of(context).textTheme.titleMedium),
+          Text(l10n.address, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Card(
             child: ListTile(
@@ -513,7 +518,7 @@ class LocationTab extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: () {/* maps */},
             icon: const Icon(Icons.directions_rounded, size: 18),
-            label: const Text('Get directions'),
+            label: Text(l10n.get_directions),
           ),
         ],
       ),

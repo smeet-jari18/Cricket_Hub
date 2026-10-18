@@ -1,11 +1,11 @@
 {
-    "name": "cricket_hub",
-    "short_name": "cricket_hub",
+    "name": "CricketHub",
+    "short_name": "CricketHub",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#006B5C",
+    "description": "Book grounds, run matches, follow live cricket.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -182,3 +182,111 @@ nahi kar raha.
 
 **Jo verify nahi hua:** asli device pe dobara run. Sandbox me Android device
 nahi hai — ye aapko confirm karna hoga (`flutter clean && flutter run`).
+
+---
+
+## 8. Localization — ab poora ho gaya (is round)
+
+§3 me maine likha tha "baaki ~81 files ki localization ek sprint ka kaam hai, ek
+turn ka nahi". Wo baat aadhi sach thi: **haath se** 500 strings migrate karna
+sprint hai, par 90% kaam mechanical hai — aur mechanical kaam script ka hota hai.
+Is round me wahi kiya.
+
+### Pipeline (sab `tools/` me, sab `--dry-run` support karte hain)
+
+| Tool | Kaam |
+|---|---|
+| `l10n_sweep.py` | `phrasebook_*.json` (English → hi, ta) padhta hai, har **text slot** (`Text(`, `label:`, `hintText:`, `title:`, `content:` …) me exact match dhoondh ke `l10n.<key>` kar deta hai. Firestore field keys, route names, asset paths ko chhoota hi nahi. Key deterministic hai (`slugify`) aur agar wahi English pehle se ARB me hai to wahi key reuse hoti hai |
+| `l10n_final_pass.py` | Jo chیز flat lookup se nahi hoti: **(a)** `'first half ' 'second half'` — poora jumla ek key me join, **(b)** `'Could not save: $e'` — ARB *placeholder* + `@key` metadata, taaki value silently drop na ho |
+| `l10n_coverage.py` | Naapta hai: kitni files migrated, kitne literals bache. `--gate` fail hota hai agar koi migrated file piche hate. `EXEMPT` me har file ki wajah likhi hai aur gate use har run pe print karta hai |
+| `l10n_decl_fix.py` | Analyzer ke `Undefined name 'l10n'` se enclosing method dhoondh ke `final l10n = …` daalta hai — sirf wahan jahan `context` reachable hai. Baaki manually |
+| `l10n_fix_consts.py` | Codemod ke baad aane wale `invalid_constant` burst ko fix karta hai |
+
+### Numbers (before → after)
+
+| | Pehle | Ab |
+|---|---|---|
+| UI literals (whole app) | **566** | **0** (1 exempt file, reason gate me likha) |
+| Files importing l10n | 0 → 17 (wave 1) | **48** |
+| ARB keys | 84 | **528** × en/hi/ta |
+| `l10n_coverage.py --gate` | — | ✅ **PASS** |
+
+### Kya genuinely translate hua
+
+- **Har screen**: auth (login, OTP, profile setup), home, my cricket, career
+  stats, ground list/detail/calendar, booking (checkout, detail, success,
+  review), owner (dashboard, create/edit ground, calendar, earnings, QR
+  scanner), umpire (list, detail, booking, requests, dashboard, edit,
+  onboarding, availability), tournament (list, create, detail — 49 strings
+  wala sabse bada file), match (create, toss, live, scoring dashboard),
+  admin verification, menu, language picker, offline banner, notifications.
+- **ICU plurals** jahan pehle `'${n} team${n == 1 ? '' : 's'}'` hack tha:
+  teams, bookings, reviews, slots, runs.
+- **Placeholders** har jagah jahan value thi: `Could not save: {error}`,
+  `{a} vs {b}`, `Need {runs}`, `Round {round}`, `₹{rate}/hr` …
+- **1 bug bhi mila**: home hero ka `'Your ground.\\nYour game.'` double-escaped
+  tha — screen pe literally `\n` dikh raha tha. Ab `homeHeroTitle` key se aata
+  hai aur asli line break deta hai.
+
+### Gate kaise chalta hai
+
+```bash
+python3 tools/l10n_coverage.py          # summary
+python3 tools/l10n_coverage.py --files  # worst-first
+python3 tools/l10n_coverage.py --gate   # CI: exit 1 on regression
+```
+
+`test/l10n_test.dart` me ek naya test bhi hai: **koi bhi ARB key jo app me
+kahin use nahi hoti, test fail kar deti hai** — dead translations jamne se
+rokta hai.
+
+### Jo verify nahi hua (honest)
+
+- **Translator review nahi hui.** Hindi/Tamil maine likhi hain — technical terms
+  (NRR, strike rate, bye, wide) cricket ke common form me rakhe hain, par kisi
+  native reviewer ne inhe padha nahi hai. Production se pehle ek review round
+  chahiye.
+- **Layout**: Tamil/Hindi strings English se lambi hoti hain. Widget tests
+  text overflow nahi pakadte. Device pe ek visual pass baaki hai.
+- `bootstrap_error_screen.dart` jaan-boojh ke English hai: wo Firebase fail
+  hone par chalta hai, `AppLocalizations` par depend nahi kar sakta (test isko
+  enforce karta hai).
+
+---
+
+## 9. Localization ke baad ki safety (is round)
+
+Localization "done" ka matlab ye nahi ki layout bhi theek hai. Devanagari aur
+Tamil Latin se chaudi hoti hain aur translations English se lambi — aur Flutter
+me `RenderFlex overflowed` ek **painted warning** hai, exception nahi, isliye
+normal widget test use pakadta hi nahi.
+
+**`test/locale_layout_test.dart`** (8 tests):
+
+- Har case **320 × 640** (chhota phone) aur **text scale 1.3×** (bada font
+  chahiye wale user) par chalta hai, teeno languages me.
+- Language picker (en/hi/ta) aur International screen (no-key state + live
+  match cards with long venue) — `tester.takeException()` null hona chahiye.
+- Ek **control test** bhi hai jo jaan-boojh ke overflow karta hai aur assert
+  karta hai ki harness use pakadta hai. Warna safety net "rumour" hota hai.
+
+**`test/l10n_test.dart`** me ek naya tripwire: koi bhi translation apne English
+se **2.2×** se lambi nahi honi chahiye (aaj ka worst 1.89× hai). Ye purani
+strings par lint nahi, **nayi** strings pakadne ke liye hai.
+
+### CricAPI key — ship se pehle check
+
+`tools/check_cricapi.py` pehle se tha (exit codes 0/2/3/4 documented the).
+Is round me usme `--demo` aur `--json` add kiye, aur **network failure par
+traceback** ki jagah saaf message + exit 4. Teen paths asli execution se
+verify hue:
+
+| Path | Kaise | Result |
+|---|---|---|
+| Key nahi di | `python3 tools/check_cricapi.py` | exit **2** |
+| Key galat | `--demo` (asli API call) | exit **3**, "Invalid API Key" |
+| Network dead | `--base https://no-such-host.invalid/...` | exit **4**, koi traceback nahi |
+| Key sahi | — | **verify nahi hua** (asli key mere paas nahi) |
+
+**Jo verify nahi hua:** exit 0 wala success path. Jab aapki key aa jaaye,
+`python3 tools/check_cricapi.py --key ...` chala kar ek baar dekh lena.

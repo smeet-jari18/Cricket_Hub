@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Adaptive-icon background layer. The foreground PNG is the client's
+         artwork (teal ring + orange dot) with its white page removed, so the
+         two layers stack back into exactly the original logo. -->
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

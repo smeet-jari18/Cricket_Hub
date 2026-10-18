@@ -6,6 +6,7 @@ import '../../models/ground_model.dart';
 import '../../services/ground_service.dart';
 import '../../services/photo_picker.dart';
 import '../../services/storage_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Edits the fields a ground owner may change after listing.
 ///
@@ -89,6 +90,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
       );
 
   Future<void> _pickCover() async {
+    final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     try {
       final picked = await _picker.pickFromGallery();
@@ -103,7 +105,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
       }
       setState(() => _newCover = picked);
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Could not open the gallery: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.errCouldNotOpenGallery('$e'))));
     }
   }
 
@@ -123,6 +125,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context);
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final hoursError = validateGroundHours(
@@ -189,7 +192,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
     } catch (e) {
       if (!mounted) return;
       messenger.showSnackBar(
-        SnackBar(content: Text('Could not save: $e')),
+        SnackBar(content: Text(l10n.errCouldNotSave('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -198,8 +201,9 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit ground')),
+      appBar: AppBar(title: Text(l10n.edit_ground)),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -208,15 +212,15 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
             TextFormField(
               controller: _name,
               textCapitalization: TextCapitalization.words,
-              decoration: const InputDecoration(labelText: 'Ground name'),
+              decoration: InputDecoration(labelText: l10n.ground_name),
               validator: validateGroundName,
             ),
             const SizedBox(height: 14),
             TextFormField(
               controller: _address,
               maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: 'Address',
+              decoration: InputDecoration(
+                labelText: l10n.address,
                 alignLabelWithHint: true,
               ),
               validator: validateGroundAddress,
@@ -257,8 +261,8 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
             TextFormField(
               controller: _weekday,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Weekday rate per hour',
+              decoration: InputDecoration(
+                labelText: l10n.weekday_rate_per_hour,
                 prefixText: '₹ ',
               ),
               validator: validateGroundPrice,
@@ -267,8 +271,8 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
             TextFormField(
               controller: _weekend,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Weekend rate per hour',
+              decoration: InputDecoration(
+                labelText: l10n.weekend_rate_per_hour,
                 prefixText: '₹ ',
               ),
               validator: validateGroundPrice,
@@ -277,10 +281,10 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
             TextFormField(
               controller: _fullDay,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Full-day rate',
+              decoration: InputDecoration(
+                labelText: l10n.full_day_rate,
                 prefixText: '₹ ',
-                helperText: '0 = full-day booking not offered',
+                helperText: l10n.k_0_full_day_booking_not_offered,
               ),
               validator: (v) => validateGroundPrice(v, allowZero: true),
             ),
@@ -291,7 +295,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
               children: [
                 Expanded(
                   child: _TimeTile(
-                    label: 'Opens',
+                    label: l10n.opens,
                     value: _hhmm(_open),
                     onTap: () => _pickTime(isOpen: true),
                   ),
@@ -299,7 +303,7 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _TimeTile(
-                    label: 'Closes',
+                    label: l10n.closes,
                     value: _hhmm(_close),
                     onTap: () => _pickTime(isOpen: false),
                   ),
@@ -307,10 +311,9 @@ class _OwnerEditGroundScreenState extends State<OwnerEditGroundScreen> {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Verification status and ratings are managed by CricketHub — '
-              'they are not editable here.',
-              style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            Text(
+              l10n.managedByCricketHub,
+              style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
             ),
           ],
         ),

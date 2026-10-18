@@ -5,6 +5,7 @@ import '../../core/app_theme.dart';
 import '../../models/payout_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/payout_service.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 9's `owner_earnings_screen.dart`.
 ///
@@ -17,12 +18,13 @@ class OwnerEarningsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Earnings')),
+      appBar: AppBar(title: Text(l10n.earnings)),
       body: uid == null
-          ? const Center(child: Text('Please sign in.'))
+          ? Center(child: Text(l10n.commonPleaseSignIn))
           : StreamBuilder<List<PayoutWeek>>(
               stream: context.read<PayoutService>().payoutWeeksStream(uid),
               builder: (context, snapshot) {
@@ -58,9 +60,9 @@ class OwnerEarningsScreen extends StatelessWidget {
                       weeks: weeks.length,
                     ),
                     const SizedBox(height: 18),
-                    const Text(
-                      'WEEKLY SETTLEMENTS',
-                      style: TextStyle(
+                    Text(
+                      l10n.weekly_settlements,
+                      style: const TextStyle(
                         fontSize: 10,
                         letterSpacing: 1,
                         fontWeight: FontWeight.w800,
@@ -116,6 +118,7 @@ class _TotalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -126,9 +129,9 @@ class _TotalsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'TOTAL NET PAYOUT',
-            style: TextStyle(
+          Text(
+            l10n.total_net_payout,
+            style: const TextStyle(
               fontSize: 10,
               letterSpacing: 1.2,
               fontWeight: FontWeight.w800,
@@ -143,10 +146,10 @@ class _TotalsCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _Mini(label: 'Weeks', value: '$weeks'),
+              _Mini(label: l10n.weeks, value: '$weeks'),
               const SizedBox(width: 24),
               _Mini(
-                label: 'Pending settlement',
+                label: l10n.pending_settlement,
                 value: '₹${(pendingPaise / 100).round()}',
               ),
             ],
@@ -191,6 +194,7 @@ class _WeekCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final color = week.isSettled ? AppTheme.boundaryFour : AppTheme.accent;
 
     return Card(
@@ -203,7 +207,7 @@ class _WeekCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Week of ${week.weekStart}',
+                    l10n.weekOf(week.weekStart),
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ),

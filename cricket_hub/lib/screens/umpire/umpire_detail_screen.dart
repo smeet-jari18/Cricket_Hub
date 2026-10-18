@@ -7,6 +7,7 @@ import '../../models/umpire_model.dart';
 import '../../services/review_service.dart';
 import '../../widgets/rating_stars.dart';
 import 'umpire_booking_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 10's `umpire_detail_screen.dart` — profile, certifications, rates and
 /// (read-only) reviews.
@@ -21,11 +22,12 @@ class UmpireDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is! Umpire) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Umpire')),
-        body: const Center(child: Text('No umpire selected.')),
+        appBar: AppBar(title: Text(l10n.umpire)),
+        body: Center(child: Text(l10n.noUmpireSelected)),
       );
     }
     return _Body(umpire: arg);
@@ -39,6 +41,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(umpire.displayName)),
       body: ListView(
@@ -48,7 +51,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 16),
           if (umpire.bio.isNotEmpty) ...[
             _Card(
-              title: 'About',
+              title: l10n.about,
               child: Text(
                 umpire.bio,
                 style: const TextStyle(fontSize: 13, height: 1.5),
@@ -57,7 +60,7 @@ class _Body extends StatelessWidget {
             const SizedBox(height: 12),
           ],
           _Card(
-            title: 'Experience',
+            title: l10n.experience,
             child: Column(
               children: [
                 _row('Years umpiring', '${umpire.experienceYears}'),
@@ -68,11 +71,11 @@ class _Body extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _Card(
-            title: 'Certifications',
+            title: l10n.certifications,
             child: umpire.certifications.isEmpty
-                ? const Text(
-                    'None listed yet.',
-                    style: TextStyle(color: AppTheme.textSecondary),
+                ? Text(
+                    l10n.none_listed_yet,
+                    style: const TextStyle(color: AppTheme.textSecondary),
                   )
                 : Column(
                     children: [
@@ -98,9 +101,9 @@ class _Body extends StatelessWidget {
                                 ),
                               ),
                               if (!c.verified)
-                                const Text(
-                                  'unverified',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.unverified,
+                                  style: const TextStyle(
                                     fontSize: 10,
                                     color: AppTheme.textSecondary,
                                   ),
@@ -142,10 +145,10 @@ class _Body extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
-                'You can rate an umpire after a completed booking.',
+              Text(
+                l10n.you_can_rate_an_umpire_after,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
               ),
             ],
           ),
@@ -304,15 +307,16 @@ class _ReviewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'REVIEWS',
-              style: TextStyle(
+            Text(
+              l10n.reviews,
+              style: const TextStyle(
                 fontSize: 10,
                 letterSpacing: 1,
                 fontWeight: FontWeight.w800,
@@ -326,9 +330,9 @@ class _ReviewsCard extends StatelessWidget {
               builder: (context, snapshot) {
                 final reviews = snapshot.data ?? const <Review>[];
                 if (reviews.isEmpty) {
-                  return const Text(
-                    'No reviews yet.',
-                    style: TextStyle(
+                  return Text(
+                    l10n.no_reviews_yet_2,
+                    style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textSecondary,
                     ),

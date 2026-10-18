@@ -9,6 +9,7 @@ import '../../services/booking_service.dart';
 import '../../services/payment_service.dart';
 import 'booking_success_screen.dart';
 import 'checkout_args.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Order summary + payment method selection + Razorpay trigger.
 class BookingCheckoutScreen extends StatefulWidget {
@@ -55,11 +56,12 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final args = widget.args;
     final total = args.amountPaise + args.platformFeePaise;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Confirm booking')),
+      appBar: AppBar(title: Text(l10n.confirmBooking)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
@@ -96,8 +98,7 @@ class _BookingCheckoutScreenState extends State<BookingCheckoutScreen> {
           _priceCard(args, total),
           const SizedBox(height: 24),
           Text(
-            'By tapping "Pay & Book", you agree to the cancellation policy '
-            '(full refund up to 24h before, 50% up to 12h before, no refund thereafter).',
+            l10n.cancellationPolicyConsent,
             style: Theme.of(context)
                 .textTheme
                 .bodySmall

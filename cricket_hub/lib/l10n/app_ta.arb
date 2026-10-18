@@ -3,12 +3,7 @@
   "retry": "மீண்டும் முயற்சி",
   "cancel": "ரத்து செய்",
   "create": "உருவாக்கு",
-  "quickActionsTitle": "இன்றைக்கு ஆட்ட நாள்",
-  "quickActionsBody": "எதை அமைக்க வேண்டும் என்று தேர்ந்தெடுக்கவும்.",
-  "quickStartMatch": "ஆட்டத்தைத் தொடங்கு",
-  "quickStartMatchSub": "அணிகளைத் தேர்வுசெய்து, டாஸ் செய்து ஸ்கோர் செய்யத் தொடங்குங்கள்",
   "quickCreateTeam": "அணி உருவாக்கு",
-  "quickCreateTeamSub": "உங்கள் அடுத்த ஆட்டத்திற்கு அணியை உருவாக்குங்கள்",
   "navHome": "முகப்பு",
   "navMyCricket": "என் கிரிக்கெட்",
   "navTours": "போட்டிகள்",
@@ -85,5 +80,976 @@
   "languageSystem": "சாதனத்தின் மொழி",
   "languageEnglish": "English",
   "languageHindi": "हिन्दी",
-  "languageTamil": "தமிழ்"
+  "languageTamil": "தமிழ்",
+  "notificationActionOpen": "திற",
+  "offlineBanner": "ஆஃப்லைன் — ஸ்கோரிங் தொடரும், தானாக ஒத்திசைக்கும்",
+  "splashTagline": "உள்ளூர் கிரிக்கெட். நிபுணர் நிலை.",
+  "commonPleaseSignIn": "தயவுசெய்து உள்நுழையவும்.",
+  "myBookingsErrLoad": "முன்பதிவுகளை ஏற்ற முடியவில்லை",
+  "filtersTitle": "வடிகட்டிகள்",
+  "apply": "பயன்படுத்து",
+  "umpiresTitle": "நடுவர்கள்",
+  "perHour": "ஒரு மணிநேரத்திற்கு",
+  "followLive": "நேரலையில் பின்தொடர்",
+  "liveNowBadge": "இப்போது நேரலை",
+  "confirmBooking": "முன்பதிவை உறுதிசெய்",
+  "availabilityTitle": "கிடைக்கும் நேரம்",
+  "noUmpireSelected": "நடுவர் யாரும் தேர்ந்தெடுக்கப்படவில்லை.",
+  "myAvailability": "என் கிடைக்கும் நேரம்",
+  "chooseASlot": "ஒரு நேரத்தைத் தேர்ந்தெடுக்கவும்",
+  "noGroundSelected": "மைதானம் எதுவும் தேர்ந்தெடுக்கப்படவில்லை.",
+  "closedOnThisDate": "இந்தத் தேதியில் மூடப்பட்டுள்ளது",
+  "noSlotsConfigured": "நேரங்கள் எதுவும் அமைக்கப்படவில்லை",
+  "continueLabel": "தொடரவும்",
+  "tournamentsTitle": "போட்டிகள்",
+  "createTournament": "போட்டியை உருவாக்கு",
+  "tournamentsErrLoad": "போட்டிகளை ஏற்ற முடியவில்லை",
+  "checkConnection": "இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+  "tournamentsTagline": "உள்ளூர் கோப்பைகள், ஒரே இடத்தில்.",
+  "tournamentsTaglineSub": "ஆட்ட அட்டவணை, புள்ளிகள் மற்றும் வீரர் முன்னணியை ஒரே இடத்தில் பாருங்கள்.",
+  "notificationFallbackTitle": "CricketHub புதுப்பிப்பு",
+  "notificationFallbackBody": "போட்டியில் புதிய செயல்பாடு உள்ளது.",
+  "homeAllCaughtUp": "எல்லாம் பார்த்துவிட்டீர்கள்.",
+  "homeHeroSubtitle": "உங்கள் கிரிக்கெட் சமூகத்தை ஒன்றிணையுங்கள்.",
+  "homeLiveOnPitch": "மைதானத்தில் நேரலை",
+  "homeErrMatches": "ஆட்டங்களை ஏற்ற முடியவில்லை",
+  "homeNoLive": "இப்போது நேரலை ஆட்டங்கள் இல்லை",
+  "homeNoLiveSub": "அடுத்த சிறந்த இன்னிங்ஸ் உங்களுடையதாக இருக்கலாம்.",
+  "homeYourFixtures": "உங்கள் ஆட்டங்கள்",
+  "homeNoFixtures": "இன்னும் ஆட்டங்கள் இல்லை",
+  "homeNoFixturesSub": "இரண்டு அணிகளை உருவாக்கி உங்கள் முதல் ஆட்டத்தை திட்டமிடுங்கள்.",
+  "notificationsTooltip": "அறிவிப்புகள்",
+  "matchStatusCompleted": "நிறைவு",
+  "matchStatusAbandoned": "கைவிடப்பட்டது",
+  "matchStatusScheduled": "திட்டமிடப்பட்டது",
+  "myCricketErrLoad": "உங்கள் அணிகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "myCricketYourSquads": "உங்கள் அணிகள்",
+  "myCricketSquadsSub": "உங்கள் அணிகளை நிர்வகித்து வீரர்களை ஒன்றாக வைத்திருங்கள்.",
+  "myCricketEmptySquad": "உங்கள் அணி முதல் வீரருக்குத் தயாராக உள்ளது.",
+  "removePlayer": "வீரரை நீக்கு",
+  "myCricketStartTitle": "உங்கள் முதல் அணியுடன் தொடங்குங்கள்",
+  "myCricketStartSub": "அணியின் பெயர் மற்றும் நகரத்தைச் சேர்த்து, உங்கள் வீரர்களை மைதானத்திற்கு அழையுங்கள்.",
+  "myCricketCreateFirst": "உங்கள் முதல் அணியை உருவாக்குங்கள்",
+  "addPlayerHint": "வீரரைச் சேர்",
+  "addPlayerTooltip": "வீரரைச் சேர்",
+  "loginEyebrow": "CricketHub-க்கு வரவேற்கிறோம்",
+  "loginTagline": "உங்கள் அணி. உங்கள் மைதானம். உங்கள் தருணம்.",
+  "loginErrMobile": "சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.",
+  "loginTitle": "விளையாட உள்நுழையுங்கள்",
+  "loginSubtitle": "ஒருமுறை குறியீட்டிற்கு உங்கள் மொபைல் எண்ணைப் பயன்படுத்தவும்.",
+  "loginMobileLabel": "மொபைல் எண்",
+  "loginOr": "அல்லது",
+  "loginGoogle": "Google மூலம் தொடரவும்",
+  "loginTerms": "தொடர்வதன் மூலம் எங்கள் சேவை விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கையை ஏற்கிறீர்கள்.",
+  "otpHeadline": "உங்கள் செய்திகளைப் பாருங்கள்",
+  "otpTitle": "எண்ணைச் சரிபார்",
+  "otpErrCode": "6 இலக்கக் குறியீட்டை உள்ளிடவும்.",
+  "otpHint": "குறியீடு வர சில வினாடிகள் ஆகலாம். இந்தத் திரையைத் திறந்தே வைத்திருங்கள்.",
+  "profileErrName": "தொடர உங்கள் பெயரைச் சேர்க்கவும்.",
+  "profileTitle": "வீரர் சுயவிவரம்",
+  "profileHeadline": "உங்களை அறிமுகப்படுத்துங்கள்",
+  "profileSubtitle": "க்ரீஸில் யார் என்று உங்கள் அணியினர் அறிய சில விவரங்களைச் சேர்க்கவும்.",
+  "profileDetails": "வீரர் விவரங்கள்",
+  "profileDisplayName": "காட்சிப் பெயர்",
+  "profileNameHint": "எ.கா. ராகுல் சர்மா",
+  "profileBattingStyle": "பேட்டிங் பாணி",
+  "profileBowlingStyle": "பந்துவீச்சு பாணி",
+  "oversCount": "{count} ஓவர்கள்",
+  "@oversCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeHeroTitle": "உங்கள் மைதானம்.\nஉங்கள் ஆட்டம்.",
+  "loginHeadline": "ஒவ்வொரு ஆட்டமும்\nஇங்கே தொடங்குகிறது.",
+  "otpSentTo": "{phone} க்கு அனுப்பிய 6 இலக்கக் குறியீட்டை உள்ளிடவும்.",
+  "@otpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "k_0_full_day_booking_not_offered": "0 = முழுநாள் முன்பதிவு இல்லை",
+  "k_5_wicket_hauls": "5 விக்கெட் சாதனைகள்",
+  "about": "பற்றி",
+  "about_you": "உங்களைப் பற்றி",
+  "add_at_least_two_teams_before": "அட்டவணையை உருவாக்கும் முன் குறைந்தது இரண்டு அணிகளைச் சேர்க்கவும்.",
+  "add_both_a_team_name_and": "அணிப் பெயரையும் நகரத்தையும் சேர்க்கவும்.",
+  "add_ground": "மைதானம் சேர்",
+  "add_photo": "புகைப்படம் சேர்",
+  "add_to_calendar": "நாட்காட்டியில் சேர்",
+  "address": "முகவரி",
+  "admins_only": "நிர்வாகிகளுக்கு மட்டும்",
+  "afternoon": "மதியம்",
+  "ahmedabad": "அகமதாபாத்",
+  "amenities": "வசதிகள்",
+  "ask_the_organizer_to_regenerate_the": "போட்டி அட்டவணையை மீண்டும் உருவாக்க ஏற்பாட்டாளரிடம் கேளுங்கள்.",
+  "batting_average": "பேட்டிங் சராசரி",
+  "best_bowling": "சிறந்த பந்துவீச்சு",
+  "back": "பின்",
+  "back_to_home": "முகப்புக்குத் திரும்பு",
+  "bat_first": "முதலில் பேட்டிங்",
+  "batting_side_a": "பேட்டிங் அணி A",
+  "become_an_umpire": "நடுவராகுங்கள்",
+  "bengaluru": "பெங்களூரு",
+  "bio": "அறிமுகம்",
+  "block_date": "தேதியைத் தடு",
+  "block_dates_you_cannot_officiate": "உங்களால் கடமையாற்ற முடியாத தேதிகளைத் தடுங்கள்",
+  "block_this_date": "இந்தத் தேதியைத் தடுக்கவா?",
+  "book_this_ground": "இந்த மைதானத்தை முன்பதிவு செய்",
+  "book_umpire": "நடுவரை முன்பதிவு செய்",
+  "booking": "முன்பதிவு",
+  "booking_confirmed": "முன்பதிவு உறுதிசெய்யப்பட்டது",
+  "booking_cancelled": "முன்பதிவு ரத்தானது.",
+  "booking_confirmed_2": "முன்பதிவு உறுதி",
+  "booking_details": "முன்பதிவு விவரங்கள்",
+  "booking_is_processing": "முன்பதிவு செயலாக்கத்தில் உள்ளது",
+  "booking_requests": "முன்பதிவு கோரிக்கைகள்",
+  "booking_verified": "முன்பதிவு சரிபார்க்கப்பட்டது",
+  "bowl_first": "முதலில் பந்துவீச்சு",
+  "bowling_side_b": "பந்துவீச்சு அணி B",
+  "bring_every_fixture_together": "ஒவ்வொரு ஆட்டத்தையும் ஒன்றிணைக்கவும்",
+  "build_your_squad": "உங்கள் அணியை உருவாக்குங்கள்",
+  "camera_scanning_runs_in_the_android": "கேமரா ஸ்கேனிங் Android மற்றும் iOS செயலியில் இயங்கும்.",
+  "cancel_booking": "முன்பதிவை ரத்துசெய்",
+  "cancel_this_booking": "இந்த முன்பதிவை ரத்துசெய்யவா?",
+  "cash_received_booking_confirmed": "பணம் பெறப்பட்டது — முன்பதிவு உறுதி.",
+  "certifications": "சான்றிதழ்கள்",
+  "choose_the_advancing_team": "முன்னேறும் அணியைத் தேர்ந்தெடு",
+  "choose_the_sides": "அணிகளைத் தேர்ந்தெடு",
+  "choose_tournament_teams": "போட்டி அணிகளைத் தேர்ந்தெடு",
+  "choose_your_teams_and_playing_format": "உங்கள் அணிகளையும் ஆட்ட வடிவத்தையும் தேர்ந்தெடுங்கள்.",
+  "city": "நகரம்",
+  "city_or_ground": "நகரம் அல்லது மைதானம்",
+  "clear_date": "தேதியை அழி",
+  "clear_search": "தேடலை அழி",
+  "closes": "மூடும் நேரம்",
+  "competition_format": "போட்டி வடிவம்",
+  "confirm_cash_you_received_from_organizers": "ஏற்பாட்டாளர்களிடம் பெற்ற பணத்தை உறுதிசெய்யுங்கள்",
+  "confirm_the_toss_then_the_first": "டாஸை உறுதிசெய்யுங்கள், முதல் பந்து உங்களுடையது.",
+  "confirmed": "உறுதி",
+  "could_not_load_the_queue": "வரிசையை ஏற்ற முடியவில்லை",
+  "couldn_t_load_fixtures": "ஆட்ட அட்டவணையை ஏற்ற முடியவில்லை",
+  "couldn_t_load_teams": "அணிகளை ஏற்ற முடியவில்லை.",
+  "couldn_t_load_teams_please_try": "அணிகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "couldn_t_load_the_match": "ஆட்டத்தை ஏற்ற முடியவில்லை.",
+  "couldn_t_load_this_tournament": "இந்தப் போட்டியை ஏற்ற முடியவில்லை",
+  "create_a_profile_and_get_verified": "சுயவிவரம் உருவாக்கி, சரிபார்ப்புக்குப் பின் ஆட்டங்களைப் பெறத் தொடங்குங்கள்.",
+  "create_a_team_before_building_your": "போட்டியை உருவாக்கும் முன் ஒரு அணியை உருவாக்குங்கள்.",
+  "create_at_least_two_teams_before": "ஆட்டத்தைத் திட்டமிட குறைந்தது இரண்டு அணிகள் உருவாக்குங்கள்.",
+  "create_team": "அணியை உருவாக்கு",
+  "create_your_first_ground": "உங்கள் முதல் மைதானத்தை உருவாக்குங்கள்",
+  "customize_the_default_awards_nrr_breaks": "இயல்புநிலை புள்ளிகளை மாற்றுங்கள். சம புள்ளிகளில் NRR தீர்மானிக்கும்.",
+  "day_rate": "நாள் கட்டணம் (₹)",
+  "day": "நாளுக்கு ₹",
+  "decline": "நிராகரி",
+  "decline_this_request": "இந்தக் கோரிக்கையை நிராகரிக்கவா?",
+  "directions": "வழிகாட்டல்",
+  "distance_city_centre": "தூரம் (நகர மையம்)",
+  "economy": "எகானமி",
+  "earnings": "வருவாய்",
+  "edit_ground": "மைதானத்தைத் திருத்து",
+  "edit_profile": "சுயவிவரத்தைத் திருத்து",
+  "end_date_must_be_after_the": "முடிவுத் தேதி தொடக்கத் தேதிக்குப் பிறகு இருக்க வேண்டும்.",
+  "ends_optional": "முடிவு (விருப்பம்)",
+  "equal_points_are_ranked_by_net": "சம புள்ளிகளில் நிகர ரன் விகிதம், பின் வெற்றிகள் அடிப்படையில் தரவரிசை.",
+  "evening": "மாலை",
+  "experience": "அனுபவம்",
+  "experience_years": "அனுபவம் (ஆண்டுகள்)",
+  "extras": "கூடுதல்",
+  "fixtures": "ஆட்டங்கள்",
+  "fall_of_wickets": "விக்கெட் வீழ்ச்சி",
+  "find_a_ground": "மைதானத்தைக் கண்டறி",
+  "fixtures_aren_t_ready_yet": "ஆட்ட அட்டவணை இன்னும் தயார் இல்லை",
+  "follow_this_match_from_the_bell": "ஆட்டம் தொடங்கும்போதோ விக்கெட் விழும்போதோ புஷ் அறிவிப்பு பெற மேலே உள்ள மணியிலிருந்து இந்த ஆட்டத்தைப் பின்தொடருங்கள்.",
+  "full_day": "முழு நாள்",
+  "full_name": "முழுப் பெயர்",
+  "full_day_rate": "முழுநாள் கட்டணம்",
+  "full_day_rate_0_not_offered": "முழுநாள் கட்டணம் ₹ (0 = இல்லை)",
+  "generate": "உருவாக்கு",
+  "generate_fixture_schedule": "ஆட்ட அட்டவணையை உருவாக்கவா?",
+  "get_directions": "வழியைப் பார்",
+  "give_your_side_a_name_and": "உங்கள் அணிக்குப் பெயரும் சொந்த நகரமும் கொடுங்கள். அடுத்து வீரர்களைச் சேர்க்கலாம்.",
+  "got_it": "புரிந்தது",
+  "ground_name": "மைதானத்தின் பெயர்",
+  "ground_owner": "மைதான உரிமையாளர்",
+  "high_score": "அதிக ஸ்கோர்",
+  "home_city": "சொந்த நகரம்",
+  "hourly_rate": "மணிக் கட்டணம் (₹)",
+  "hourly": "மணிக்கு ₹",
+  "how_long_will_you_play": "எவ்வளவு நேரம் விளையாடுவீர்கள்?",
+  "how_was_the_batter_out": "பேட்டர் எப்படி ஆட்டமிழந்தார்?",
+  "hyderabad": "ஹைதராபாத்",
+  "innings_1": "இன்னிங்ஸ் 1",
+  "innings_summary": "இன்னிங்ஸ் சுருக்கம்",
+  "it_may_have_been_removed_by": "ஏற்பாட்டாளர் இதை நீக்கியிருக்கலாம்.",
+  "keep_it": "வைத்திருங்கள்",
+  "knockout_2": "நாக்அவுட்",
+  "knockout_bracket": "நாக்அவுட் அமைப்பு",
+  "league_standings": "லீக் நிலை",
+  "leagues_officiated_playing_background": "கடமையாற்றிய லீக்குகள், விளையாட்டுப் பின்னணி…",
+  "leave_a_review": "மதிப்பாய்வு எழுதுங்கள்",
+  "list_your_ground": "உங்கள் மைதானத்தைப் பட்டியலிடுங்கள்",
+  "list_your_ground_and_start_taking": "உங்கள் மைதானத்தைப் பட்டியலிட்டு முன்பதிவுகளைப் பெறத் தொடங்குங்கள்.",
+  "list_yourself_so_organizers_can_book": "உங்களைப் பட்டியலிடுங்கள், ஏற்பாட்டாளர்கள் ஆட்டங்களுக்கு முன்பதிவு செய்வார்கள்.",
+  "live_totals_from_completed_fixtures": "முடிந்த ஆட்டங்களின் நேரடி மொத்தங்கள்.",
+  "location": "இடம்",
+  "loss": "தோல்வி",
+  "matches": "ஆட்டங்கள்",
+  "my_grounds": "என் மைதானங்கள்",
+  "maintenance_private_tournament": "பராமரிப்பு, தனியார் போட்டி…",
+  "match_center": "ஆட்ட மையம்",
+  "match_setup": "ஆட்ட அமைப்பு",
+  "match_closed_the_player_can_rate": "ஆட்டம் முடிந்தது. வீரர் இப்போது உங்களுக்கு மதிப்பீடு தரலாம்.",
+  "match_day_starts_here": "ஆட்ட நாள் இங்கே தொடங்குகிறது",
+  "match_format": "ஆட்ட வடிவம்",
+  "match_not_found": "ஆட்டம் கிடைக்கவில்லை",
+  "money": "பணம்",
+  "morning": "காலை",
+  "most_tournament_runs": "போட்டியில் அதிக ஓட்டங்கள்",
+  "most_tournament_wickets": "போட்டியில் அதிக விக்கெட்டுகள்",
+  "mumbai": "மும்பை",
+  "nrr_uses_cumulative_runs_scored_and": "NRR-இல் அடித்த மற்றும் விட்டுக்கொடுத்த மொத்த ஓட்டங்கள் செல்லுபடியாகும் பந்துகளால் வகுக்கப்படும். ஆட்டமிழந்து முடிந்த இன்னிங்ஸுக்கு முழு ஓவர் ஒதுக்கீடு கணக்கிடப்படும்.",
+  "name_bio_experience_and_rates": "பெயர், அறிமுகம், அனுபவம், கட்டணம்",
+  "new_batter_name": "புதிய பேட்டரின் பெயர்",
+  "no_amenities_listed": "வசதிகள் பட்டியலிடப்படவில்லை",
+  "no_balls_recorded_yet": "இன்னும் பந்துகள் பதிவாகவில்லை.",
+  "no_balls_yet_waiting_for_the": "இன்னும் பந்துகள் இல்லை — முதல் ஓவருக்காகக் காத்திருப்பு!",
+  "no_booking_requests_yet": "இன்னும் முன்பதிவு கோரிக்கைகள் இல்லை",
+  "no_booking_selected": "முன்பதிவு எதுவும் தேர்ந்தெடுக்கப்படவில்லை.",
+  "no_fixtures_found": "ஆட்டங்கள் எதுவும் கிடைக்கவில்லை",
+  "no_grounds_match_your_filters": "எந்த மைதானமும் வடிகட்டிகளுடன் பொருந்தவில்லை",
+  "no_grounds_waiting": "காத்திருக்கும் மைதானங்கள் இல்லை",
+  "no_grounds_yet": "இன்னும் மைதானங்கள் இல்லை",
+  "no_player_stats_yet": "இன்னும் வீரர் புள்ளிவிவரங்கள் இல்லை.",
+  "no_result": "முடிவு இல்லை",
+  "no_reviews_yet": "இன்னும் மதிப்பாய்வுகள் இல்லை",
+  "no_reviews_yet_2": "இன்னும் மதிப்பாய்வுகள் இல்லை.",
+  "no_teams_added_yet_choose_teams": "இன்னும் அணிகள் சேர்க்கப்படவில்லை. தொடர உங்கள் CricketHub அணிப் பட்டியலில் இருந்து அணிகளைத் தேர்ந்தெடுக்கவும்.",
+  "no_umpire_profile_loaded": "நடுவர் சுயவிவரம் ஏதும் ஏற்றப்படவில்லை.",
+  "no_umpires_waiting": "காத்திருக்கும் நடுவர்கள் இல்லை",
+  "non_striker_name": "நான்-ஸ்ட்ரைக்கர் பெயர்",
+  "none_listed_yet": "இன்னும் எதுவும் பட்டியலிடப்படவில்லை.",
+  "not_valid": "செல்லாதது",
+  "not_yet": "இன்னும் இல்லை",
+  "notes": "குறிப்புகள்",
+  "ok": "சரி",
+  "orange_cap": "ஆரஞ்சு கேப்",
+  "overs": "ஓவர்கள்",
+  "one_last_call": "கடைசி முடிவு",
+  "open_crickethub_on_a_phone_to": "முன்பதிவு QR சரிபார்க்க ஃபோனில் CricketHub திறக்கவும்.",
+  "open_calendar": "நாட்காட்டியைத் திற",
+  "opening_bowler": "தொடக்க பந்துவீச்சாளர்",
+  "opens": "திறக்கும் நேரம்",
+  "or_type_a_new_bowler": "அல்லது புதிய பந்துவீச்சாளரைத் தட்டச்சு செய்யவும்",
+  "over_complete_next_bowler": "ஓவர் முடிந்தது! அடுத்த பந்துவீச்சாளர்",
+  "overs_per_match": "ஒரு ஆட்டத்திற்கு ஓவர்கள்",
+  "pick_a_date": "தேதியைத் தேர்ந்தெடு",
+  "pick_a_window": "நேரத்தைத் தேர்ந்தெடு",
+  "price_breakdown": "கட்டண விவரம்",
+  "pts": "புள்ளிகள்",
+  "purple_cap": "பர்பிள் கேப்",
+  "participating_teams": "பங்கேற்கும் அணிகள்",
+  "payout_earned": "கிடைத்த வருவாய்",
+  "pending_settlement": "தீர்வு நிலுவையில்",
+  "people": "நபர்கள்",
+  "phone_number": "தொலைபேசி எண்",
+  "photos": "புகைப்படங்கள்",
+  "pick_a_rating_from_1_to": "முதலில் 1 முதல் 5 வரை மதிப்பீடு தேர்ந்தெடுக்கவும்.",
+  "pick_your_slot": "உங்கள் நேரத்தைத் தேர்ந்தெடுங்கள்",
+  "pitch_quality_lights_changing_rooms_staff": "பிட்ச் தரம், விளக்குகள், உடைமாற்றும் அறை, பணியாளர்கள்…",
+  "pitch_type": "பிட்ச் வகை",
+  "player_leaders_appear_here": "வீரர் முன்னிலையாளர்கள் இங்கே தோன்றுவார்கள்",
+  "point_at_the_organizer_s_qr": "ஏற்பாட்டாளரின் QR-ஐ நோக்குங்கள்",
+  "points_and_nrr_are_calculated_automatically": "ஒவ்வொரு ஆட்டம் முடிந்ததும் புள்ளிகளும் NRR-உம் தானாகக் கணக்கிடப்படும்.",
+  "points_configuration": "புள்ளி அமைப்பு",
+  "points_system": "புள்ளி முறை",
+  "price_low_high": "கட்டணம்: குறைவு → அதிகம்",
+  "pricing": "கட்டணம்",
+  "profile_photo": "சுயவிவரப் படம்",
+  "profile_updated": "சுயவிவரம் புதுப்பிக்கப்பட்டது.",
+  "pune": "புனே",
+  "reviews": "மதிப்பாய்வுகள்",
+  "rating_high_low": "மதிப்பீடு: அதிகம் → குறைவு",
+  "ready_to_bowl": "பந்துவீசத் தயார்",
+  "reason_optional": "காரணம் (விருப்பம்)",
+  "recent_balls": "சமீபத்திய பந்துகள்",
+  "recent_form": "சமீபத்திய ஃபார்ம்",
+  "refund": "பணத்திருப்பம்",
+  "request_declined": "கோரிக்கை நிராகரிக்கப்பட்டது.",
+  "resolve_tie": "சமநிலையைத் தீர்",
+  "reviews_come_from_a_completed_booking": "மதிப்பாய்வுகள் முடிந்த முன்பதிவிலிருந்து வரும்.",
+  "round_robin_2": "ரவுண்ட் ராபின்",
+  "show_this_at_the_ground": "மைதானத்தில் இதைக் காட்டுங்கள்",
+  "side_a": "அணி A",
+  "side_b": "அணி B",
+  "strike_rate": "ஸ்ட்ரைக் ரேட்",
+  "save_selected_teams": "தேர்ந்த அணிகளைச் சேமி",
+  "scan_qr": "QR ஸ்கேன் செய்",
+  "scan_a_booking_qr": "முன்பதிவு QR ஸ்கேன் செய்",
+  "scan_again": "மீண்டும் ஸ்கேன்",
+  "scan_booking_qr": "முன்பதிவு QR ஸ்கேன் செய்",
+  "scan_next": "அடுத்ததை ஸ்கேன்",
+  "search_grounds_city_pitch": "மைதானம், நகரம், பிட்ச் தேடுங்கள்...",
+  "send_back": "திரும்ப அனுப்பு",
+  "send_in": "அனுப்பு",
+  "set_the_competition_rules_first_you": "முதலில் போட்டி விதிகளை அமையுங்கள். அடுத்து செயலி அணிகளைத் தேர்ந்தெடுத்து அட்டவணையை உருவாக்கலாம்.",
+  "set_up_a_match": "ஆட்டத்தை அமை",
+  "share": "பகிர்",
+  "slot_length": "நேர இடைவெளி",
+  "starts": "தொடக்கம்",
+  "striker_name": "ஸ்ட்ரைக்கர் பெயர்",
+  "submit": "சமர்ப்பி",
+  "submitted": "சமர்ப்பிக்கப்பட்டது.",
+  "t_nr": "டை/மு",
+  "target": "இலக்கு",
+  "team": "அணி",
+  "teams": "அணிகள்",
+  "this_over": "இந்த ஓவர்",
+  "today": "இன்று",
+  "total_net_payout": "மொத்த நிகர பணப்பட்டுவாடா",
+  "total_runs": "மொத்த ஓட்டங்கள்",
+  "team_details": "அணி விவரங்கள்",
+  "team_name": "அணியின் பெயர்",
+  "tennis_ball_by_default_toss_comes": "இயல்பாக டென்னிஸ் பந்து · அடுத்து டாஸ்",
+  "thanks_for_the_review": "மதிப்பாய்வுக்கு நன்றி!",
+  "the_orange_cap_and_purple_cap": "ஆரஞ்சு கேப், பர்பிள் கேப் பட்டியல்கள் முடிந்த போட்டி ஸ்கோர்கார்டுகளிலிருந்து புதுப்பிக்கப்படும்.",
+  "the_ground_owner_scans_this_to": "மைதான உரிமையாளர் இதை ஸ்கேன் செய்து முன்பதிவைச் சரிபார்ப்பார்.",
+  "the_organizer_can_add_teams_and": "ஏற்பாட்டாளர் மேலோட்டப் பக்கத்திலிருந்து அணிகளைச் சேர்த்து அட்டவணையை உருவாக்கலாம்.",
+  "the_organizer_is_still_preparing_the": "ஏற்பாட்டாளர் இன்னும் அணிப் பட்டியலையும் ஆட்ட அட்டவணையையும் தயாரிக்கிறார்.",
+  "the_scorecard_will_fill_in_as": "இன்னிங்ஸ் முடியும்போது ஸ்கோர்கார்டு நிரம்பும்.",
+  "the_table_is_ready_for_play": "அட்டவணை ஆட்டத்திற்குத் தயார்",
+  "the_toss": "டாஸ்",
+  "there_is_no_league_points_table": "வெளியேற்ற ஆட்டங்களுக்கு லீக் புள்ளி அட்டவணை இல்லை. ஒவ்வொரு சுற்றையும் ஆட்டங்கள் தாவலில் பாருங்கள்.",
+  "tie": "சமநிலை",
+  "tied_fixture_organizer_decision_required": "சமநிலை ஆட்டம் · ஏற்பாட்டாளர் முடிவு தேவை",
+  "total": "மொத்தம்",
+  "tournament_details": "போட்டி விவரங்கள்",
+  "tournament_leaders": "போட்டி முன்னிலையாளர்கள்",
+  "tournament_name": "போட்டியின் பெயர்",
+  "tournament_not_found": "போட்டி கிடைக்கவில்லை",
+  "try_removing_a_filter_or_switch": "ஒரு வடிகட்டியை நீக்குங்கள் அல்லது நகரத்தை மாற்றுங்கள்.",
+  "umpire": "நடுவர்",
+  "umpire_requested": "நடுவர் கோரப்பட்டார்",
+  "undo": "செயல்நீக்கு",
+  "up_to_5_photos_5mb_each": "5 புகைப்படங்கள் வரை, ஒவ்வொன்றும் 5MB. முதலாவது அட்டைப் படமாகும்.",
+  "vs": "எதிர்",
+  "weekly_settlements": "வாராந்திர தீர்வுகள்",
+  "wicket": "விக்கெட்",
+  "wicket_next_batter": "விக்கெட்! அடுத்த பேட்டர்",
+  "weekday_rate_per_hour": "வேலைநாள் மணிக் கட்டணம்",
+  "weekday_hr": "வேலைநாள் ₹/மணி",
+  "weekend_rate_per_hour": "வாரஇறுதி மணிக் கட்டணம்",
+  "weekend_hr": "வாரஇறுதி ₹/மணி",
+  "weeks": "வாரங்கள்",
+  "what_did_they_choose": "என்ன தேர்ந்தெடுத்தார்கள்?",
+  "when_where": "எப்போது, எங்கே",
+  "who_won_the_toss": "டாஸை யார் வென்றார்?",
+  "win": "வெற்றி",
+  "winners_advance_automatically_fixtures_marked_tbd": "வெற்றியாளர்கள் தானாக முன்னேறுவார்கள். TBD ஆட்டங்கள் முந்தைய சுற்று முடிந்ததும் திறக்கும்.",
+  "years_of_experience": "அனுபவ ஆண்டுகள்",
+  "you_are_not_listed_as_an": "நீங்கள் நடுவராகப் பட்டியலிடப்படவில்லை",
+  "you_are_offline_scoring_continues_syncs": "நீங்கள் ஆஃப்லைனில் உள்ளீர்கள். ஸ்கோரிங் தொடரும் — தானாக ஒத்திசைக்கும்.",
+  "you_can_rate_an_umpire_after": "முன்பதிவு முடிந்த பின் நடுவருக்கு மதிப்பீடு தரலாம்.",
+  "you_can_undo_scoring_actions_during": "ஆட்டத்தின்போது ஸ்கோரிங் செயல்களைச் செயல்நீக்கலாம்.",
+  "your_rating_helps_other_organizers_pick": "உங்கள் மதிப்பீடு மற்ற ஏற்பாட்டாளர்கள் நல்ல மைதானத்தைத் தேர்ந்தெடுக்க உதவும்.",
+  "e_g_ahmedabad": "எ.கா. அகமதாபாத்",
+  "e_g_ahmedabad_monsoon_cup": "எ.கா. அகமதாபாத் பருவமழை கோப்பை",
+  "e_g_ahmedabad_strikers": "எ.கா. அகமதாபாத் ஸ்ட்ரைக்கர்ஸ்",
+  "unverified": "சரிபார்க்கப்படாத",
+  "errFailed": "தோல்வி: {error}",
+  "@errFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotConfirm": "உறுதிசெய்ய முடியவில்லை: {error}",
+  "@errCouldNotConfirm": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCloseBooking": "முன்பதிவை மூட முடியவில்லை: {error}",
+  "@errCouldNotCloseBooking": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCancel": "ரத்துசெய்ய முடியவில்லை: {error}",
+  "@errCouldNotCancel": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotPostReview": "மதிப்பாய்வை இட முடியவில்லை: {error}",
+  "@errCouldNotPostReview": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateMatch": "ஆட்டத்தை உருவாக்க முடியவில்லை: {error}",
+  "@errCouldNotCreateMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotStartMatch": "ஆட்டத்தைத் தொடங்க முடியவில்லை: {error}",
+  "@errCouldNotStartMatch": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdateAlerts": "ஆட்ட அறிவிப்புகளைப் புதுப்பிக்க முடியவில்லை: {error}",
+  "@errCouldNotUpdateAlerts": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveInnings": "இன்னிங்ஸைச் சேமிக்க முடியவில்லை: {error}",
+  "@errCouldNotSaveInnings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotUpdate": "புதுப்பிக்க முடியவில்லை: {error}",
+  "@errCouldNotUpdate": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTeam": "அணியை உருவாக்க முடியவில்லை: {error}",
+  "@errCouldNotCreateTeam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotCreateTournament": "போட்டியை உருவாக்க முடியவில்லை: {error}",
+  "@errCouldNotCreateTournament": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSaveTeams": "அணிகளைச் சேமிக்க முடியவில்லை: {error}",
+  "@errCouldNotSaveTeams": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotGenerateFixtures": "ஆட்டங்களை உருவாக்க முடியவில்லை: {error}",
+  "@errCouldNotGenerateFixtures": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotResolveTie": "சமநிலையைத் தீர்க்க முடியவில்லை: {error}",
+  "@errCouldNotResolveTie": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotLoadBookings": "முன்பதிவுகளை ஏற்ற முடியவில்லை: {error}",
+  "@errCouldNotLoadBookings": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotDecline": "நிராகரிக்க முடியவில்லை: {error}",
+  "@errCouldNotDecline": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotSave": "சேமிக்க முடியவில்லை: {error}",
+  "@errCouldNotSave": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errCouldNotOpenGallery": "கேலரியைத் திறக்க முடியவில்லை: {error}",
+  "@errCouldNotOpenGallery": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "adminQueueHelp": "இந்த வரிசை CricketHub பணியாளர்களுக்கானது. Firebase Console-இல் /admins கீழ் உங்களைச் சேர்க்க ஏற்கனவே உள்ள நிர்வாகியிடம் கேளுங்கள்.",
+  "@adminQueueHelp": {
+    "placeholders": {}
+  },
+  "cancellationPolicyConsent": "\"Pay & Book\" தட்டுவதன் மூலம் ரத்துக் கொள்கையை ஏற்கிறீர்கள் (24 மணி நேரத்திற்கு முன் முழு பணத்திருப்பம், 12 மணி நேரத்திற்கு முன் 50%, அதன் பின் திருப்பம் இல்லை).",
+  "@cancellationPolicyConsent": {
+    "placeholders": {}
+  },
+  "ownerCashConfirmHelp": "வீரர் மைதானத்தில் பணமாகத் தருவார். இங்கே உறுதிசெய்தால் அவரது QR செக்-இனுக்குச் செல்லுபடியாகும்.",
+  "@ownerCashConfirmHelp": {
+    "placeholders": {}
+  },
+  "pickSlotHelp": "தேதியையும் நேரத்தையும் தேர்ந்தெடுக்க நாட்காட்டியைப் பயன்படுத்துங்கள் அல்லது கீழே \"இந்த மைதானத்தை முன்பதிவு செய்\" தட்டுங்கள்.",
+  "@pickSlotHelp": {
+    "placeholders": {}
+  },
+  "batterAlreadyUsed": "ஏற்கனவே ஆட்டமிழந்த (அல்லது களத்தில் இருக்கும்) பேட்டர் மீண்டும் வர முடியாது.",
+  "@batterAlreadyUsed": {
+    "placeholders": {}
+  },
+  "groundVerificationHelp": "உங்கள் மைதானம் சரிபார்ப்புக்கு நிர்வாகியிடம் செல்லும். அனுமதிக்குப் பிறகு முன்பதிவுகளைப் பெறலாம்.",
+  "@groundVerificationHelp": {
+    "placeholders": {}
+  },
+  "managedByCricketHub": "சரிபார்ப்பு நிலையும் மதிப்பீடுகளும் CricketHub நிர்வகிக்கும் — இங்கே திருத்த முடியாது.",
+  "@managedByCricketHub": {
+    "placeholders": {}
+  },
+  "managedByCricketHubUmpire": "சரிபார்ப்பு நிலை, மதிப்பீடுகள், ஆட்ட எண்ணிக்கை CricketHub நிர்வகிக்கும் — இங்கே திருத்த முடியாது.",
+  "@managedByCricketHubUmpire": {
+    "placeholders": {}
+  },
+  "noPendingRequestsHelp": "நிலுவையில் கோரிக்கைகள் இல்லை. புதிய முன்பதிவுகள் இங்கே தோன்றும்.",
+  "@noPendingRequestsHelp": {
+    "placeholders": {}
+  },
+  "umpireRequestHelp": "ஏற்பாட்டாளர் உங்களை முன்பதிவு செய்தால் கோரிக்கை இங்கே வரும். பணம் கிடைத்ததும் உறுதிசெய்யுங்கள்.",
+  "@umpireRequestHelp": {
+    "placeholders": {}
+  },
+  "declineRequestHelp": "நீங்கள் கடமையாற்ற முடியாது என்று ஏற்பாட்டாளருக்குத் தெரிவிக்கப்படும். அவரது நேரம் வேறொருவருக்குக் கிடைக்கும்.",
+  "@declineRequestHelp": {
+    "placeholders": {}
+  },
+  "draftProfileHelp": "உங்கள் சுயவிவரம் வரைவில் உள்ளது. ஏற்பாட்டாளர்கள் கண்டறிய சரிபார்ப்புக்கு அனுப்புங்கள்.",
+  "@draftProfileHelp": {
+    "placeholders": {}
+  },
+  "umpireCashHelp": "மைதானத்தில் பணம்: ஆன்லைனில் எதுவும் வசூலாகாது. நடுவர் செயலியில் பணத்தை உறுதிசெய்ததும் முன்பதிவு உறுதியாகும்.",
+  "@umpireCashHelp": {
+    "placeholders": {}
+  },
+  "payCashHelp": "அன்று {name} க்கு {amount} பணமாகத் தரவும். பெற்றதும் செயலியில் முன்பதிவை உறுதிசெய்வார்.",
+  "@payCashHelp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "umpireReceives": "தளக் கட்டணத்திற்குப் பின் நடுவருக்கு ₹{amount} கிடைக்கும்.",
+  "@umpireReceives": {
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "howWasName": "{name} எப்படி இருந்தது?",
+  "@howWasName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "teamReadyForMatchDay": "{name} ஆட்ட நாளுக்குத் தயார்.",
+  "@teamReadyForMatchDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingStatusLabel": "நிலை: {status}",
+  "@bookingStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsSelectedOf": "{selected}/{max} தேர்ந்தெடுக்கப்பட்டது · குறைந்தது 2 தேவை",
+  "@teamsSelectedOf": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "teamsSavedCount": "{count} அணிகள் சேமிக்கப்பட்டன.",
+  "@teamsSavedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleReadyCount": "அட்டவணை தயார் · {count} ஆட்டங்கள் உருவாக்கப்பட்டன.",
+  "@scheduleReadyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "locationAndDate": "{location} · {date}",
+  "@locationAndDate": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cityAndPlayers": "{city} · {count} வீரர்கள்",
+  "@cityAndPlayers": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cityAndRate": "{city} · ₹{rate}/மணி",
+  "@cityAndRate": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "weekdayAndPitch": "வேலைநாள் • {pitch}",
+  "@weekdayAndPitch": {
+    "placeholders": {
+      "pitch": {
+        "type": "String"
+      }
+    }
+  },
+  "groundAvailabilityHeader": "{name} · கிடைக்கும் நேரம்",
+  "@groundAvailabilityHeader": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "weekOf": "{date} வாரம்",
+  "@weekOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesShort": "{minutes} நிமிடம்",
+  "@minutesShort": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsShort": "{label} · {points} புள்ளி",
+  "@pointsShort": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "roundLabel": "சுற்று {round}",
+  "@roundLabel": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "byeAdvances": "{round} · பை — தானாக முன்னேறும்",
+  "@byeAdvances": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "waitingForResult": "{round} · முந்தைய முடிவுக்காகக் காத்திருப்பு",
+  "@waitingForResult": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingFixture": "{round} · ஆட்டம் ஏற்றப்படுகிறது",
+  "@loadingFixture": {
+    "placeholders": {
+      "round": {
+        "type": "String"
+      }
+    }
+  },
+  "teamVsTeam": "{a} எதிர் {b}",
+  "@teamVsTeam": {
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "bookUmpireName": "{name} ஐ முன்பதிவு செய்",
+  "@bookUmpireName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "windowLabel": "{start}–{end} · {hours}மணி",
+  "@windowLabel": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "battingTeamLabel": "{team} பேட்டிங்",
+  "@battingTeamLabel": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "bowlingLabel": "பந்துவீச்சு: {bowler}",
+  "@bowlingLabel": {
+    "placeholders": {
+      "bowler": {
+        "type": "String"
+      }
+    }
+  },
+  "needRuns": "{runs} தேவை",
+  "@needRuns": {
+    "placeholders": {
+      "runs": {
+        "type": "int"
+      }
+    }
+  },
+  "lastNForm": "கடைசி {count}",
+  "@lastNForm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireExpMatches": "{years} ஆண்டு · {matches} ஆட்டங்கள்",
+  "@umpireExpMatches": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "umpireListLine": "{city} · {years} ஆண்டு · ₹{rate}/மணி",
+  "@umpireListLine": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "years": {
+        "type": "int"
+      },
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "countLive": "{count} நேரலை",
+  "@countLive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countMatches": "{count} ஆட்டங்கள்",
+  "@countMatches": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hourlyRate": "₹{rate}/மணி",
+  "@hourlyRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
+  "oversShort": "{value} ஓவர்",
+  "@oversShort": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "teamsCount": "{count, plural, =0{அணிகள் இல்லை} =1{1 அணி} other{{count} அணிகள்}}",
+  "@teamsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingsCount": "{count, plural, =1{1 முன்பதிவு} other{{count} முன்பதிவுகள்}}",
+  "@bookingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errCouldNotLoadGrounds": "மைதானங்களை ஏற்ற முடியவில்லை. புதுப்பிக்க இழுக்கவும்.",
+  "letsPlay": "விளையாடுவோம்",
+  "inningsHeader": "இன்னிங்ஸ் {number} · {team}",
+  "@inningsHeader": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "ballDetail": "இன்னிங்ஸ் {innings} · {over} · {bowler} → {striker}",
+  "@ballDetail": {
+    "placeholders": {
+      "innings": {
+        "type": "String"
+      },
+      "over": {
+        "type": "String"
+      },
+      "bowler": {
+        "type": "String"
+      },
+      "striker": {
+        "type": "String"
+      }
+    }
+  },
+  "slotsSelected": "{count, plural, =0{ஸ்லாட் தேர்ந்தெடுக்கப்படவில்லை} =1{1 ஸ்லாட்} other{{count} ஸ்லாட்கள்}}",
+  "@slotsSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsCount": "{count, plural, =1{1 ஓட்டம்} other{{count} ஓட்டங்கள்}}",
+  "@runsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "runsExclaimed": "{count, plural, =1{1 ஓட்டம்!} other{{count} ஓட்டங்கள்!}}",
+  "@runsExclaimed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extraWide": "வைட் பந்து",
+  "extraNoBall": "நோ-பந்து",
+  "wicketEvent": "விக்கெட்! {player} ({type})",
+  "@wicketEvent": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      },
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "quickActionsTitle": "என்ன செய்ய விரும்புகிறீர்கள்?",
+  "quickActionsBody": "ஆட்டம் தொடங்குங்கள், அணி உருவாக்குங்கள் அல்லது மைதானம் தேடுங்கள்.",
+  "quickStartMatch": "ஆட்டத்தைத் தொடங்கு",
+  "quickStartMatchSub": "அணிகள், டாஸ், நேரலை ஸ்கோரிங்",
+  "quickCreateTeamSub": "வீரர்களைச் சேர்த்து அணியைத் தொடங்குங்கள்"
 }

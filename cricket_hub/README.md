@@ -4,6 +4,117 @@
 > All file paths, naming conventions, code style, and dependencies follow the existing Phase 2 codebase.
 
 ---
+## Android build fail ho rahi hai?
+
+`android/build.gradle.kts` ka error message aksar distract karta hai — asli
+wajah neeche hoti hai. Ek command se check karo:
+
+```powershell
+python tools/check_android_setup.py
+```
+
+Poora diagnostic + har error ka fix: **`docs/ANDROID_BUILD_TROUBLESHOOTING.md`**
+(`build.gradle` + `build.gradle.kts` dono, repos mode, SDK path, JDK 17+,
+dono build files, IDE squiggles).
+
+## Logo / app icon
+
+**Source of truth:** `assets/branding/logo_source.png` — the artwork as
+designed (teal ring, orange dot, white page). Every icon in the project is
+generated from this one file; nothing is hand-edited.
+
+| Target | File | Look |
+|---|---|---|
+| Splash screen | `assets/images/logo.png` | artwork as-is, transparent |
+| Native launch window | `android/…/drawable-nodpi/launch_logo.png` | artwork as-is |
+| Android launcher | `android/…/mipmap-*/ic_launcher.png` | artwork on a white tile |
+| Android 8+ adaptive | `drawable-*/ic_launcher_foreground.png` + `#FFFFFF` background | same artwork, maskable |
+| iOS AppIcon | `ios/…/AppIcon.appiconset/*.png` | artwork, opaque (App Store rule) |
+| Web / PWA / favicon | `web/icons/*`, `web/favicon.png` | artwork on a white tile |
+
+```bash
+python3 tools/make_icons.py            # regenerate everything
+python3 tools/make_icons.py --check    # report only
+python3 tools/make_icons.py --style on_teal   # white ring on brand teal (alt)
+flutter clean && flutter run           # launcher caches mipmaps, so clean first
+```
+
+New artwork? Overwrite `assets/branding/logo_source.png` and rerun. The script
+removes the white page by un-premultiplying it, so the ring keeps smooth edges
+instead of a pale halo.
+
+## Android build fail ho rahi hai?
+
+`android/build.gradle.kts` ka error message aksar distract karta hai — asli
+wajah neeche hoti hai. Ek command se check karo:
+
+```powershell
+python tools/check_android_setup.py
+```
+
+Poora diagnostic + har error ka fix: **`docs/ANDROID_BUILD_TROUBLESHOOTING.md`**
+(`build.gradle` + `build.gradle.kts` dono, repos mode, SDK path, JDK 17+,
+dono build files, IDE squiggles).
+
+## Logo / app icon
+
+**Mark:** solid ball + orange seam — do hi colours (teal `#006B5C`, orange
+`#FF6D00`), koi gradient nahi, koi letterform nahi. Isliye 24px favicon se
+1024px store icon tak same padhta hai. Geometry `tools/logo_mark.py` me hai,
+image file me nahi.
+
+| Kahan | Form |
+|---|---|
+| Launcher / iOS / web icon | Teal ki full-bleed tile + white ball |
+| Splash screen | Teal ball, transparent — app ke white canvas pe |
+| Vector (print, deck, store listing) | `docs/branding/crickethub-mark.svg`, `crickethub-tile.svg` |
+
+Sab icons regenerate karne ke liye:
+
+```bash
+python3 tools/make_icons.py          # report only: --check
+flutter clean && flutter run
+```
+
+`assets/branding/logo_source.png` (client ka original artwork) repo me safe
+hai. Usse wapas ship karna ho to `make_icons.py` me `USE_CUSTOM_ARTWORK = True`
+kar do — baaki sab waisa hi chalega.
+
+Random logo options dekhne ke liye `python3 tools/logo_lab.py`.
+
+## Ship se pehle: CricAPI key check (2 second)
+
+App install karne se pehle terminal me hi pata chal jaata hai ki key chalegi ya
+nahi — aur agar nahi, to kya galat hai:
+
+```bash
+python3 tools/check_cricapi.py --key YOUR_KEY      # ya CRICAPI_KEY=... python3 tools/check_cricapi.py
+python3 tools/check_cricapi.py --demo              # bina account, failure path dekho
+```
+
+| Exit | Matlab | App me kya dikhega |
+|---|---|---|
+| 0 | Key theek, quota print hoga | Live cards, koi demo banner nahi |
+| 2 | Key di hi nahi | "Live scores need a CricAPI key" card |
+| 3 | Key reject ya quota khatam | "CricAPI rejected the key" / "Daily limit reached" |
+| 4 | Network ya response shape badla | Network error card, retry button |
+
+Key valid nikle to app isi key ke saath chalao:
+
+```bash
+flutter run --dart-define=CRICAPI_KEY=YOUR_KEY
+```
+
+## Fresh clone? Firebase options ek command door hai
+
+`lib/firebase_options.dart` gitignored hai (asli keys usme hain). Fresh clone pe
+`flutter analyze` fail karega jab tak wo file na ho. Do raste hain:
+
+```bash
+cp lib/firebase_options.example.dart lib/firebase_options.dart   # placeholder, analyze/test ke liye kaafi
+dart run tools/sync_firebase_options.dart                        # asli values google-services.json se
+```
+
 
 ## 🚨 Device pe black screen? Pehle ye padho
 
@@ -36,18 +147,39 @@ flutter clean && flutter run
 
 ### Fix B — asli (recommended)
 
-Placeholder ko asli file se replace karo:
+Placeholder ko asli values se replace karo. Do tarike:
 
-```bash
+**B1 — bina kuch install kiye (sabse fast).** Aapke paas `google-services.json`
+already hai, usme asli `apiKey` maujood hai. Ye script wahan se values utha kar
+Dart file bhar deti hai (Dart Flutter ke saath already installed hai):
+
+```powershell
+dart run tools/sync_firebase_options.dart
+flutter clean; flutter run
+```
+
+Pehle dekhna ho ki kya badlega: `dart run tools/sync_firebase_options.dart --check`
+
+**B2 — official CLI se.**
+
+```powershell
+npm install -g firebase-tools      # ya standalone installer
+firebase login
 flutterfire configure --project=crickethub-dev
 ```
+
+> `flutterfire` ko `firebase` CLI chahiye. Agar `firebase --version` fail hota
+> hai to ye error aata hai:
+> `FirebaseCommandException: ... firebase --version`. Us case me B1 use karo —
+> uske liye Firebase CLI ki zaroorat nahi.
 
 Ye `lib/firebase_options.dart` (aur platform config) regenerate karta hai.
 **Ise repo me commit mat karna** — `.gitignore` me hai, aur har developer ki
 machine pe apna hota hai.
 
-> ⚠️ **Zip extract karte waqt dhyan:** zip me placeholder `firebase_options.dart`
-> bhi hota hai. Agar aapke paas pehle se asli file thi, to zip ne usko overwrite
+> ⚠️ **Zip extract karte waqt dhyan:** `v4` se zip me `firebase_options.dart`
+> **shaamil nahi** hai (sirf `.example`), isliye aapki asli file safe rehti hai.
+> Purane zips me placeholder hota tha jo asli file ko overwrite kar deta tha.
 > kar diya hoga — Fix B chala kar wapas banao. (Git users ke liye ye problem
 > nahi hoti, kyunki file gitignored hai.)
 

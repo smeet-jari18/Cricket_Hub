@@ -12,6 +12,7 @@ import 'owner_create_ground_screen.dart';
 import 'owner_edit_ground_screen.dart';
 import 'owner_earnings_screen.dart';
 import 'owner_qr_scanner_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Sprint 9's `owner_dashboard.dart` — the ground owner's home.
 ///
@@ -25,14 +26,15 @@ class OwnerDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = context.watch<AuthProvider>().appUser?.uid;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ground owner'),
+        title: Text(l10n.ground_owner),
         actions: [
           IconButton(
-            tooltip: 'Scan a booking QR',
+            tooltip: l10n.scan_a_booking_qr,
             onPressed: () =>
                 Navigator.pushNamed(context, OwnerQrScannerScreen.route),
             icon: const Icon(Icons.qr_code_scanner_rounded),
@@ -40,7 +42,7 @@ class OwnerDashboard extends StatelessWidget {
         ],
       ),
       body: uid == null
-          ? const Center(child: Text('Please sign in.'))
+          ? Center(child: Text(l10n.commonPleaseSignIn))
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
@@ -48,9 +50,9 @@ class OwnerDashboard extends StatelessWidget {
                 const SizedBox(height: 16),
                 const _QuickActions(),
                 const SizedBox(height: 20),
-                const Text(
-                  'MY GROUNDS',
-                  style: TextStyle(
+                Text(
+                  l10n.my_grounds,
+                  style: const TextStyle(
                     fontSize: 10,
                     letterSpacing: 1,
                     fontWeight: FontWeight.w800,
@@ -67,7 +69,7 @@ class OwnerDashboard extends StatelessWidget {
           OwnerCreateGroundScreen.route,
         ),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Add ground'),
+        label: Text(l10n.add_ground),
       ),
     );
   }
@@ -80,6 +82,7 @@ class _TodayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Booking>>(
       stream: context
           .read<BookingService>()
@@ -106,9 +109,9 @@ class _TodayCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'TODAY',
-                style: TextStyle(
+              Text(
+                l10n.today,
+                style: const TextStyle(
                   fontSize: 10,
                   letterSpacing: 1.2,
                   fontWeight: FontWeight.w800,
@@ -117,8 +120,7 @@ class _TodayCard extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                '${todayBookings.length} booking'
-                '${todayBookings.length == 1 ? '' : 's'}',
+                l10n.bookingsCount(todayBookings.length),
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w800,
@@ -129,12 +131,12 @@ class _TodayCard extends StatelessWidget {
               Row(
                 children: [
                   _MiniStat(
-                    label: 'Confirmed',
+                    label: l10n.confirmed,
                     value: '${confirmed.length}',
                   ),
                   const SizedBox(width: 24),
                   _MiniStat(
-                    label: 'Payout earned',
+                    label: l10n.payout_earned,
                     value: '₹${(revenuePaise / 100).round()}',
                   ),
                 ],
@@ -185,12 +187,13 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Row(
       children: [
         Expanded(
           child: _ActionTile(
             icon: Icons.qr_code_scanner_rounded,
-            label: 'Scan QR',
+            label: l10n.scan_qr,
             onTap: () =>
                 Navigator.pushNamed(context, OwnerQrScannerScreen.route),
           ),
@@ -199,7 +202,7 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: _ActionTile(
             icon: Icons.account_balance_wallet_rounded,
-            label: 'Earnings',
+            label: l10n.earnings,
             onTap: () =>
                 Navigator.pushNamed(context, OwnerEarningsScreen.route),
           ),
@@ -253,6 +256,7 @@ class _GroundList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return StreamBuilder<List<Ground>>(
       stream: context.read<GroundService>().ownerGroundsStream(ownerUid),
       builder: (context, snapshot) {
@@ -272,15 +276,15 @@ class _GroundList extends StatelessWidget {
                   const Icon(Icons.stadium_outlined,
                       size: 40, color: AppTheme.textSecondary),
                   const SizedBox(height: 12),
-                  const Text(
-                    'No grounds yet',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                  Text(
+                    l10n.no_grounds_yet,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'List your ground and start taking bookings.',
+                  Text(
+                    l10n.list_your_ground_and_start_taking,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textSecondary,
                     ),
@@ -291,7 +295,7 @@ class _GroundList extends StatelessWidget {
                       context,
                       OwnerCreateGroundScreen.route,
                     ),
-                    child: const Text('Create your first ground'),
+                    child: Text(l10n.create_your_first_ground),
                   ),
                 ],
               ),
@@ -325,6 +329,7 @@ class _GroundRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: InkWell(
         onTap: () => Navigator.pushNamed(
@@ -357,7 +362,7 @@ class _GroundRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${ground.city} · ₹${ground.priceWeekdayHourly}/hr',
+                      l10n.cityAndRate(ground.city, ground.priceWeekdayHourly),
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppTheme.textSecondary,
@@ -383,7 +388,7 @@ class _GroundRow extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'Edit ground',
+                tooltip: l10n.edit_ground,
                 icon: const Icon(Icons.edit_outlined, size: 18),
                 color: AppTheme.textSecondary,
                 onPressed: () => Navigator.pushNamed(
